@@ -61,12 +61,18 @@ void APlayerCharacter::beginSprint()
 {
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
+
+	// Set camera location
+	//CameraComp->SetRelativeLocation( FVector( 0, 10, 160 ) );
 }
 
 void APlayerCharacter::endSprint()
 {
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+
+	// Set camera location
+	//CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
 }
 
 void APlayerCharacter::beginCrouch()
