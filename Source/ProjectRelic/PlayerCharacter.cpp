@@ -13,7 +13,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 
 	// Set the location and rotation of the Characrer Mesh Transform
-	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
+	GetMesh()->SetRelativeLocationAndRotation( FVector( -10.0f, 20.0f, 160.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
 	//SpringArmComp->SetupAttachment( CameraComp, UCameraComponent:: );
@@ -59,42 +59,58 @@ void APlayerCharacter::moveRight( float inputAxis )
 
 void APlayerCharacter::beginSprint()
 {
-	// -- Note its not the component --
+	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 }
 
 void APlayerCharacter::endSprint()
 {
-	// -- Note its not the component --
+	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 }
 
 void APlayerCharacter::beginCrouch()
 {
-	
+	// Crouch function
 	Crouch();
+
+	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	// Set camera location
+	CameraComp->SetRelativeLocation( FVector( -10, 20, 100 ) );
 }
 
 void APlayerCharacter::endCrouch()
 {
+	// UnCrouch function
 	UnCrouch();
-	
+
+	// Reset camera
+	CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
 }
 
 void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
+	// Movement
 	PlayerInputComponent->BindAxis( "MoveForward", this, &APlayerCharacter::moveForward );
 	PlayerInputComponent->BindAxis( "MoveRight", this, &APlayerCharacter::moveRight );
+
+	// Mouse rotation
 	PlayerInputComponent->BindAxis( "Turn", this, &APawn::AddControllerYawInput );
 	PlayerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
 
+	// Jump
 	PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
 	PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
+
+	// Crouch
 	PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &APlayerCharacter::beginCrouch );
 	PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &APlayerCharacter::endCrouch );
+
+	// Sprint
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &APlayerCharacter::beginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &APlayerCharacter::endSprint );
 }
