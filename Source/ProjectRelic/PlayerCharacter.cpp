@@ -84,7 +84,7 @@ void APlayerCharacter::beginCrouch()
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
 	// Set camera location
-	CameraComp->SetRelativeLocation( FVector( -10, 20, 100 ) );
+	CameraComp->SetRelativeLocation( FVector( -10, 20, 140 ) );
 }
 
 void APlayerCharacter::endCrouch()
