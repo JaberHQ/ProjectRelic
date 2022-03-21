@@ -15,10 +15,11 @@ class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 	GENERATED_BODY()
 
 private:
-	bool isAiming;
+	bool m_holdADS;
 public:
 	APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+	
 protected:
 	// Spring Arm Component to follow the camera behind the player
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
@@ -29,8 +30,8 @@ protected:
 		class UCameraComponent* CameraComp;
 
 	// Input 
-	void moveForward( float InputAxis );
-	void moveRight( float InputAxis );
+	void moveForward( float inputAxis );
+	void moveRight( float inputAxis );
 
 	// Sprint
 	void beginSprint();
@@ -44,5 +45,8 @@ protected:
 	void aimIn();
 	void aimOut();
 
+
+	void setHoldADS( bool holdADS );
+	bool getHoldADS();
 
 };

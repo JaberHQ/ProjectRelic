@@ -25,9 +25,9 @@ APlayerCharacter::APlayerCharacter()
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	GetCharacterMovement()->bIgnoreBaseRotation = true;
+	GetCharacterMovement()->bIgnoreBaseRotation = false;
 
-	 
+	m_holdADS = false;
 
 }
 
@@ -100,21 +100,33 @@ void APlayerCharacter::endCrouch()
 
 void APlayerCharacter::aimIn()
 {
-	isAiming = true;
-	if( isAiming == true )
+	CameraComp->SetRelativeLocation( FVector( -10, 20, 165 ) );
+	if( m_holdADS == false )
 	{
+
 		CameraComp->SetFieldOfView( 70.0f );
 	}
+	
 }
 
 void APlayerCharacter::aimOut()
 {
-	isAiming = false;
-	if( isAiming == false )
+	// Reset camera
+	CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
+	if( m_holdADS == false )
 	{
+
 		CameraComp->SetFieldOfView( 90.0f );
 	}
-	
+}
+
+void APlayerCharacter::setHoldADS( bool holdADS )
+{
+}
+
+bool APlayerCharacter::getHoldADS()
+{
+	return m_holdADS;
 }
 
 void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
