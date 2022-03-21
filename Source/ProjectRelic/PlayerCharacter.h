@@ -13,6 +13,9 @@ UCLASS()
 class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 {
 	GENERATED_BODY()
+
+private:
+	bool isAiming;
 public:
 	APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
@@ -36,6 +39,10 @@ protected:
 	// Crouch
 	void beginCrouch();
 	void endCrouch();
+
+	// Aim
+	void aimIn();
+	void aimOut();
 
 
 };

@@ -27,6 +27,8 @@ APlayerCharacter::APlayerCharacter()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bIgnoreBaseRotation = true;
 
+	 
+
 }
 
 void APlayerCharacter::moveForward( float inputAxis )
@@ -96,6 +98,25 @@ void APlayerCharacter::endCrouch()
 	CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
 }
 
+void APlayerCharacter::aimIn()
+{
+	isAiming = true;
+	if( isAiming == true )
+	{
+		CameraComp->SetFieldOfView( 70.0f );
+	}
+}
+
+void APlayerCharacter::aimOut()
+{
+	isAiming = false;
+	if( isAiming == false )
+	{
+		CameraComp->SetFieldOfView( 90.0f );
+	}
+	
+}
+
 void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
@@ -119,6 +140,10 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputCo
 	// Sprint
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &APlayerCharacter::beginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &APlayerCharacter::endSprint );
+
+	// Aim
+	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &APlayerCharacter::aimIn );
+	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &APlayerCharacter::aimOut );
 }
 
 
