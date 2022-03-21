@@ -16,10 +16,14 @@ class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 
 private:
 	bool m_holdADS;
+	
 public:
 	APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 	
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
+	bool isAimedin;
+
 protected:
 	// Spring Arm Component to follow the camera behind the player
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )

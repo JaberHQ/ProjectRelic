@@ -13,7 +13,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 
 	// Set the location and rotation of the Characrer Mesh Transform
-	GetMesh()->SetRelativeLocationAndRotation( FVector( -10.0f, 20.0f, 160.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
+	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
 	//SpringArmComp->SetupAttachment( CameraComp, UCameraComponent:: );
@@ -28,7 +28,9 @@ APlayerCharacter::APlayerCharacter()
 	GetCharacterMovement()->bIgnoreBaseRotation = false;
 
 	m_holdADS = false;
+	isAimedin = false;
 
+	
 }
 
 void APlayerCharacter::moveForward( float inputAxis )
@@ -86,7 +88,7 @@ void APlayerCharacter::beginCrouch()
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
 	// Set camera location
-	CameraComp->SetRelativeLocation( FVector( -10, 20, 140 ) );
+	CameraComp->SetRelativeLocation( FVector( -10, 20, 120 ) );
 }
 
 void APlayerCharacter::endCrouch()
@@ -95,15 +97,15 @@ void APlayerCharacter::endCrouch()
 	UnCrouch();
 
 	// Reset camera
-	CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
+	CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
 }
 
 void APlayerCharacter::aimIn()
 {
-	CameraComp->SetRelativeLocation( FVector( -10, 20, 165 ) );
+	CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
 	if( m_holdADS == false )
 	{
-
+		isAimedin = true;
 		CameraComp->SetFieldOfView( 70.0f );
 	}
 	
@@ -112,10 +114,10 @@ void APlayerCharacter::aimIn()
 void APlayerCharacter::aimOut()
 {
 	// Reset camera
-	CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
+	CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
 	if( m_holdADS == false )
 	{
-
+		isAimedin = false;
 		CameraComp->SetFieldOfView( 90.0f );
 	}
 }
