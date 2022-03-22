@@ -28,8 +28,7 @@ APlayerCharacter::APlayerCharacter()
 	GetCharacterMovement()->bIgnoreBaseRotation = false;
 
 	m_holdADS = false;
-	isAimedin = false;
-
+	isAimedIn = false;
 	
 }
 
@@ -105,7 +104,7 @@ void APlayerCharacter::aimIn()
 	CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
 	if( m_holdADS == false )
 	{
-		isAimedin = true;
+		isAimedIn = true;
 		CameraComp->SetFieldOfView( 70.0f );
 	}
 	
@@ -117,9 +116,19 @@ void APlayerCharacter::aimOut()
 	CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
 	if( m_holdADS == false )
 	{
-		isAimedin = false;
+		isAimedIn = false;
 		CameraComp->SetFieldOfView( 90.0f );
 	}
+}
+
+void APlayerCharacter::setIsAimed( bool isAimedin )
+{
+	isAimedIn = isAimedin;
+}
+
+const bool APlayerCharacter::getIsAimed()
+{
+	return isAimedIn;
 }
 
 void APlayerCharacter::setHoldADS( bool holdADS )
