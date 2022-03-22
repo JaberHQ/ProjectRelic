@@ -16,12 +16,11 @@ APlayerCharacter::APlayerCharacter()
 	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
-	//SpringArmComp->SetupAttachment( CameraComp, UCameraComponent:: );
 	CameraComp->SetupAttachment( GetMesh() );
 
-	// Setting class variables of the spring arm
-	//SpringArmComp->bUsePawnControlRotation = true;
+	
 	CameraComp->bUsePawnControlRotation = true;
+
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -29,6 +28,7 @@ APlayerCharacter::APlayerCharacter()
 
 	m_holdADS = false;
 	isAimedIn = false;
+	
 	
 }
 
