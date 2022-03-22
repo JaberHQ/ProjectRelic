@@ -11,6 +11,8 @@ APlayerCharacter::APlayerCharacter()
 	// Instantiating class components
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
 	CameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
+	GunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
+	ADSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
 
 	// Set the location and rotation of the Characrer Mesh Transform
 	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
@@ -21,14 +23,22 @@ APlayerCharacter::APlayerCharacter()
 	
 	CameraComp->bUsePawnControlRotation = true;
 
+	GunComp->SetupAttachment( GetMesh() );
+	ADSCameraComp->SetupAttachment( GunComp );
+	GunComp-> AttachTo( GetMesh(), TEXT( "hand_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	
+	// Set Gun Position
+	
+	// Set ADS CameraPosition
+	
+	
+	//CameraComp->SetupAttachment(SpringArmComp,USpringArmComponent::SocketName);
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bIgnoreBaseRotation = false;
 
 	m_holdADS = false;
-	isAimedIn = false;
-	
 	
 }
 
@@ -101,35 +111,29 @@ void APlayerCharacter::endCrouch()
 
 void APlayerCharacter::aimIn()
 {
-	CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
-	if( m_holdADS == false )
+	//CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
+	/*if( m_holdADS == false )
 	{
 		isAimedIn = true;
 		CameraComp->SetFieldOfView( 70.0f );
-	}
+	}*/
+	CameraComp->Deactivate();
 	
 }
 
 void APlayerCharacter::aimOut()
 {
 	// Reset camera
-	CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
-	if( m_holdADS == false )
+	//CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
+	/*if( m_holdADS == false )
 	{
 		isAimedIn = false;
 		CameraComp->SetFieldOfView( 90.0f );
-	}
+	}*/
+	CameraComp->Activate();
+
 }
 
-void APlayerCharacter::setIsAimed( bool isAimedin )
-{
-	isAimedIn = isAimedin;
-}
-
-const bool APlayerCharacter::getIsAimed()
-{
-	return isAimedIn;
-}
 
 void APlayerCharacter::setHoldADS( bool holdADS )
 {

@@ -21,11 +21,8 @@ public:
 	APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 	
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
-	bool isAimedIn;
 	
-	void setIsAimed( bool isAimedIn );
-	const bool getIsAimed( );
+
 protected:
 	// Spring Arm Component to follow the camera behind the player
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
@@ -34,6 +31,14 @@ protected:
 	// Player follow camera
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* CameraComp;
+
+	// Player ADS camera
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UCameraComponent* ADSCameraComp;
+
+	// Gun
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USkeletalMeshComponent* GunComp;
 
 	// Input 
 	void moveForward( float inputAxis );
