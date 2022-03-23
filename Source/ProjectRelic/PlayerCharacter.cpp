@@ -25,7 +25,7 @@ APlayerCharacter::APlayerCharacter()
 
 	GunComp->SetupAttachment( GetMesh() );
 	ADSCameraComp->SetupAttachment( GunComp );
-	GunComp-> AttachTo( GetMesh(), TEXT( "hand_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	GunComp->AttachTo( GetMesh(), TEXT( "hand_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
 	
 	// Set Gun Position
 	
