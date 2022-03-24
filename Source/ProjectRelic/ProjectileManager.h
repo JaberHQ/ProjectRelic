@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "ProjectileManager.generated.h"
 
 //UENUM( BlueprintType )
@@ -40,8 +41,6 @@ public:
 	UPROPERTY( VisibleAnywhere, Category = Movement )
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
-	// Initalise the projectile's velocity 
-	void ShootInDirection( const FVector& ShootDirection );
 
 	// Projectile Mesh
 	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
@@ -50,4 +49,7 @@ public:
 	// Projectile Mesh
 	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
 		UMaterialInstanceDynamic* ProjectileMaterialInstance;
+	
+	// Initalise the projectile's velocity 
+	void ShootInDirection( const FVector& ShootDirection );
 };
