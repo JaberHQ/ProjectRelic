@@ -19,9 +19,11 @@ APlayerCharacter::APlayerCharacter()
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
 	CameraComp->SetupAttachment( GetMesh() );
-
+	CameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	CameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
+	CameraComp->SetRelativeRotation( FRotator( 0.0f, 90.0f, 0.0f  ) );
 	
-	CameraComp->bUsePawnControlRotation = true;
+	CameraComp->bUsePawnControlRotation = false;
 
 	GunComp->SetupAttachment( GetMesh() );
 	ADSCameraComp->SetupAttachment( GunComp );
@@ -75,8 +77,7 @@ void APlayerCharacter::beginSprint()
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 
-	// Set camera location
-	//CameraComp->SetRelativeLocation( FVector( 0, 10, 160 ) );
+
 }
 
 void APlayerCharacter::endSprint()
@@ -84,8 +85,7 @@ void APlayerCharacter::endSprint()
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 
-	// Set camera location
-	//CameraComp->SetRelativeLocation( FVector( -10, 20, 160 ) );
+	
 }
 
 void APlayerCharacter::beginCrouch()
@@ -96,8 +96,7 @@ void APlayerCharacter::beginCrouch()
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
-	// Set camera location
-	CameraComp->SetRelativeLocation( FVector( -10, 20, 120 ) );
+	
 }
 
 void APlayerCharacter::endCrouch()
@@ -105,8 +104,6 @@ void APlayerCharacter::endCrouch()
 	// UnCrouch function
 	UnCrouch();
 
-	// Reset camera
-	CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
 }
 
 void APlayerCharacter::aimIn()
