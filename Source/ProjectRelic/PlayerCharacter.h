@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CharacterManager.h"
+#include "ProjectileManager.h"
 #include "PlayerCharacter.generated.h"
 
 /**
@@ -21,7 +22,12 @@ public:
 	APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 	
-	
+	// Fire projectile
+	UFUNCTION()
+		void Shoot();
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
+		FVector MuzzleOffset;
 
 protected:
 	// Spring Arm Component to follow the camera behind the player
@@ -40,25 +46,29 @@ protected:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* GunComp;
 
+	UPROPERTY( EditDefaultsOnly, Category = Projectile )
+		TSubclassOf<class AProjectileManager> ProjectileClass;
+
 	// Input 
-	void moveForward( float inputAxis );
-	void moveRight( float inputAxis );
+	void MoveForward( float inputAxis );
+	void MoveRight( float inputAxis );
 
 	// Sprint
-	void beginSprint();
-	void endSprint();
+	void BeginSprint();
+	void EndSprint();
 
 	// Crouch
-	void beginCrouch();
-	void endCrouch();
+	void BeginCrouch();
+	void EndCrouch();
 
 	// Aim
-	void aimIn();
-	void aimOut();
+	void AimIn();
+	void AimOut();
 
 	
 
-	void setHoldADS( bool holdADS );
-	bool getHoldADS();
+	void SetHoldADS( bool holdADS );
+	bool GetHoldADS();
 
+	
 };

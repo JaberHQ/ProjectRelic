@@ -44,7 +44,7 @@ APlayerCharacter::APlayerCharacter()
 	
 }
 
-void APlayerCharacter::moveForward( float inputAxis )
+void APlayerCharacter::MoveForward( float inputAxis )
 {
 	if( ( Controller != nullptr )  && (inputAxis != 0.0f ) )
 	{
@@ -58,7 +58,7 @@ void APlayerCharacter::moveForward( float inputAxis )
 	}
 }
 
-void APlayerCharacter::moveRight( float inputAxis )
+void APlayerCharacter::MoveRight( float inputAxis )
 {
 	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
 	{
@@ -72,7 +72,7 @@ void APlayerCharacter::moveRight( float inputAxis )
 	}
 }
 
-void APlayerCharacter::beginSprint()
+void APlayerCharacter::BeginSprint()
 {
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
@@ -80,7 +80,7 @@ void APlayerCharacter::beginSprint()
 
 }
 
-void APlayerCharacter::endSprint()
+void APlayerCharacter::EndSprint()
 {
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
@@ -88,7 +88,7 @@ void APlayerCharacter::endSprint()
 	
 }
 
-void APlayerCharacter::beginCrouch()
+void APlayerCharacter::BeginCrouch()
 {
 	// Crouch function
 	Crouch();
@@ -99,14 +99,14 @@ void APlayerCharacter::beginCrouch()
 	
 }
 
-void APlayerCharacter::endCrouch()
+void APlayerCharacter::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
 
 }
 
-void APlayerCharacter::aimIn()
+void APlayerCharacter::AimIn()
 {
 	//CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
 	/*if( m_holdADS == false )
@@ -118,7 +118,7 @@ void APlayerCharacter::aimIn()
 	
 }
 
-void APlayerCharacter::aimOut()
+void APlayerCharacter::AimOut()
 {
 	// Reset camera
 	//CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
@@ -132,11 +132,11 @@ void APlayerCharacter::aimOut()
 }
 
 
-void APlayerCharacter::setHoldADS( bool holdADS )
+void APlayerCharacter::SetHoldADS( bool holdADS )
 {
 }
 
-bool APlayerCharacter::getHoldADS()
+bool APlayerCharacter::GetHoldADS()
 {
 	return m_holdADS;
 }
@@ -146,8 +146,8 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
 	// Movement
-	PlayerInputComponent->BindAxis( "MoveForward", this, &APlayerCharacter::moveForward );
-	PlayerInputComponent->BindAxis( "MoveRight", this, &APlayerCharacter::moveRight );
+	PlayerInputComponent->BindAxis( "MoveForward", this, &APlayerCharacter::MoveForward );
+	PlayerInputComponent->BindAxis( "MoveRight", this, &APlayerCharacter::MoveRight );
 
 	// Mouse rotation
 	PlayerInputComponent->BindAxis( "Turn", this, &APawn::AddControllerYawInput );
@@ -158,16 +158,56 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
 
 	// Crouch
-	PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &APlayerCharacter::beginCrouch );
-	PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &APlayerCharacter::endCrouch );
+	PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &APlayerCharacter::BeginCrouch );
+	PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &APlayerCharacter::EndCrouch );
 
 	// Sprint
-	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &APlayerCharacter::beginSprint );
-	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &APlayerCharacter::endSprint );
+	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &APlayerCharacter::BeginSprint );
+	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &APlayerCharacter::EndSprint );
 
 	// Aim
-	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &APlayerCharacter::aimIn );
-	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &APlayerCharacter::aimOut );
+	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &APlayerCharacter::AimIn );
+	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &APlayerCharacter::AimOut );
+
+	// Shoot
+	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &APlayerCharacter::Shoot );
+}
+
+void APlayerCharacter::Shoot()
+{
+	if( ProjectileClass )
+	{
+		FVector CameraLocation;
+		FRotator CameraRotation;
+		GetActorEyesViewPoint( CameraLocation, CameraRotation );
+
+		// MuzzleOffset
+		MuzzleOffset.Set( 100.0f, 0.0f, 0.0f );
+
+		// Transform Muzzleoffset from camera space to world space
+		FVector MuzzleLocation = CameraLocation + FTransform( CameraRotation ).TransformVector( MuzzleOffset );
+
+		// Skew aim to be upwards
+		FRotator MuzzleRotation = CameraRotation;
+		MuzzleRotation.Pitch += 10.0f;
+
+		UWorld* World = GetWorld();
+		if( World )
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = GetInstigator();
+
+			// Spawn projectile
+			AProjectileManager* Projectile = World->SpawnActor<AProjectileManager>( ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams );
+
+			if( Projectile )
+			{
+				FVector LaunchDirection = MuzzleRotation.Vector();
+				Projectile->ShootInDirection( LaunchDirection );
+			}
+		}
+	}
 }
 
 

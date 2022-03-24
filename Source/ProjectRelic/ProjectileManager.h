@@ -4,14 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "ProjectileManager.generated.h"
 
-UENUM()
-enum class Type
-{
-	Bullet,
-	Fireball
-};
+//UENUM( BlueprintType )
+//enum class Type:uint8
+//{
+//	AssaultRifle UMETA(DisplayName = "AssaultRifle"),
+//	Pistol UMETA( DisplayName = "Pistol" ),
+//	Fireball UMETA( DisplayName = "Fireball" )
+//};
 
 UCLASS()
 class PROJECTRELIC_API AProjectileManager : public AActor
@@ -30,4 +33,21 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
+	USphereComponent* CollisionComponent;
+
+	// Projectile movement component
+	UPROPERTY( VisibleAnywhere, Category = Movement )
+	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	// Initalise the projectile's velocity 
+	void ShootInDirection( const FVector& ShootDirection );
+
+	// Projectile Mesh
+	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
+		UStaticMeshComponent* ProjectileMeshComponent;
+
+	// Projectile Mesh
+	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
+		UMaterialInstanceDynamic* ProjectileMaterialInstance;
 };
