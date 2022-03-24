@@ -189,7 +189,7 @@ void APlayerCharacter::Shoot()
 
 		// Skew aim to be upwards
 		FRotator MuzzleRotation = CameraRotation;
-		MuzzleRotation.Pitch += 10.0f;
+		MuzzleRotation.Pitch += 3.0f;
 
 		UWorld* World = GetWorld();
 		if( World )

@@ -50,6 +50,10 @@ public:
 	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
 		UMaterialInstanceDynamic* ProjectileMaterialInstance;
 	
+	// When projectile hits something
+	UFUNCTION()
+		void OnHit( UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit );
+
 	// Initalise the projectile's velocity 
 	void ShootInDirection( const FVector& ShootDirection );
 };

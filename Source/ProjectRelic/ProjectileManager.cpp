@@ -44,6 +44,10 @@ AProjectileManager::AProjectileManager()
 		{
 			ProjectileMeshComponent->SetStaticMesh( Mesh.Object );
 		}
+		else
+		{
+			UE_LOG( LogTemp, Warning, TEXT( "BAD PATH" ) );
+		}
 		static ConstructorHelpers::FObjectFinder<UMaterial>Material( TEXT( "'/Game/ProjectRelic/Materials/Bullet/SphereMaterial.SphereMaterial'" ) );
 		if( Material.Succeeded() )
 		{
@@ -53,7 +57,14 @@ AProjectileManager::AProjectileManager()
 		ProjectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
 		ProjectileMeshComponent->SetupAttachment( RootComponent );
 	}
+	//Set Lifespan
+	InitialLifeSpan = 3.0f;
 
+	// Set sphere collision
+	CollisionComponent->BodyInstance.SetCollisionProfileName( TEXT( "Projectile" ) );
+
+	// Collision event
+	CollisionComponent->OnComponentHit.AddDynamic( this, &AProjectileManager::OnHit );
 }
 
 // Called when the game starts or when spawned
@@ -68,6 +79,16 @@ void AProjectileManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProjectileManager::OnHit( UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit )
+{
+	if( OtherActor != this && OtherComponent->IsSimulatingPhysics() )
+	{
+		OtherComponent->AddImpulseAtLocation( ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint );
+	}
+
+	Destroy();
 }
 
 void AProjectileManager::ShootInDirection( const FVector& ShootDirection )
