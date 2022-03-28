@@ -21,11 +21,7 @@ private:
 public:
 	APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
-	
-	
 
 protected:
-	
 
-	
 };
