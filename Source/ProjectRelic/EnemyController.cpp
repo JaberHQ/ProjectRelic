@@ -1,23 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "EnemyController.h"
-#include "EnemyManager.h"
-#include "EnemyPatrolPoint.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
+
 
 AEnemyController::AEnemyController()
 {
 	/*PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComp" ) );
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "AISightConfig" ) );*/
 
-	BehaviourTreeComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourTreeComp" ) );
-	BackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BackboardComp" ) );
-
-	PlayerKey = "target";
-	PatrolLocationKey = "patrolLocation";
 }
 
 AEnemyController::~AEnemyController()
@@ -26,24 +16,16 @@ AEnemyController::~AEnemyController()
 
 void AEnemyController::OnTargetPerceptionUpdated()
 {
-	//if( ActorHasTag( TEXT( "Player" ) ) /*&& SightConfig->*/ )
-	//{
-
-	//}
-}
-
-void AEnemyController::OnPossess( APawn* Pawn )
-{
-	Super::Possess( Pawn );
-
-	//Get Ref
-	AEnemyManager* AIEnemy = Cast<AEnemyManager>( Pawn );
-
-	if( AIEnemy )
+	if( ActorHasTag( TEXT( "Player" ) ) /*&& SightConfig->StimuliSensed*/ )
 	{
-		if( AIEnemy->BehaviourTree->BlackboardAsset )
-		{
-
-		}
+		//Clear and invialidate timer by handle
+		//Has line of sight (blackboard) = true;
+		//Enemy Actor (blackboard) = true;
+	}
+	else
+	{
+		//Set line of sight timer =4.0f;
+		//Set line of sight = false;
+		//Set enemy actor = false;
 	}
 }

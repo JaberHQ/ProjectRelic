@@ -3,3 +3,10 @@
 
 #include "EnemyPatrolPoint.h"
 
+AEnemyPatrolPoint::AEnemyPatrolPoint()
+{
+}
+
+AEnemyPatrolPoint::~AEnemyPatrolPoint()
+{
+}

@@ -18,8 +18,6 @@ public:
 	~AEnemyManager();
 	
 	void UpdateWalkSpeed( float ChaseSpeed );
-	UPROPERTY( EditAnywhere, Category = AI )
-		class UBehaviorTree* BehaviourTree;
 
 protected:
 };

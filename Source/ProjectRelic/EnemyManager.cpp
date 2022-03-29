@@ -5,7 +5,7 @@
 
 AEnemyManager::AEnemyManager()
 {
-	BehaviourTree = CreateDefaultSubobject<UBehaviorTree>( TEXT( "BehaviourTree" ) );
+	
 }
 
 AEnemyManager::~AEnemyManager()

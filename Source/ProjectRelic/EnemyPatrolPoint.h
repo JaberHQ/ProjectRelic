@@ -13,5 +13,9 @@ UCLASS()
 class PROJECTRELIC_API AEnemyPatrolPoint : public ATargetPoint
 {
 	GENERATED_BODY()
-	
+private:
+protected:
+public:
+	AEnemyPatrolPoint();
+	~AEnemyPatrolPoint();
 };
