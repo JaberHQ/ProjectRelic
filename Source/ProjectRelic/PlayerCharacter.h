@@ -20,8 +20,10 @@ private:
 	
 public:
 	APlayerCharacter();
+	~APlayerCharacter();
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
 protected:
-
+	// Invisiblity
+	void Power();
 };

@@ -15,4 +15,11 @@ class PROJECTRELIC_API AEnemyManager : public ACharacterManager
 	GENERATED_BODY()
 public:
 	AEnemyManager();
+	~AEnemyManager();
+	
+	void UpdateWalkSpeed( float ChaseSpeed );
+	UPROPERTY( EditAnywhere, Category = AI )
+		class UBehaviorTree* BehaviourTree;
+
+protected:
 };

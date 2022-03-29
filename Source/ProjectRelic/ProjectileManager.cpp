@@ -67,6 +67,10 @@ AProjectileManager::AProjectileManager()
 	CollisionComponent->OnComponentHit.AddDynamic( this, &AProjectileManager::OnHit );
 }
 
+AProjectileManager::~AProjectileManager()
+{
+}
+
 // Called when the game starts or when spawned
 void AProjectileManager::BeginPlay()
 {
