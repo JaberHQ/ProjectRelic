@@ -47,18 +47,11 @@ protected:
 		class USkeletalMeshComponent* GunComp;
 
 	UPROPERTY( EditDefaultsOnly, Category = Projectile )
-		TSubclassOf<class AProjectileManager> ProjectileClass;	
-
-public:
-	// Called every frame
-	virtual void Tick( float DeltaTime ) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+		TSubclassOf<class AProjectileManager> ProjectileClass;
 
 	// Input 
-	void MoveForward( float InputAxis );
-	void MoveRight( float InputAxis );
+	void MoveForward( float inputAxis );
+	void MoveRight( float inputAxis );
 
 	// Sprint
 	void BeginSprint();
@@ -72,6 +65,15 @@ public:
 	void AimIn();
 	void AimOut();
 
-	void SetHoldADS( bool HoldADS );
+	void SetHoldADS( bool holdADS );
 	bool GetHoldADS();
+
+public:
+	// Called every frame
+	virtual void Tick( float DeltaTime ) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+
+
 };

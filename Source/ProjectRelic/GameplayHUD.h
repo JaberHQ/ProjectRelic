@@ -18,7 +18,6 @@ protected:
 	// Centre
 	UPROPERTY( EditDefaultsOnly )
 		UTexture2D* CrosshairTexture;
-
 public:
 	// Primary draw call for HUD
 	virtual void DrawHUD() override;

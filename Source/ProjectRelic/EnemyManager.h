@@ -15,9 +15,12 @@ class PROJECTRELIC_API AEnemyManager : public ACharacterManager
 	GENERATED_BODY()
 public:
 	AEnemyManager();
+<<<<<<< HEAD
 	~AEnemyManager();
 	
 	void UpdateWalkSpeed( float ChaseSpeed );
 
 protected:
+=======
+>>>>>>> parent of b521974 (WIP Enemy AI C++)
 };

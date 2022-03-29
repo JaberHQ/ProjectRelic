@@ -33,7 +33,12 @@ ACharacterManager::ACharacterManager()
 	ADSCameraComp->SetupAttachment( GunComp );
 	GunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
 
-	
+	// Set Gun Position
+
+	// Set ADS CameraPosition
+
+
+	//CameraComp->SetupAttachment(SpringArmComp,USpringArmComponent::SocketName);
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -90,9 +95,9 @@ void ACharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerInputC
 }
 
 
-void ACharacterManager::MoveForward( float InputAxis )
+void ACharacterManager::MoveForward( float inputAxis )
 {
-	if( ( Controller != nullptr ) && ( InputAxis != 0.0f ) )
+	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
 	{
 		// Find out the forward direction
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -100,13 +105,13 @@ void ACharacterManager::MoveForward( float InputAxis )
 
 		// Get forward vector
 		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::X );
-		AddMovementInput( Direction, InputAxis );
+		AddMovementInput( Direction, inputAxis );
 	}
 }
 
-void ACharacterManager::MoveRight( float InputAxis )
+void ACharacterManager::MoveRight( float inputAxis )
 {
-	if( ( Controller != nullptr ) && ( InputAxis != 0.0f ) )
+	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
 	{
 		// Find out the right direction
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -114,7 +119,7 @@ void ACharacterManager::MoveRight( float InputAxis )
 
 		// Get forward vector
 		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
-		AddMovementInput( Direction, InputAxis );
+		AddMovementInput( Direction, inputAxis );
 	}
 }
 
@@ -154,11 +159,25 @@ void ACharacterManager::EndCrouch()
 
 void ACharacterManager::AimIn()
 {
+	//CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
+	/*if( m_holdADS == false )
+	{
+		isAimedIn = true;
+		CameraComp->SetFieldOfView( 70.0f );
+	}*/
 	CameraComp->Deactivate();
+
 }
 
 void ACharacterManager::AimOut()
 {
+	// Reset camera
+	//CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
+	/*if( m_holdADS == false )
+	{
+		isAimedIn = false;
+		CameraComp->SetFieldOfView( 90.0f );
+	}*/
 	CameraComp->Activate();
 
 }

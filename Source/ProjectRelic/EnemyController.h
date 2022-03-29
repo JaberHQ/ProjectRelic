@@ -6,7 +6,6 @@
 #include "AIController.h"
 #include "EnemyController.generated.h"
 
-
 /**
  * 
  */
@@ -14,6 +13,7 @@ UCLASS()
 class PROJECTRELIC_API AEnemyController : public AAIController
 {
 	GENERATED_BODY()
+<<<<<<< HEAD
 
 private:
 	void OnTargetPerceptionUpdated();	
@@ -30,4 +30,7 @@ public:
 	AEnemyController();
 	~AEnemyController();
 
+=======
+	
+>>>>>>> parent of b521974 (WIP Enemy AI C++)
 };
