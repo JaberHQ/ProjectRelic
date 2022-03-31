@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "ProjectileManager.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "CharacterManager.generated.h"
 
 UCLASS()

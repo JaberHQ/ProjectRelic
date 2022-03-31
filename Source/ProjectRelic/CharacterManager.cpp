@@ -4,7 +4,7 @@
 #include "CharacterManager.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 ACharacterManager::ACharacterManager()
