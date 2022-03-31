@@ -20,8 +20,6 @@ private:
 	FName m_enemyActor;
 	FName m_hasLineOfSight;
 protected:
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UAIPerceptionComponent* AIPerceptionComp;
 public:
 	AEnemyController();
 	~AEnemyController();
