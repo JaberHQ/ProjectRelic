@@ -14,13 +14,20 @@ class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager
 {
 	GENERATED_BODY()
 	
+private:
+	UFUNCTION()
+		void OnPlayerCaught( APawn* Pawn );
 public:
 	AEnemyCharacter();
 	~AEnemyCharacter();
 	void UpdateWalkSpeed( float ChaseSpeed );
 	UPROPERTY( EditAnywhere, Category = AI )
 		class UBehaviorTree* BehaviourTree;
+
+	UPROPERTY( VisibleAnywhere, Category = AI )
+		class UPawnSensingComponent* PawnSensingComp;
+
+	void BeginPlay() override;
 protected:
-private:
 
 };

@@ -4,13 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "EnemyCharacter.h"
-#include "EnemyPatrolPoint.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "EnemyController.generated.h"
-
 
 /**
  * 
@@ -20,9 +17,10 @@ class PROJECTRELIC_API AEnemyController : public AAIController
 {
 	GENERATED_BODY()
 
+	virtual void OnPossess( APawn* Pawn ) override;
 private:
 	// Behaviour Tree comp
-	UBehaviorTreeComponent* BehaviourTreeComp;
+	UBehaviorTreeComponent* BehaviourComp;
 
 	// Blackboard Comp
 	UBlackboardComponent* BlackboardComp;
@@ -37,7 +35,8 @@ private:
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		TArray<AActor*> patrolPoints;
 
-	virtual void OnPossess( APawn* Pawn ) override;
+
+	int32 currentPatrolPoint = 0;
 
 protected:
 public:
