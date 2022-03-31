@@ -12,7 +12,7 @@ AEnemyController::AEnemyController()
 {
 	
 	// BT and BB
-	BehaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
+	BehaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourTreeComp" ) );
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
 
 	// BB keys
