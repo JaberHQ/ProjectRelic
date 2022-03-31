@@ -17,7 +17,8 @@ class PROJECTRELIC_API AEnemyController : public AAIController
 {
 	GENERATED_BODY()
 
-	virtual void OnPossess( APawn* Pawn ) override;
+	virtual void OnPossess( APawn* pawn ) override;
+
 private:
 	// Behaviour Tree comp
 	UBehaviorTreeComponent* BehaviourComp;

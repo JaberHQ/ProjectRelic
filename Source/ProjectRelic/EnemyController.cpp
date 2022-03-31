@@ -26,20 +26,20 @@ AEnemyController::~AEnemyController()
 	
 }
 
-void AEnemyController::SetPlayerCaught( APawn* Pawn )
+void AEnemyController::SetPlayerCaught( APawn* pawn )
 {
 	if( BlackboardComp )
 	{
-		BlackboardComp->SetValueAsObject( playerKey, Pawn );
+		BlackboardComp->SetValueAsObject( playerKey, pawn );
 	}
 }
 
-void AEnemyController::Possess( APawn* Pawn )
+void AEnemyController::OnPossess( APawn* pawn )
 {
-	Super::Possess( Pawn );
+	Super::Possess( pawn );
 
 	// Get ref to character
-	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>( Pawn );
+	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>( pawn );
 
 	if( EnemyCharacter )
 	{
