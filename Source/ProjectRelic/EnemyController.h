@@ -4,7 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "EnemyCharacter.h"
+#include "EnemyPatrolPoint.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "EnemyController.generated.h"
+
 
 /**
  * 
@@ -15,13 +21,33 @@ class PROJECTRELIC_API AEnemyController : public AAIController
 	GENERATED_BODY()
 
 private:
-	float m_lineOfSightTimer;
-	FTimerHandle m_enemyTimer;
-	FName m_enemyActor;
-	FName m_hasLineOfSight;
+	// Behaviour Tree comp
+	UBehaviorTreeComponent* BehaviourTreeComp;
+
+	// Blackboard Comp
+	UBlackboardComponent* BlackboardComp;
+
+	// BB keys
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName locationToGoKey;
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName playerKey;
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		TArray<AActor*> patrolPoints;
+
+	virtual void OnPossess( APawn* Pawn ) override;
+
 protected:
 public:
 	AEnemyController();
 	~AEnemyController();
-	void onTargetPerceptionUpdated();
+	
+	void SetPlayerCaught( APawn* Pawn );
+
+	// Getters
+	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
+	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
+	
 };

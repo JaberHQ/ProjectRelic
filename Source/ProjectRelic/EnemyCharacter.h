@@ -18,6 +18,8 @@ public:
 	AEnemyCharacter();
 	~AEnemyCharacter();
 	void UpdateWalkSpeed( float ChaseSpeed );
+	UPROPERTY( EditAnywhere, Category = AI )
+		class UBehaviorTree* BehaviourTree;
 protected:
 private:
 
