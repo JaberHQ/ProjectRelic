@@ -37,7 +37,7 @@ private:
 		TArray<AActor*> patrolPoints;
 
 
-	int32 currentPatrolPoint = 0;
+	
 
 protected:
 public:
@@ -49,5 +49,5 @@ public:
 	// Getters
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
-	
+	int32 currentPatrolPoint = 0;
 };
