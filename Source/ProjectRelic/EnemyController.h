@@ -19,12 +19,12 @@ class PROJECTRELIC_API AEnemyController : public AAIController
 
 	virtual void OnPossess( APawn* pawn ) override;
 
-private:
 	// Behaviour Tree comp
 	UBehaviorTreeComponent* BehaviourComp;
 
 	// Blackboard Comp
 	UBlackboardComponent* BlackboardComp;
+private:
 
 	// BB keys
 	UPROPERTY( EditDefaultsOnly, Category = AI )

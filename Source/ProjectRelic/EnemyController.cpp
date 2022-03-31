@@ -12,7 +12,7 @@ AEnemyController::AEnemyController()
 {
 	
 	// BT and BB
-	BehaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourTreeComp" ) );
+	BehaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
 
 	// BB keys
@@ -39,19 +39,19 @@ void AEnemyController::OnPossess( APawn* pawn )
 	Super::Possess( pawn );
 
 	// Get ref to character
-	AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>( pawn );
+	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
 
-	if( EnemyCharacter )
+	if( enemyCharacter )
 	{
-		if( EnemyCharacter->BehaviourTree->BlackboardAsset )
+		if( enemyCharacter->BehaviourTree->BlackboardAsset )
 		{
-			BlackboardComp->InitializeBlackboard( *( EnemyCharacter->BehaviourTree->BlackboardAsset ) );
+			BlackboardComp->InitializeBlackboard( *( enemyCharacter->BehaviourTree->BlackboardAsset ) );
 		}
 
 		// Populate patrol point array
 		UGameplayStatics::GetAllActorsOfClass( GetWorld(), AEnemyPatrolPoint::StaticClass(), patrolPoints );
 
-		BehaviourComp->StartTree( *EnemyCharacter->BehaviourTree );
+		BehaviourComp->StartTree( *enemyCharacter->BehaviourTree );
 	}
 }
 
