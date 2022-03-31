@@ -25,7 +25,7 @@ ACharacterManager::ACharacterManager()
 	CameraComp->SetupAttachment( GetMesh() );
 	CameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
 	CameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
-	CameraComp->SetRelativeRotation( FRotator( 0.0f, 90.0f, 0.0f ) );
+	CameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
 
 	CameraComp->bUsePawnControlRotation = false;
 
