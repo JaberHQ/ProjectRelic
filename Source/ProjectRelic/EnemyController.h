@@ -49,8 +49,8 @@ public:
 	void SetPlayerCaught( APawn* pawn );
 
 	// Getters
-	UBlackboardComponent* GetBlackboardComp() const;
-	TArray<AActor*> GetPatrolPoints() const;
+	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
+	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
 	
-	int currentPatrolPoint = 0;
+	int32 currentPatrolPoint = 0;
 };
