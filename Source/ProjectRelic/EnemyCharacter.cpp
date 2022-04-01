@@ -2,7 +2,7 @@
 
 
 #include "EnemyCharacter.h"
-//#include "EnemyController.h"
+#include "EnemyController.h"
 
 //#include "Engine.h".
 
@@ -39,11 +39,11 @@ AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
 void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 {
 	////// get ref to player controller
-	//aenemycontroller* enemycontroller = cast<aenemycontroller>( getcontroller() );
+	AEnemyController* enemycontroller = Cast<AEnemyController>( GetController() );
 
-	//if( enemycontroller )
-	//{
-	//	//gengine->addonscreendebugmessage( -1, 5.0f, fcolor::red, ( text( "you've been caught!" ) ) );
-	//	enemycontroller->setplayercaught( pawn );
-	//}
+	if( enemycontroller )
+	{
+		//gengine->addonscreendebugmessage( -1, 5.0f, fcolor::red, ( text( "you've been caught!" ) ) );
+		enemycontroller->SetPlayerCaught( pawn );
+	}
 }

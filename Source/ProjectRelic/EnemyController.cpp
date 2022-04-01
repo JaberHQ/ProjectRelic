@@ -7,9 +7,9 @@
 
 AEnemyController::AEnemyController()
 	:enemyCharacter( nullptr )
-	,currentPatrolPoint( 0 )
 	,locationToGoKey( "locationToGo" )
 	,playerKey( "target" )
+	,currentPatrolPoint( 0 )
 {
 	
 	// BT and BB
@@ -24,8 +24,6 @@ AEnemyController::AEnemyController()
 
 AEnemyController::~AEnemyController()
 {
-	delete enemyCharacter;
-	enemyCharacter = nullptr;
 
 }
 
@@ -39,10 +37,11 @@ void AEnemyController::SetPlayerCaught( APawn* pawn )
 
 void AEnemyController::OnPossess( APawn* pawn )
 {
-	Super::Possess( pawn );
+	Super::OnPossess( pawn );
+
 
 	// Get ref to character
-	enemyCharacter = enemyCharacter->GetEnemyCharacter( pawn );
+	AEnemyController* enemyController = Cast<AEnemyController>( pawn );
 	if( enemyCharacter )
 	{
 		if( enemyCharacter->behaviourTree->BlackboardAsset )
