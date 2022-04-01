@@ -2,9 +2,7 @@
 
 
 #include "EnemyCharacter.h"
-#include "EnemyController.h"
-#include "BehaviorTree/BehaviorTree.h"
-#include "Perception/PawnSensingComponent.h"
+//#include "EnemyController.h"
 
 //#include "Engine.h".
 
@@ -13,7 +11,6 @@ AEnemyCharacter::AEnemyCharacter()
 	//Initialise senses
 	pawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>( TEXT( "PawnSensingComp" ) );
 	pawnSensingComp->SetPeripheralVisionAngle( 90.0f );
-
 }
 
 AEnemyCharacter::~AEnemyCharacter()
@@ -33,14 +30,20 @@ void AEnemyCharacter::BeginPlay()
 	}
 }
 
+AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
+{
+	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
+	return enemyCharacter;
+}
+
 void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 {
-	// Get ref to player controller
-	AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
+	////// get ref to player controller
+	//aenemycontroller* enemycontroller = cast<aenemycontroller>( getcontroller() );
 
-	if( enemyController )
-	{
-		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "You've been caught!" ) ) );
-		enemyController->SetPlayerCaught( pawn );
-	}
+	//if( enemycontroller )
+	//{
+	//	//gengine->addonscreendebugmessage( -1, 5.0f, fcolor::red, ( text( "you've been caught!" ) ) );
+	//	enemycontroller->setplayercaught( pawn );
+	//}
 }

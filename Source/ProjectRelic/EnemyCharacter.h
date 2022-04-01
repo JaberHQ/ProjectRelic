@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "CharacterManager.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "Perception/PawnSensingComponent.h"
 #include "EnemyCharacter.generated.h"
 
 /**
@@ -28,6 +30,8 @@ public:
 		class UPawnSensingComponent* pawnSensingComp;
 
 	void BeginPlay() override;
+
+	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const; 
 protected:
 
 };

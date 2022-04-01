@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "EnemyCharacter.h"
 #include "EnemyPatrolPoint.h"
+#include "EnemyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -22,7 +22,6 @@ class PROJECTRELIC_API AEnemyController : public AAIController
 
 private:
 
-	virtual void OnPossess( APawn* pawn ) override;
 
 	// Behaviour Tree comp
 	UBehaviorTreeComponent* behaviourComp;
@@ -37,12 +36,11 @@ private:
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName playerKey;
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
-		TArray<AActor*> patrolPoints;
+	AEnemyCharacter* enemyCharacter;
 
+	TArray<AActor*> patrolPoints;
 
-	
-
+	virtual void OnPossess( APawn* pawn ) override;
 protected:
 public:
 	AEnemyController();
@@ -51,7 +49,8 @@ public:
 	void SetPlayerCaught( APawn* pawn );
 
 	// Getters
-	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
-	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
-	int32 currentPatrolPoint = 0;
+	UBlackboardComponent* GetBlackboardComp() const;
+	TArray<AActor*> GetPatrolPoints() const;
+	
+	int currentPatrolPoint = 0;
 };

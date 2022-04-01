@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnemyPatrolPoint.h"
+#include "EnemyController.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "SelectEnemyPatrolPoint.generated.h"

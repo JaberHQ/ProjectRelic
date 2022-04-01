@@ -6,6 +6,10 @@
 
 
 AEnemyController::AEnemyController()
+	:enemyCharacter( nullptr )
+	,currentPatrolPoint( 0 )
+	,locationToGoKey( "locationToGo" )
+	,playerKey( "target" )
 {
 	
 	// BT and BB
@@ -13,16 +17,16 @@ AEnemyController::AEnemyController()
 	blackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
 
 	// BB keys
-	locationToGoKey = "locationToGo";
-	playerKey = "target";
-	currentPatrolPoint = 0;
-
-
+	/*locationToGoKey = "locationToGo";
+	playerKey = "target";*/
+	//currentPatrolPoint = 0;
 }
 
 AEnemyController::~AEnemyController()
 {
-	
+	delete enemyCharacter;
+	enemyCharacter = nullptr;
+
 }
 
 void AEnemyController::SetPlayerCaught( APawn* pawn )
@@ -38,8 +42,7 @@ void AEnemyController::OnPossess( APawn* pawn )
 	Super::Possess( pawn );
 
 	// Get ref to character
-	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
-
+	enemyCharacter = enemyCharacter->GetEnemyCharacter( pawn );
 	if( enemyCharacter )
 	{
 		if( enemyCharacter->behaviourTree->BlackboardAsset )

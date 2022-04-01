@@ -2,8 +2,7 @@
 
 
 #include "SelectEnemyPatrolPoint.h"
-#include "EnemyPatrolPoint.h"
-#include "EnemyController.h"
+
 
 EBTNodeResult::Type USelectEnemyPatrolPoint::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
