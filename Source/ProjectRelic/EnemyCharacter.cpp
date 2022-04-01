@@ -38,7 +38,7 @@ AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
 
 void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 {
-	////// get ref to player controller
+	// get ref to player controller
 	AEnemyController* enemycontroller = Cast<AEnemyController>( GetController() );
 
 	if( enemycontroller )

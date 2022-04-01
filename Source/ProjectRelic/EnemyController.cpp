@@ -3,13 +3,7 @@
 #include "EnemyController.h"
 
 
-
-
 AEnemyController::AEnemyController()
-	:enemyCharacter( nullptr )
-	,locationToGoKey( "locationToGo" )
-	,playerKey( "target" )
-	,currentPatrolPoint( 0 )
 {
 	
 	// BT and BB
@@ -17,9 +11,9 @@ AEnemyController::AEnemyController()
 	blackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
 
 	// BB keys
-	/*locationToGoKey = "locationToGo";
-	playerKey = "target";*/
-	//currentPatrolPoint = 0;
+	locationToGoKey = "locationToGo";
+	playerKey = "target";
+	currentPatrolPoint = 0;
 }
 
 AEnemyController::~AEnemyController()
@@ -39,9 +33,8 @@ void AEnemyController::OnPossess( APawn* pawn )
 {
 	Super::OnPossess( pawn );
 
-
 	// Get ref to character
-	AEnemyController* enemyController = Cast<AEnemyController>( pawn );
+	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
 	if( enemyCharacter )
 	{
 		if( enemyCharacter->behaviourTree->BlackboardAsset )

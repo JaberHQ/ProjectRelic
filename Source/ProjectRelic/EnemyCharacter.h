@@ -31,7 +31,7 @@ public:
 
 	void BeginPlay() override;
 
-	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* Pawn ) const;
+	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const;
 protected:
 
 };

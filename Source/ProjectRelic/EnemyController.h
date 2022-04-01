@@ -36,7 +36,6 @@ private:
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName playerKey;
 
-	AEnemyCharacter* enemyCharacter;
 
 	TArray<AActor*> patrolPoints;
 
