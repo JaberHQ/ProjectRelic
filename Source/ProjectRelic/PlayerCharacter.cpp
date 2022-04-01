@@ -11,9 +11,9 @@ APlayerCharacter::APlayerCharacter()
 }
 
 
-void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
+void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputComponent )
 {
-	Super::SetupPlayerInputComponent( PlayerInputComponent );
+	Super::SetupPlayerInputComponent( playerInputComponent );
 }
 
 

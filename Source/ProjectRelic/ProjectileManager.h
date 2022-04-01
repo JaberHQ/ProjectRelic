@@ -32,28 +32,28 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float deltaTime) override;
 
 	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
-	USphereComponent* CollisionComponent;
+	USphereComponent* collisionComponent;
 
 	// Projectile movement component
 	UPROPERTY( VisibleAnywhere, Category = Movement )
-	UProjectileMovementComponent* ProjectileMovementComponent;
+	UProjectileMovementComponent* projectileMovementComponent;
 
 
 	// Projectile Mesh
 	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
-		UStaticMeshComponent* ProjectileMeshComponent;
+		UStaticMeshComponent* projectileMeshComponent;
 
 	// Projectile Mesh
 	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
-		UMaterialInstanceDynamic* ProjectileMaterialInstance;
+		UMaterialInstanceDynamic* projectileMaterialInstance;
 	
 	// When projectile hits something
 	UFUNCTION()
-		void OnHit( UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit );
+		void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit );
 
 	// Initalise the projectile's velocity 
-	void ShootInDirection( const FVector& ShootDirection );
+	void ShootInDirection( const FVector& shootDirection );
 };

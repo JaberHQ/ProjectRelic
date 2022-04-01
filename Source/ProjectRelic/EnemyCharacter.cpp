@@ -11,8 +11,8 @@
 AEnemyCharacter::AEnemyCharacter()
 {
 	//Initialise senses
-	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>( TEXT( "PawnSensingComp" ) );
-	PawnSensingComp->SetPeripheralVisionAngle( 90.0f );
+	pawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>( TEXT( "PawnSensingComp" ) );
+	pawnSensingComp->SetPeripheralVisionAngle( 90.0f );
 
 }
 
@@ -20,27 +20,27 @@ AEnemyCharacter::~AEnemyCharacter()
 {
 }
 
-void AEnemyCharacter::UpdateWalkSpeed( float ChaseSpeed )
+void AEnemyCharacter::UpdateWalkSpeed( float chaseSpeed )
 {
-	GetCharacterMovement()->MaxWalkSpeed = ChaseSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = chaseSpeed;
 }
 
 void AEnemyCharacter::BeginPlay()
 {
-	if( PawnSensingComp )
+	if( pawnSensingComp )
 	{
-		PawnSensingComp->OnSeePawn.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
+		pawnSensingComp->OnSeePawn.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
 	}
 }
 
-void AEnemyCharacter::OnPlayerCaught( APawn* Pawn )
+void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 {
 	// Get ref to player controller
-	AEnemyController* EnemyController = Cast<AEnemyController>( GetController() );
+	AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
 
-	if( EnemyController )
+	if( enemyController )
 	{
 		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "You've been caught!" ) ) );
-		EnemyController->SetPlayerCaught( Pawn );
+		enemyController->SetPlayerCaught( pawn );
 	}
 }

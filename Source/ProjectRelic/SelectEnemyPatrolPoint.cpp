@@ -5,7 +5,7 @@
 #include "EnemyPatrolPoint.h"
 #include "EnemyController.h"
 
-EBTNodeResult::Type USelectEnemyPatrolPoint::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* NodeMemory )
+EBTNodeResult::Type USelectEnemyPatrolPoint::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
 	AEnemyController* enemyController = Cast<AEnemyController>( ownerComp.GetAIOwner() );
 

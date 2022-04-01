@@ -16,16 +16,16 @@ class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager
 	
 private:
 	UFUNCTION()
-		void OnPlayerCaught( APawn* Pawn );
+		void OnPlayerCaught( APawn* pawn );
 public:
 	AEnemyCharacter();
 	~AEnemyCharacter();
-	void UpdateWalkSpeed( float ChaseSpeed );
+	void UpdateWalkSpeed( float chaseSpeed );
 	UPROPERTY( EditAnywhere, Category = AI )
-		class UBehaviorTree* BehaviourTree;
+		class UBehaviorTree* behaviourTree;
 
 	UPROPERTY( VisibleAnywhere, Category = AI )
-		class UPawnSensingComponent* PawnSensingComp;
+		class UPawnSensingComponent* pawnSensingComp;
 
 	void BeginPlay() override;
 protected:

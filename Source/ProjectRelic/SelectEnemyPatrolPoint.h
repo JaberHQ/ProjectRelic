@@ -15,5 +15,5 @@ class PROJECTRELIC_API USelectEnemyPatrolPoint : public UBTTaskNode
 {
 	GENERATED_BODY()
 
-		virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* NodeMemory ) override;
+		virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
 };

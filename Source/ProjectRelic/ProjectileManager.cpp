@@ -14,35 +14,35 @@ AProjectileManager::AProjectileManager()
 		RootComponent = CreateDefaultSubobject<USceneComponent>( TEXT( "ProjectileSceneComponent" ) );
 	}
 
-	if( !CollisionComponent )
+	if( !collisionComponent )
 	{
 		// Sphere
-		CollisionComponent = CreateDefaultSubobject<USphereComponent>( TEXT( "SphereComponent" ) );
+		collisionComponent = CreateDefaultSubobject<USphereComponent>( TEXT( "SphereComponent" ) );
 		// Sphere collision radius
-		CollisionComponent->InitSphereRadius( 15.0f );
+		collisionComponent->InitSphereRadius( 15.0f );
 		// Set root component to collision component
-		RootComponent = CollisionComponent;
+		RootComponent = collisionComponent;
 	}
 	
-	if( !ProjectileMovementComponent )
+	if( !projectileMovementComponent )
 	{
-		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>( TEXT( "ProjectileMovementComponent" ) );
-		ProjectileMovementComponent->SetUpdatedComponent( CollisionComponent );
-		ProjectileMovementComponent->InitialSpeed = 3000.0f;
-		ProjectileMovementComponent->MaxSpeed = 3000.0f;
-		ProjectileMovementComponent->bRotationFollowsVelocity = true;
-		ProjectileMovementComponent->bShouldBounce = true;
-		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+		projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>( TEXT( "ProjectileMovementComponent" ) );
+		projectileMovementComponent->SetUpdatedComponent( collisionComponent );
+		projectileMovementComponent->InitialSpeed = 3000.0f;
+		projectileMovementComponent->MaxSpeed = 3000.0f;
+		projectileMovementComponent->bRotationFollowsVelocity = true;
+		projectileMovementComponent->bShouldBounce = true;
+		projectileMovementComponent->Bounciness = 0.3f;
+		projectileMovementComponent->ProjectileGravityScale = 0.0f;
 	}
 	
-	if( !ProjectileMeshComponent )
+	if( !projectileMeshComponent )
 	{
-		ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "ProjectileMeshComponent" ) );
+		projectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "ProjectileMeshComponent" ) );
 		static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh( TEXT( "'/Game/Sphere.Sphere'"));
 		if( Mesh.Succeeded() )
 		{
-			ProjectileMeshComponent->SetStaticMesh( Mesh.Object );
+			projectileMeshComponent->SetStaticMesh( Mesh.Object );
 		}
 		else
 		{
@@ -51,20 +51,20 @@ AProjectileManager::AProjectileManager()
 		static ConstructorHelpers::FObjectFinder<UMaterial>Material( TEXT( "'/Game/ProjectRelic/Materials/Bullet/SphereMaterial.SphereMaterial'" ) );
 		if( Material.Succeeded() )
 		{
-			ProjectileMaterialInstance = UMaterialInstanceDynamic::Create( Material.Object, ProjectileMeshComponent );
+			projectileMaterialInstance = UMaterialInstanceDynamic::Create( Material.Object, projectileMeshComponent );
 		}
-		ProjectileMeshComponent->SetMaterial( 0, ProjectileMaterialInstance );
-		ProjectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
-		ProjectileMeshComponent->SetupAttachment( RootComponent );
+		projectileMeshComponent->SetMaterial( 0, projectileMaterialInstance );
+		projectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
+		projectileMeshComponent->SetupAttachment( RootComponent );
 	}
 	//Set Lifespan
 	InitialLifeSpan = 3.0f;
 
 	// Set sphere collision
-	CollisionComponent->BodyInstance.SetCollisionProfileName( TEXT( "Projectile" ) );
+	collisionComponent->BodyInstance.SetCollisionProfileName( TEXT( "Projectile" ) );
 
 	// Collision event
-	CollisionComponent->OnComponentHit.AddDynamic( this, &AProjectileManager::OnHit );
+	collisionComponent->OnComponentHit.AddDynamic( this, &AProjectileManager::OnHit );
 }
 
 // Called when the game starts or when spawned
@@ -75,25 +75,25 @@ void AProjectileManager::BeginPlay()
 }
 
 // Called every frame
-void AProjectileManager::Tick(float DeltaTime)
+void AProjectileManager::Tick(float deltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(deltaTime);
 
 }
 
-void AProjectileManager::OnHit( UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit )
+void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
 {
-	if( OtherActor != this && OtherComponent->IsSimulatingPhysics() )
+	if( otherActor != this && otherComponent->IsSimulatingPhysics() )
 	{
-		OtherComponent->AddImpulseAtLocation( ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint );
+		otherComponent->AddImpulseAtLocation( projectileMovementComponent->Velocity * 100.0f, hit.ImpactPoint );
 	}
 
 	Destroy();
 }
 
-void AProjectileManager::ShootInDirection( const FVector& ShootDirection )
+void AProjectileManager::ShootInDirection( const FVector& shootDirection )
 {
-	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+	projectileMovementComponent->Velocity = shootDirection * projectileMovementComponent->InitialSpeed;
 }
 
 

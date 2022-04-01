@@ -13,25 +13,25 @@ ACharacterManager::ACharacterManager()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Instantiating class components
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
-	CameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
-	GunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
-	ADSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
+	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
+	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
+	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
+	aDSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
 
 	// Set the location and rotation of the Characrer Mesh Transform
 	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
-	CameraComp->SetupAttachment( GetMesh() );
-	CameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
-	CameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
-	CameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
+	cameraComp->SetupAttachment( GetMesh() );
+	cameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	cameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
+	cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
 
-	CameraComp->bUsePawnControlRotation = false;
+	cameraComp->bUsePawnControlRotation = false;
 
-	GunComp->SetupAttachment( GetMesh() );
-	ADSCameraComp->SetupAttachment( GunComp );
-	GunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	gunComp->SetupAttachment( GetMesh() );
+	aDSCameraComp->SetupAttachment( gunComp );
+	gunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
 
 	// Set Gun Position
 
@@ -62,36 +62,36 @@ void ACharacterManager::Tick( float DeltaTime )
 }
 
 // Called to bind functionality to input
-void ACharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
+void ACharacterManager::SetupPlayerInputComponent( UInputComponent* playerInputComponent )
 {
-	Super::SetupPlayerInputComponent( PlayerInputComponent );
+	Super::SetupPlayerInputComponent( playerInputComponent );
 
 	// Movement
-	PlayerInputComponent->BindAxis( "MoveForward", this, &ACharacterManager::MoveForward );
-	PlayerInputComponent->BindAxis( "MoveRight", this, &ACharacterManager::MoveRight );
+	playerInputComponent->BindAxis( "MoveForward", this, &ACharacterManager::MoveForward );
+	playerInputComponent->BindAxis( "MoveRight", this, &ACharacterManager::MoveRight );
 
 	// Mouse rotation
-	PlayerInputComponent->BindAxis( "Turn", this, &APawn::AddControllerYawInput );
-	PlayerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
+	playerInputComponent->BindAxis( "Turn", this, &APawn::AddControllerYawInput );
+	playerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
 
 	// Jump
-	PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
-	PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
+	playerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
+	playerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
 
 	// Crouch
-	PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACharacterManager::BeginCrouch );
-	PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACharacterManager::EndCrouch );
+	playerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACharacterManager::BeginCrouch );
+	playerInputComponent->BindAction( "Crouch", IE_Released, this, &ACharacterManager::EndCrouch );
 
 	// Sprint
-	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACharacterManager::BeginSprint );
-	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACharacterManager::EndSprint );
+	playerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACharacterManager::BeginSprint );
+	playerInputComponent->BindAction( "Sprint", IE_Released, this, &ACharacterManager::EndSprint );
 
 	// Aim
-	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACharacterManager::AimIn );
-	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACharacterManager::AimOut );
+	playerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACharacterManager::AimIn );
+	playerInputComponent->BindAction( "Aim", IE_Released, this, &ACharacterManager::AimOut );
 
 	// Shoot
-	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACharacterManager::Shoot );
+	playerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACharacterManager::Shoot );
 }
 
 
@@ -127,16 +127,12 @@ void ACharacterManager::BeginSprint()
 {
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
-
-
 }
 
 void ACharacterManager::EndSprint()
 {
 	// Set speed
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-
-
 }
 
 void ACharacterManager::BeginCrouch()
@@ -146,40 +142,24 @@ void ACharacterManager::BeginCrouch()
 
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
-
-
 }
 
 void ACharacterManager::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
-
 }
 
 void ACharacterManager::AimIn()
 {
-	//CameraComp->SetRelativeLocation( FVector( -15, 20, 165 ) );
-	/*if( m_holdADS == false )
-	{
-		isAimedIn = true;
-		CameraComp->SetFieldOfView( 70.0f );
-	}*/
-	CameraComp->Deactivate();
-
+	// Deactivate Camera
+	cameraComp->Deactivate();
 }
 
 void ACharacterManager::AimOut()
 {
-	// Reset camera
-	//CameraComp->SetRelativeLocation( FVector( -6.0f, 24.0f, 130.0f ) );
-	/*if( m_holdADS == false )
-	{
-		isAimedIn = false;
-		CameraComp->SetFieldOfView( 90.0f );
-	}*/
-	CameraComp->Activate();
-
+	// Activate Camera
+	cameraComp->Activate();
 }
 
 
@@ -194,36 +174,36 @@ bool ACharacterManager::GetHoldADS()
 
 void ACharacterManager::Shoot()
 {
-	if( ProjectileClass )
+	if( projectileClass )
 	{
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint( CameraLocation, CameraRotation );
+		FVector cameraLocation;
+		FRotator cameraRotation;
+		GetActorEyesViewPoint( cameraLocation, cameraRotation );
 
 		// MuzzleOffset
-		MuzzleOffset.Set( 100.0f, 0.0f, 0.0f );
+		muzzleOffset.Set( 100.0f, 0.0f, 0.0f );
 
 		// Transform Muzzleoffset from camera space to world space
-		FVector MuzzleLocation = CameraLocation + FTransform( CameraRotation ).TransformVector( MuzzleOffset );
+		FVector muzzleLocation = cameraLocation + FTransform( cameraRotation ).TransformVector( muzzleOffset );
 
 		// Skew aim to be upwards
-		FRotator MuzzleRotation = CameraRotation;
-		MuzzleRotation.Pitch += 3.0f;
+		FRotator muzzleRotation = cameraRotation;
+		muzzleRotation.Pitch += 3.0f;
 
-		UWorld* World = GetWorld();
-		if( World )
+		UWorld* world = GetWorld();
+		if( world )
 		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = GetInstigator();
+			FActorSpawnParameters spawnParams;
+			spawnParams.Owner = this;
+			spawnParams.Instigator = GetInstigator();
 
 			// Spawn projectile
-			AProjectileManager* Projectile = World->SpawnActor<AProjectileManager>( ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams );
+			AProjectileManager* projectile = world->SpawnActor<AProjectileManager>( projectileClass, muzzleLocation, muzzleRotation, spawnParams );
 
-			if( Projectile )
+			if( projectile )
 			{
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				Projectile->ShootInDirection( LaunchDirection );
+				FVector launchDirection = muzzleRotation.Vector();
+				projectile->ShootInDirection( launchDirection );
 			}
 		}
 	}

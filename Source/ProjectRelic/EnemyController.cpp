@@ -1,9 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EnemyController.h"
-#include "EnemyCharacter.h"
-#include "EnemyPatrolPoint.h"
-#include <Engine.h>
 
 
 
@@ -12,13 +9,15 @@ AEnemyController::AEnemyController()
 {
 	
 	// BT and BB
-	BehaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
-	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
+	behaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
+	blackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
 
 	// BB keys
 	locationToGoKey = "locationToGo";
 	playerKey = "target";
 	currentPatrolPoint = 0;
+
+
 }
 
 AEnemyController::~AEnemyController()
@@ -28,9 +27,9 @@ AEnemyController::~AEnemyController()
 
 void AEnemyController::SetPlayerCaught( APawn* pawn )
 {
-	if( BlackboardComp )
+	if( blackboardComp )
 	{
-		BlackboardComp->SetValueAsObject( playerKey, pawn );
+		blackboardComp->SetValueAsObject( playerKey, pawn );
 	}
 }
 
@@ -43,21 +42,21 @@ void AEnemyController::OnPossess( APawn* pawn )
 
 	if( enemyCharacter )
 	{
-		if( enemyCharacter->BehaviourTree->BlackboardAsset )
+		if( enemyCharacter->behaviourTree->BlackboardAsset )
 		{
-			BlackboardComp->InitializeBlackboard( *( enemyCharacter->BehaviourTree->BlackboardAsset ) );
+			blackboardComp->InitializeBlackboard( *( enemyCharacter->behaviourTree->BlackboardAsset ) );
 		}
 
 		// Populate patrol point array
 		UGameplayStatics::GetAllActorsOfClass( GetWorld(), AEnemyPatrolPoint::StaticClass(), patrolPoints );
 
-		BehaviourComp->StartTree( *enemyCharacter->BehaviourTree );
+		behaviourComp->StartTree( *enemyCharacter->behaviourTree );
 	}
 }
 
 UBlackboardComponent* AEnemyController::GetBlackboardComp() const
 {
-	return BlackboardComp;
+	return blackboardComp;
 }
 
 TArray<AActor*> AEnemyController::GetPatrolPoints() const

@@ -25,7 +25,7 @@ public:
 		void Shoot();
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
-		FVector MuzzleOffset;
+		FVector muzzleOffset;
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,22 +33,22 @@ protected:
 
 	// Spring Arm Component to follow the camera behind the player
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USpringArmComponent* SpringArmComp;
+		class USpringArmComponent* springArmComp;
 
 	// Player follow camera
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UCameraComponent* CameraComp;
+		class UCameraComponent* cameraComp;
 
 	// Player ADS camera
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UCameraComponent* ADSCameraComp;
+		class UCameraComponent* aDSCameraComp;
 
 	// Gun
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USkeletalMeshComponent* GunComp;
+		class USkeletalMeshComponent* gunComp;
 
 	UPROPERTY( EditDefaultsOnly, Category = Projectile )
-		TSubclassOf<class AProjectileManager> ProjectileClass;
+		TSubclassOf<class AProjectileManager> projectileClass;
 
 	// Input 
 	void MoveForward( float inputAxis );
@@ -71,10 +71,10 @@ protected:
 
 public:
 	// Called every frame
-	virtual void Tick( float DeltaTime ) override;
+	virtual void Tick( float deltaTime ) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
 
 
 };
