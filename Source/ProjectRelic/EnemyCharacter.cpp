@@ -24,6 +24,8 @@ void AEnemyCharacter::UpdateWalkSpeed( float chaseSpeed )
 
 void AEnemyCharacter::BeginPlay()
 {
+	Super::BeginPlay();
+
 	if( pawnSensingComp )
 	{
 		pawnSensingComp->OnSeePawn.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
