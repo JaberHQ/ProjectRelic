@@ -141,12 +141,14 @@ void ACharacterManager::BeginCrouch()
 
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	cameraComp->SetRelativeLocation( FVector( -9.492332, 32.671730, 90 ) );
 }
 
 void ACharacterManager::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
+	cameraComp->SetRelativeLocation( FVector( -9.492332, 32.671730, 162.198380 ) );
 }
 
 void ACharacterManager::AimIn()
