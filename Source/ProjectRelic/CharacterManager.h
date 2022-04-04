@@ -8,6 +8,27 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CharacterManager.generated.h"
 
+/***************************************************************************************
+ * Type: Class
+ *
+ * Name: CharacterManager
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Parent class for characters
+ *
+ * Functions: Shoot(), MoveForward(), MoveRight(), BeginSprint(), EndSprint(),
+ * BeginCrouch(), EndCrouch(), AimIn(), AimOut(),
+ *
+ * References:
+ *
+ * See Also:
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * ----------    --------    -------     ----------------------------------------------
+ ***************************************************************************************/
+
 UCLASS()
 class PROJECTRELIC_API ACharacterManager : public ACharacter
 {
