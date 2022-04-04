@@ -24,10 +24,9 @@ ACharacterManager::ACharacterManager()
 	// Attatch your class Components to the default Skeletal Mesh Component 
 	cameraComp->SetupAttachment( GetMesh() );
 	cameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
-	/*cameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
-	cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );*/
-
-	//cameraComp->bUsePawnControlRotation = false;
+	cameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
+	cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
+	cameraComp->bUsePawnControlRotation = false;
 
 	gunComp->SetupAttachment( GetMesh() );
 	aDSCameraComp->SetupAttachment( gunComp );

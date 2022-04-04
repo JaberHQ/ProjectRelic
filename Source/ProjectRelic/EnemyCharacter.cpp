@@ -45,7 +45,7 @@ void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 
 	if( enemycontroller )
 	{
-		//gengine->addonscreendebugmessage( -1, 5.0f, fcolor::red, ( text( "you've been caught!" ) ) );
+		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "you've been caught!" ) ) );
 		enemycontroller->SetPlayerCaught( pawn );
 	}
 }
