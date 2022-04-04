@@ -18,7 +18,8 @@
  * Purpose: Parent class for characters
  *
  * Functions: Shoot(), MoveForward(), MoveRight(), BeginSprint(), EndSprint(),
- * BeginCrouch(), EndCrouch(), AimIn(), AimOut(),
+ * BeginCrouch(), EndCrouch(), AimIn(), AimOut(), SetHoldADS(), GetHoldADS(),
+ * Tick( float deltaTime ), SetupPlayerInputComponent(), 
  *
  * References:
  *
