@@ -11,6 +11,7 @@ AProjectileManager::AProjectileManager()
 
 	if( !RootComponent )
 	{
+		// Set root component
 		RootComponent = CreateDefaultSubobject<USceneComponent>( TEXT( "ProjectileSceneComponent" ) );
 	}
 
@@ -28,6 +29,7 @@ AProjectileManager::AProjectileManager()
 	
 	if( !projectileMovementComponent )
 	{
+		// Set projectile movement component
 		projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>( TEXT( "ProjectileMovementComponent" ) );
 		projectileMovementComponent->SetUpdatedComponent( collisionComponent );
 		projectileMovementComponent->InitialSpeed = 3000.0f;
@@ -77,14 +79,12 @@ AProjectileManager::AProjectileManager()
 void AProjectileManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AProjectileManager::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
-
 }
 
 void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
