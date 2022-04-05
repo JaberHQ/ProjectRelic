@@ -17,36 +17,33 @@ ACharacterManager::ACharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	aDSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
-	crouchCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CrouchCamera" ) );
-
+	head = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "Head" ) );
 	// Set the location and rotation of the Characrer Mesh Transform
 	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
+
+
 	cameraComp->SetupAttachment( GetMesh() );
-	cameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	cameraComp->AttachTo( GetMesh(), TEXT( "head" ) );
+	//cameraComp->AttachTo( GetMesh(), TEXT( "head" ) );
+	//cameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
 	cameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
 	cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
-	cameraComp->bUsePawnControlRotation = false;
+	cameraComp->bUsePawnControlRotation = true;
 
 	// Gun
 	gunComp->SetupAttachment( GetMesh() );
-	gunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	gunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ) );
 	
 	// ADS Camera
 	aDSCameraComp->SetupAttachment( gunComp );
 	aDSCameraComp->Deactivate();
 
-	// Crouch camera
-	crouchCameraComp->SetupAttachment( GetMesh() );
-	//crouchCameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
-	crouchCameraComp->SetRelativeLocation( FVector( ( -6.898682, 38.375107, 0.000000 ) ) );
-	crouchCameraComp->Deactivate();
-
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	GetCharacterMovement()->bIgnoreBaseRotation = false;
+	GetCharacterMovement()->bIgnoreBaseRotation = true;
 
 	m_holdADS = false;
 
@@ -146,31 +143,19 @@ void ACharacterManager::BeginCrouch()
 {
 	// Crouch function
 	Crouch();
-
-	
-
-	// Switch camera
-	cameraComp->Deactivate();
-	aDSCameraComp->Deactivate();
-	crouchCameraComp->Activate();
 }
 
 void ACharacterManager::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
-
-	// Switch camera
-	cameraComp->Activate();
-	aDSCameraComp->Deactivate();
-	crouchCameraComp->Deactivate();
 }
 
 void ACharacterManager::AimIn()
 {
 	// Deactivate Camera
 	cameraComp->Deactivate();
-	aDSCameraComp->Deactivate();
+	aDSCameraComp->Activate();
 }
 
 void ACharacterManager::AimOut()

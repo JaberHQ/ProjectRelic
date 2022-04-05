@@ -96,16 +96,16 @@ protected:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* aDSCameraComp;
 
-	// Crouch camera
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UCameraComponent* crouchCameraComp;
-
 	// Gun
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* gunComp;
 
 	UPROPERTY( EditDefaultsOnly, Category = Projectile )
 		TSubclassOf<class AProjectileManager> projectileClass;
+
+	// Gun
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USkeletalMeshComponent* head;
 	/********************************************************
 	   *   Function        : void MoveForward()
 	   *   Purpose         :
