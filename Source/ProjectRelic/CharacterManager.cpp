@@ -10,7 +10,7 @@
 ACharacterManager::ACharacterManager()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	// Instantiating class components
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
@@ -32,12 +32,6 @@ ACharacterManager::ACharacterManager()
 	aDSCameraComp->SetupAttachment( gunComp );
 	gunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
 
-	// Set Gun Position
-
-	// Set ADS CameraPosition
-
-
-	//CameraComp->SetupAttachment(SpringArmComp,USpringArmComponent::SocketName);
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -141,6 +135,8 @@ void ACharacterManager::BeginCrouch()
 
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	// Move camera
 	cameraComp->SetRelativeLocation( FVector( -9.492332, 32.671730, 90 ) );
 }
 
@@ -148,6 +144,8 @@ void ACharacterManager::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
+
+	// Move camera
 	cameraComp->SetRelativeLocation( FVector( -9.492332, 32.671730, 162.198380 ) );
 }
 

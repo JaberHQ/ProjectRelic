@@ -35,6 +35,9 @@ class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager
 	GENERATED_BODY()
 	
 private:
+	// Enemy health variable
+	float m_health;
+
 	/**********************************************************
 	   *   Function        : void OnPlayerCaught( APawn* pawn )
 	   *   Purpose         :

@@ -6,8 +6,8 @@
 // Sets default values
 AProjectileManager::AProjectileManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 	// Set this actor to call Tick() every frame.  
+	PrimaryActorTick.bCanEverTick = false;
 
 	if( !RootComponent )
 	{
@@ -18,8 +18,10 @@ AProjectileManager::AProjectileManager()
 	{
 		// Sphere
 		collisionComponent = CreateDefaultSubobject<USphereComponent>( TEXT( "SphereComponent" ) );
+
 		// Sphere collision radius
 		collisionComponent->InitSphereRadius( 15.0f );
+
 		// Set root component to collision component
 		RootComponent = collisionComponent;
 	}
@@ -57,6 +59,7 @@ AProjectileManager::AProjectileManager()
 		projectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
 		projectileMeshComponent->SetupAttachment( RootComponent );
 	}
+
 	//Set Lifespan
 	InitialLifeSpan = 3.0f;
 
@@ -65,6 +68,9 @@ AProjectileManager::AProjectileManager()
 
 	// Collision event
 	collisionComponent->OnComponentHit.AddDynamic( this, &AProjectileManager::OnHit );
+
+	// Set hit bool to false
+	isHit = false;
 }
 
 // Called when the game starts or when spawned
@@ -83,9 +89,16 @@ void AProjectileManager::Tick(float deltaTime)
 
 void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
 {
+	isHit = true;
+
 	if( otherActor != this && otherComponent->IsSimulatingPhysics() )
 	{
 		otherComponent->AddImpulseAtLocation( projectileMovementComponent->Velocity * 100.0f, hit.ImpactPoint );
+	}
+
+	if( isHit = true )
+	{
+		isHit = false;
 	}
 
 	Destroy();
