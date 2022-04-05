@@ -17,19 +17,19 @@ ACharacterManager::ACharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	aDSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
-	head = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "Head" ) );
 	// Set the location and rotation of the Characrer Mesh Transform
-	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
+	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
 
 
 	cameraComp->SetupAttachment( GetMesh() );
 	cameraComp->AttachTo( GetMesh(), TEXT( "head" ) );
+	//cameraComp->attach
 	//cameraComp->AttachTo( GetMesh(), TEXT( "head" ) );
 	//cameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
-	cameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
-	cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
+	//cameraComp->SetRelativeLocation( FVector( 0.0f, 33.0f, 160.0f ) );
+	//cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
 	cameraComp->bUsePawnControlRotation = true;
 
 	// Gun

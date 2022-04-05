@@ -103,9 +103,6 @@ protected:
 	UPROPERTY( EditDefaultsOnly, Category = Projectile )
 		TSubclassOf<class AProjectileManager> projectileClass;
 
-	// Gun
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USkeletalMeshComponent* head;
 	/********************************************************
 	   *   Function        : void MoveForward()
 	   *   Purpose         :
