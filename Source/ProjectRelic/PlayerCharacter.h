@@ -7,21 +7,53 @@
 
 #include "PlayerCharacter.generated.h"
 
-/**
+/*************************************************************************************************
+ * Type: Class
  *
- */
+ * Name: PlayerCharacter
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Child class for the player 
+ *
+ * Functions: APlayerCharacter(), ~APlayerCharacter(), 
+ *   virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
+ *
+ * References:
+ *
+ * See Also:
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 15/03/2022    JA			 1.0         Prototype version
+ **************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 {
 	GENERATED_BODY()
 
-private:
-	
-	
 public:
+	/********************************************************
+	   *   Function        :
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	*********************************************************/
 	APlayerCharacter();
+	/********************************************************
+	   *   Function        :
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	*********************************************************/
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
-
-protected:
 
 };

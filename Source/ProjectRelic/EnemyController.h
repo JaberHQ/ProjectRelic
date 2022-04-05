@@ -11,18 +11,34 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "EnemyController.generated.h"
-
-/**
- * 
- */
+/***************************************************************************************
+ * Type: Class
+ *
+ * Name: EnemyController
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Control the enemy patrol pawn and set its behaviour
+ *
+ * Functions: virtual void OnPossess( APawn* pawn ) override, AEnemyController(),
+ *			  ~AEnemyController(), void SetPlayerCaught( APawn* pawn ), 
+ *			  FORCEINLINE UBlackboardComponent* GetBlackboardComp() const,
+ *			  FORCEINLINE TArray<AActor*> GetPatrolPoints() const
+ *
+ * References:
+ *
+ * See Also:
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 31/03/2022    JA          1.0         Prototype, very basic pathing and vision
+ ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AEnemyController : public AAIController
 {
 	GENERATED_BODY()
 
 private:
-
-
 	// Behaviour Tree comp
 	UBehaviorTreeComponent* behaviourComp;
 
@@ -38,17 +54,74 @@ private:
 
 
 	TArray<AActor*> patrolPoints;
-
+	/**********************************************************************
+	   *   Function        : virtual void OnPossess( APawn* pawn ) override
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         : 
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	***********************************************************************/
 	virtual void OnPossess( APawn* pawn ) override;
-protected:
 public:
+	/********************************************************
+	   *   Function        : AEnemyController()
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	*********************************************************/
 	AEnemyController();
+	/********************************************************
+	   *   Function        : ~AEnemyController()
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	*********************************************************/
 	~AEnemyController();
-	
+	/***********************************************************
+	   *   Function        : void SetPlayerCaught( APawn* pawn )
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	************************************************************/
 	void SetPlayerCaught( APawn* pawn );
 
 	// Getters
+	/***********************************************************************************
+	   *   Function        : FORCEINLINE UBlackboardComponent* GetBlackboardComp() const
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	************************************************************************************/
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
+	/***********************************************************************************
+	   *   Function        : FORCEINLINE TArray<AActor*> GetPatrolPoints() const
+	   *   Purpose         :
+	   *   Parameters      :
+	   *   Returns         :
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           :
+	   *   See also        :
+	***********************************************************************************/
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
 	
 	int32 currentPatrolPoint = 0;
