@@ -96,6 +96,10 @@ protected:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* aDSCameraComp;
 
+	// Crouch camera
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UCameraComponent* crouchCameraComp;
+
 	// Gun
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* gunComp;
@@ -116,13 +120,13 @@ protected:
 	void MoveForward( float inputAxis );
 	/********************************************************
 	   *   Function        : MoveRight()
-	   *   Purpose         :
+	   *   Purpose         : Allow character to move right
 	   *   Parameters      : float inputAxis
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Returns         : N/A
+	   *   Date altered    : 12/03/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	void MoveRight( float inputAxis );
 	/********************************************************
