@@ -179,7 +179,7 @@ void ACharacterManager::Shoot()
 		FRotator cameraRotation;
 		GetActorEyesViewPoint( cameraLocation, cameraRotation );
 
-		// MuzzleOffset
+		// Muzzle offset
 		muzzleOffset.Set( 100.0f, 0.0f, 0.0f );
 
 		// Transform Muzzleoffset from camera space to world space
