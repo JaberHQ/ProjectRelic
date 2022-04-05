@@ -104,8 +104,6 @@ void AProjectileManager::Tick(float deltaTime)
 
 void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
 {
-	// Set is hit to true
-	isHit = true;
 
 	// If other actor is hit and simulating physics
 	if( otherActor != this && otherComponent->IsSimulatingPhysics() )
@@ -113,14 +111,6 @@ void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* other
 		// Set an impulse and shoot object back
 		otherComponent->AddImpulseAtLocation( projectileMovementComponent->Velocity * 100.0f, hit.ImpactPoint );
 	}
-
-	// If is hit is true
-	if( isHit = true )
-	{
-		// Set it back to false
-		isHit = false;
-	}
-
 	// Destroy once hit
 	Destroy();
 }

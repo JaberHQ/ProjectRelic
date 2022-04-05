@@ -35,9 +35,12 @@ EBTNodeResult::Type USelectEnemyPatrolPoint::ExecuteTask( UBehaviorTreeComponent
 			nextPatrolPoint = Cast<AEnemyPatrolPoint>( availablePatrolPoints[ 0 ] );
 			enemyController->currentPatrolPoint = 0;
 		}
+		// Set BB keys
 		blackboardComp->SetValueAsObject( "locationToGo", nextPatrolPoint );
 
+		// Return node has succeeded
 		return EBTNodeResult::Succeeded;
 	}
+	// Return node has failed
 	return EBTNodeResult::Failed;
 }
