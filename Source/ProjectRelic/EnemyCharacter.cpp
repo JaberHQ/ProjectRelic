@@ -59,6 +59,4 @@ void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 		// Shoot at player
 		Shoot();
 	}
-
-	m_projectileManager.OnHit();
 }

@@ -50,6 +50,8 @@ private:
 	**********************************************************/
 	UFUNCTION()
 		void OnPlayerCaught( APawn* pawn );
+
+	AProjectileManager m_projectileManager;
 public:
 	/********************************************************
 	   *   Function        : AEnemyCharacter()

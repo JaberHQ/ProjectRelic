@@ -41,7 +41,8 @@ UCLASS()
 class PROJECTRELIC_API AProjectileManager : public AActor
 {
 	GENERATED_BODY()
-	
+private:
+	bool isHit;
 public:	
 	/********************************************************
 	   *   Function        :

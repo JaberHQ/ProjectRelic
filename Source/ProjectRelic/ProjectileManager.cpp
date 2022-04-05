@@ -42,23 +42,38 @@ AProjectileManager::AProjectileManager()
 	
 	if( !projectileMeshComponent )
 	{
+		// Set projectile mesh component
 		projectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "ProjectileMeshComponent" ) );
+
+		// Set to sphere
 		static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh( TEXT( "'/Game/Sphere.Sphere'"));
+
+		// If the reference to mesh succeeded
 		if( Mesh.Succeeded() )
 		{
+			// Set mesh
 			projectileMeshComponent->SetStaticMesh( Mesh.Object );
 		}
 		else
 		{
+			// Else give error message within log
 			UE_LOG( LogTemp, Warning, TEXT( "BAD PATH" ) );
 		}
+
+		// Reference to material
 		static ConstructorHelpers::FObjectFinder<UMaterial>Material( TEXT( "'/Game/ProjectRelic/Materials/Bullet/SphereMaterial.SphereMaterial'" ) );
+
+		// If reference to material succeeded
 		if( Material.Succeeded() )
 		{
+			// Set material instance
 			projectileMaterialInstance = UMaterialInstanceDynamic::Create( Material.Object, projectileMeshComponent );
 		}
+		// Set material of projectile
 		projectileMeshComponent->SetMaterial( 0, projectileMaterialInstance );
+		// Set scale of projectile
 		projectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
+		// Set attachment of projectile
 		projectileMeshComponent->SetupAttachment( RootComponent );
 	}
 
@@ -89,23 +104,30 @@ void AProjectileManager::Tick(float deltaTime)
 
 void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
 {
+	// Set is hit to true
 	isHit = true;
 
+	// If other actor is hit and simulating physics
 	if( otherActor != this && otherComponent->IsSimulatingPhysics() )
 	{
+		// Set an impulse and shoot object back
 		otherComponent->AddImpulseAtLocation( projectileMovementComponent->Velocity * 100.0f, hit.ImpactPoint );
 	}
 
+	// If is hit is true
 	if( isHit = true )
 	{
+		// Set it back to false
 		isHit = false;
 	}
 
+	// Destroy once hit
 	Destroy();
 }
 
 void AProjectileManager::ShootInDirection( const FVector& shootDirection )
 {
+	// Set direction and velocity of projectile
 	projectileMovementComponent->Velocity = shootDirection * projectileMovementComponent->InitialSpeed;
 }
 
