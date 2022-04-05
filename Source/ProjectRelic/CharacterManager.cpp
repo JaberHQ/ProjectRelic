@@ -17,6 +17,7 @@ ACharacterManager::ACharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	aDSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
+	crouchCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CrouchCamera" ) );
 
 	// Set the location and rotation of the Characrer Mesh Transform
 	GetMesh()->SetRelativeLocationAndRotation( FVector( -6.0f, 24.0f, 130.0f ), FQuat( FRotator( 0.0f, 0.0, 90.0f ) ) );
@@ -28,9 +29,19 @@ ACharacterManager::ACharacterManager()
 	cameraComp->SetRelativeRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
 	cameraComp->bUsePawnControlRotation = false;
 
+	// Gun
 	gunComp->SetupAttachment( GetMesh() );
-	aDSCameraComp->SetupAttachment( gunComp );
 	gunComp->AttachTo( GetMesh(), TEXT( "thumb_01_l" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	
+	// ADS Camera
+	aDSCameraComp->SetupAttachment( gunComp );
+	aDSCameraComp->Deactivate();
+
+	// Crouch camera
+	crouchCameraComp->SetupAttachment( GetMesh() );
+	//crouchCameraComp->AttachTo( GetMesh(), TEXT( "head" ), EAttachLocation::SnapToTargetIncludingScale, true );
+	crouchCameraComp->SetRelativeLocation( FVector( ( -6.898682, 38.375107, 0.000000 ) ) );
+	crouchCameraComp->Deactivate();
 
 	// Setting class variables of the Character movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -38,6 +49,9 @@ ACharacterManager::ACharacterManager()
 	GetCharacterMovement()->bIgnoreBaseRotation = false;
 
 	m_holdADS = false;
+
+	// Set Nav Agent property
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
 // Called when the game starts or when spawned
@@ -133,11 +147,12 @@ void ACharacterManager::BeginCrouch()
 	// Crouch function
 	Crouch();
 
-	// Set Nav Agent property
-	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	
 
-	// Move camera
-	cameraComp->SetRelativeLocation( FVector( -9.492332, 32.671730, 90 ) );
+	// Switch camera
+	cameraComp->Deactivate();
+	aDSCameraComp->Deactivate();
+	crouchCameraComp->Activate();
 }
 
 void ACharacterManager::EndCrouch()
@@ -145,20 +160,24 @@ void ACharacterManager::EndCrouch()
 	// UnCrouch function
 	UnCrouch();
 
-	// Move camera
-	cameraComp->SetRelativeLocation( FVector( -9.492332, 32.671730, 162.198380 ) );
+	// Switch camera
+	cameraComp->Activate();
+	aDSCameraComp->Deactivate();
+	crouchCameraComp->Deactivate();
 }
 
 void ACharacterManager::AimIn()
 {
 	// Deactivate Camera
 	cameraComp->Deactivate();
+	aDSCameraComp->Deactivate();
 }
 
 void ACharacterManager::AimOut()
 {
 	// Activate Camera
 	cameraComp->Activate();
+	aDSCameraComp->Deactivate();
 }
 
 
