@@ -14,6 +14,8 @@ AEnemyCharacter::AEnemyCharacter()
 
 	// Default enemy health
 	m_health = 100.0f;
+
+	UpdateWalkSpeed( 300.0f );
 }
 
 AEnemyCharacter::~AEnemyCharacter()
