@@ -30,7 +30,7 @@ ACharacterManager::ACharacterManager()
 
 	// Gun
 	gunComp->SetupAttachment( GetMesh() );
-	gunComp->AttachTo( GetMesh(), TEXT( "RightHandThumb1" ) );
+	gunComp->GetSocketBoneName( TEXT( "RightHandThumb1" ) );
 	
 	// ADS Camera
 	aDSCameraComp->SetupAttachment( gunComp );
