@@ -15,6 +15,8 @@ AEnemyController::AEnemyController()
 	playerKey = "target";
 	hasLineOfSight = "hasLineOfSight";
 	currentPatrolPoint = 0;
+
+	
 }
 
 AEnemyController::~AEnemyController()
@@ -30,7 +32,12 @@ void AEnemyController::SetPlayerCaught( APawn* pawn )
 	}
 }
 
-bool AEnemyController::GetPlayerCaught()
+void AEnemyController::SetHasLineOfSight( bool boolean )
+{
+	blackboardComp->SetValueAsBool( hasLineOfSight, boolean );
+}
+
+bool AEnemyController::GetHasLineOfSight()
 {
 	return blackboardComp->GetValueAsBool( hasLineOfSight );
 }

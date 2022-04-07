@@ -103,7 +103,8 @@ public:
 	   *   See also        :
 	************************************************************/
 	void SetPlayerCaught( APawn* pawn );
-	bool GetPlayerCaught();
+	void SetHasLineOfSight( bool hasLineOfSight );
+	bool GetHasLineOfSight();
 
 	// Getters
 	/***********************************************************************************
