@@ -25,7 +25,8 @@
  *			  FORCEINLINE UBlackboardComponent* GetBlackboardComp() const,
  *			  FORCEINLINE TArray<AActor*> GetPatrolPoints() const
  *
- * References:
+ * References: Reubs via YouTube, https://www.youtube.com/watch?v=3Z1A825gTA8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=4
+ *				[Accessed: 20th March 2022 | Has been modified]
  *
  * See Also:
  *
@@ -51,6 +52,9 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName playerKey;
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName hasLineOfSight;
 
 
 	TArray<AActor*> patrolPoints;
@@ -99,6 +103,7 @@ public:
 	   *   See also        :
 	************************************************************/
 	void SetPlayerCaught( APawn* pawn );
+	bool GetPlayerCaught();
 
 	// Getters
 	/***********************************************************************************

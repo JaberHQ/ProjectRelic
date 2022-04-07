@@ -17,7 +17,7 @@
  *
  * Functions:
  *
- * References:
+ * References: 
  *
  * See Also:
  *

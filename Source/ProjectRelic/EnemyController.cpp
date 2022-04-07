@@ -13,6 +13,7 @@ AEnemyController::AEnemyController()
 	// BB keys
 	locationToGoKey = "locationToGo";
 	playerKey = "target";
+	hasLineOfSight = "hasLineOfSight";
 	currentPatrolPoint = 0;
 }
 
@@ -28,6 +29,12 @@ void AEnemyController::SetPlayerCaught( APawn* pawn )
 		blackboardComp->SetValueAsObject( playerKey, pawn );
 	}
 }
+
+bool AEnemyController::GetPlayerCaught()
+{
+	return blackboardComp->GetValueAsBool( hasLineOfSight );
+}
+
 
 void AEnemyController::OnPossess( APawn* pawn )
 {

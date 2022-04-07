@@ -38,6 +38,9 @@ private:
 	// Enemy health variable
 	float m_health;
 
+	// Enemy detection timer
+	float detectionTimer;
+
 	/**********************************************************
 	   *   Function        : void OnPlayerCaught( APawn* pawn )
 	   *   Purpose         :
