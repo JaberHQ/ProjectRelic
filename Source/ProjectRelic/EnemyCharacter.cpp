@@ -25,7 +25,7 @@ AEnemyCharacter::AEnemyCharacter()
 	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
 
 	sightConfig->SightRadius = 1000.0f;
-	sightConfig->LoseSightRadius = 3020.0f;
+	sightConfig->LoseSightRadius = 1020.0f;
 	sightConfig->PeripheralVisionAngleDegrees = 360.0f;
 	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
@@ -70,10 +70,11 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& CaughtActors )
 	// Get reference to player controller
 	AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
 	
-	enemyController->SetHasLineOfSight( true );
+	
 	
 	if( enemyController )
 	{	
+		enemyController->SetHasLineOfSight( true );
 		// Debug message
 		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
 			//enemyController->SetPlayerCaught( CaughtActors );
