@@ -6,6 +6,11 @@
 #include "CharacterManager.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Perception/AISense.h"
+#include "Perception/AIPerceptionSystem.h"
+#include "Perception/AIPerceptionComponent.h"
+#include <UObject/ObjectMacros.h>
+#include <Perception/AISenseConfig_Sight.h>
 #include "EnemyCharacter.generated.h"
 
 /***************************************************************************************
@@ -39,7 +44,7 @@ private:
 	float m_health;
 
 	// Enemy detection timer
-	float detectionTimer;
+	float m_detectionTimer;
 
 	/**********************************************************
 	   *   Function        : void OnPlayerCaught( APawn* pawn )
@@ -52,7 +57,7 @@ private:
 	   *   See also        :
 	**********************************************************/
 	UFUNCTION()
-		void OnPlayerCaught( APawn* pawn );
+		void OnPlayerCaught( const TArray<AActor*>& CaughtActors );
 
 public:
 	/********************************************************
@@ -103,8 +108,14 @@ public:
 	UPROPERTY( EditAnywhere, Category = AI )
 		class UBehaviorTree* behaviourTree;
 
+	/*UPROPERTY( VisibleAnywhere, Category = AI )
+		class UPawnSensingComponent* pawnSensingComp;*/
+
 	UPROPERTY( VisibleAnywhere, Category = AI )
-		class UPawnSensingComponent* pawnSensingComp;
+		class UAIPerceptionComponent* perceptionComp;
+
+	UPROPERTY( VisibleAnywhere, Category = AI )
+		class UAISenseConfig_Sight* sightConfig;
 	/*******************************************************************************************
 	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
 	   *   Purpose         :

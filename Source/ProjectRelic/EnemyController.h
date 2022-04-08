@@ -102,7 +102,7 @@ public:
 	   *   Notes           :
 	   *   See also        :
 	************************************************************/
-	void SetPlayerCaught( APawn* pawn );
+	void SetPlayerCaught( const TArray<AActor*> CaughtActors );
 	void SetHasLineOfSight( bool hasLineOfSight );
 	bool GetHasLineOfSight();
 

@@ -7,24 +7,35 @@
 //#include "Engine.h".
 
 AEnemyCharacter::AEnemyCharacter()
+	:m_health( 100.0f )
+	,m_detectionTimer( 0.0f )
+	//,m_timerHandle()
+	//,m_RepeatingCallsRemaining(10)
 {
 	//Initialise senses
-	pawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>( TEXT( "PawnSensingComp" ) );
-	pawnSensingComp->SetPeripheralVisionAngle( 90.0f );
+	/*pawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>( TEXT( "PawnSensingComp" ) );
+	pawnSensingComp->SetPeripheralVisionAngle( 90.0f );*/
 
-	// Default enemy health
-	m_health = 100.0f;
-
+	// Set default walk speed
 	UpdateWalkSpeed( 300.0f );
 
-	detectionTimer = 0.0f;
+	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerception Component" ) );
+	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "Sight Config" ) );
+	perceptionComp->ConfigureSense( *sightConfig );
+	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
 
-	// Set sight raidus
-	pawnSensingComp->SightRadius = 1000.0f;
+	sightConfig->SightRadius = 1000.0f;
+	sightConfig->LoseSightRadius = 3020.0f;
+	sightConfig->PeripheralVisionAngleDegrees = 360.0f;
+	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+
 }
 
 AEnemyCharacter::~AEnemyCharacter()
 {
+	
 }
 
 void AEnemyCharacter::UpdateWalkSpeed( float chaseSpeed )
@@ -37,11 +48,13 @@ void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if( pawnSensingComp )
-	{
-		// If enemy 'senses' player
-		pawnSensingComp->OnSeePawn.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
-	}
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
+
+	//if( pawnSensingComp )
+	//{
+	//	// If enemy 'senses' player
+	//	pawnSensingComp->OnSeePawn.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
+	//}
 }
 
 AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
@@ -50,36 +63,26 @@ AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
 	return enemyCharacter;
 }
 
-void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
+
+
+void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& CaughtActors )
 {
 	// Get reference to player controller
 	AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
-
-	if( pawnSensingComp->SightRadius > GetDistanceTo( pawn ) )
-	{
-		// Set has line of sight = false
-		enemyController->SetHasLineOfSight( true );
-	}
-	else
-	{
-		enemyController->SetHasLineOfSight( false );
-	}
+	
+	enemyController->SetHasLineOfSight( true );
 	
 	if( enemyController )
-	{
-		if( enemyController->GetHasLineOfSight() == true )
-		{
-			// Debug message
-			GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
-
-			// Set bool
-			enemyController->SetPlayerCaught( pawn );
-
+	{	
+		// Debug message
+		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
+			//enemyController->SetPlayerCaught( CaughtActors );
+		UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
 			// Shoot at player
-			Shoot();
-		}
-	}
+		Shoot();
 
+			//UpdateWalkSpeed( 600.0f );				
+	}			
 }
 
 
@@ -99,3 +102,14 @@ void AEnemyCharacter::OnPlayerCaught( APawn* pawn )
 	/*if( detectionTimer >= 5.0f )
 	{
 	}*/
+
+
+	//if( pawnSensingComp->SightRadius >= GetDistanceTo( pawn ) )
+		//{
+		//	// Set has line of sight = false
+		//	enemyController->SetHasLineOfSight( true );
+		//}
+		//else
+		//{
+		//	enemyController->SetHasLineOfSight( false );
+		//}

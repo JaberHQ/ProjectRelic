@@ -24,11 +24,11 @@ AEnemyController::~AEnemyController()
 
 }
 
-void AEnemyController::SetPlayerCaught( APawn* pawn )
+void AEnemyController::SetPlayerCaught( const TArray<AActor*> CaughtActors )
 {
 	if( blackboardComp )
 	{
-		blackboardComp->SetValueAsObject( playerKey, pawn );
+		//blackboardComp->SetValueAsObject( playerKey, CaughtActors );
 	}
 }
 
