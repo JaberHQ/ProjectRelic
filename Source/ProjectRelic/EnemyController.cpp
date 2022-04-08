@@ -24,11 +24,12 @@ AEnemyController::~AEnemyController()
 
 }
 
-void AEnemyController::SetPlayerCaught( const TArray<AActor*> CaughtActors )
+void AEnemyController::SetPlayerCaught( const TArray<AActor*>& CaughtActors )
 {
 	if( blackboardComp )
 	{
-		//blackboardComp->SetValueAsObject( playerKey, CaughtActors );
+		blackboardComp->SetValueAsBool( hasLineOfSight, true );
+		blackboardComp->SetValueAsObject( playerKey, CaughtActors[0]);
 	}
 }
 

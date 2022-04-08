@@ -49,6 +49,7 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
+	
 
 	//if( pawnSensingComp )
 	//{
@@ -77,12 +78,14 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& CaughtActors )
 		enemyController->SetHasLineOfSight( true );
 		// Debug message
 		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
-			//enemyController->SetPlayerCaught( CaughtActors );
+		enemyController->SetPlayerCaught( CaughtActors );
 		UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
 			// Shoot at player
 		Shoot();
 
 			//UpdateWalkSpeed( 600.0f );				
+
+		
 	}			
 }
 
