@@ -11,7 +11,7 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "EnemyController.generated.h"
-/***************************************************************************************
+/******************************************************************************************************************************
  * Type: Class
  *
  * Name: EnemyController
@@ -35,7 +35,7 @@
  * Change Log:
  * Date          Initials    Version     Comments
  * 31/03/2022    JA          1.0         Prototype, very basic pathing and vision
- ***************************************************************************************/
+ ******************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AEnemyController : public AAIController
 {
@@ -55,8 +55,7 @@ private:
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName hasLineOfSight; // Has line of sight bool
 
-
-	TArray<AActor*> patrolPoints;
+	TArray<AActor*> patrolPoints; // Patrol points array
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
 	   *   Purpose         : Possess pawn and control behaviour
