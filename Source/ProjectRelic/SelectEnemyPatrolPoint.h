@@ -9,39 +9,39 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "SelectEnemyPatrolPoint.generated.h"
 
-/***************************************************************************************
+/*****************************************************************************************************************************
  * Type: Class
  *
  * Name: SelectEnemyPatrolPoint
  *
  * Author: Jaber Ahmed
  *
- * Purpose:
+ * Purpose: BB Task for enemy to select node and walk path
  *
- * Functions:
+ * Functions: virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override
  *
  * References: Reubs via YouTube, https://www.youtube.com/watch?v=3Z1A825gTA8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=4
  *				[Accessed: 20th March 2022 | Has been modified]
  *
- * See Also:
+ * See Also: EnemyController
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 1.0     ----------------------------------------------
- ***************************************************************************************/
+ * 31/03/2022    JA			 1.0         
+ *****************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API USelectEnemyPatrolPoint : public UBTTaskNode
 {
 	GENERATED_BODY()
-		/********************************************************
-		   *   Function        :
-		   *   Purpose         :
-		   *   Parameters      :
-		   *   Returns         :
-		   *   Date altered    :
+		/********************************************************************************************************************************
+		   *   Function        : virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override
+		   *   Purpose         : Select enemy patrol point node
+		   *   Parameters      : UBehaviorTreeComponent& ownerComp, uint8* nodeMemory
+		   *   Returns         : EBTNodeResult::Succeeded, EBTNodeResult::Failed
+		   *   Date altered    : 09/04/2022
 		   *   Contributors    : Jaber Ahmed
-		   *   Notes           :
-		   *   See also        :
-		*********************************************************/
+		   *   Notes           : N/A
+		   *   See also        : EnemyController
+		********************************************************************************************************************************/
 		virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
 };

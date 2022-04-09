@@ -4,37 +4,36 @@
 
 
 AEnemyController::AEnemyController()
+	:currentPatrolPoint( 0 )
 {
-	
 	// BT and BB
 	behaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
 	blackboardComp = CreateDefaultSubobject<UBlackboardComponent>( TEXT( "BlackboardComp" ) );
 
-	// BB keys
+	// Set variables to the BB keys
 	locationToGoKey = "locationToGo";
 	playerKey = "target";
 	hasLineOfSight = "hasLineOfSight";
-	currentPatrolPoint = 0;
 
-	
 }
 
 AEnemyController::~AEnemyController()
 {
-
 }
 
-void AEnemyController::SetPlayerCaught( const TArray<AActor*>& CaughtActors )
+void AEnemyController::SetPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	if( blackboardComp )
 	{
+		// Set bool to true and set target to be the Player
 		blackboardComp->SetValueAsBool( hasLineOfSight, true );
-		blackboardComp->SetValueAsObject( playerKey, CaughtActors[0]);
+		blackboardComp->SetValueAsObject( playerKey, caughtActors[ 0 ]);
 	}
 }
 
 void AEnemyController::SetHasLineOfSight( bool boolean )
 {
+	// Set boolean
 	blackboardComp->SetValueAsBool( hasLineOfSight, boolean );
 }
 
@@ -54,12 +53,14 @@ void AEnemyController::OnPossess( APawn* pawn )
 	{
 		if( enemyCharacter->behaviourTree->BlackboardAsset )
 		{
+			// Initialise BB
 			blackboardComp->InitializeBlackboard( *( enemyCharacter->behaviourTree->BlackboardAsset ) );
 		}
 
 		// Populate patrol point array
 		UGameplayStatics::GetAllActorsOfClass( GetWorld(), AEnemyPatrolPoint::StaticClass(), patrolPoints );
 
+		// Initialise BT
 		behaviourComp->StartTree( *enemyCharacter->behaviourTree );
 	}
 }

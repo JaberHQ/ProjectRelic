@@ -5,6 +5,12 @@
 
 // Sets default values
 AProjectileManager::AProjectileManager()
+	:m_sphereRadius( 15.0f )
+	,m_initialSpeed( 3000.0f )
+	,m_maxSpeed( 3000.0f )
+	,m_bounciness( 0.3f )
+	,m_projectileGravityScale( 0.0f )
+	,m_impulse( 100.0f )
 {
  	// Set this actor to call Tick() every frame.  
 	PrimaryActorTick.bCanEverTick = false;
@@ -21,7 +27,7 @@ AProjectileManager::AProjectileManager()
 		collisionComponent = CreateDefaultSubobject<USphereComponent>( TEXT( "SphereComponent" ) );
 
 		// Sphere collision radius
-		collisionComponent->InitSphereRadius( 15.0f );
+		collisionComponent->InitSphereRadius( m_sphereRadius );
 
 		// Set root component to collision component
 		RootComponent = collisionComponent;
@@ -32,12 +38,12 @@ AProjectileManager::AProjectileManager()
 		// Set projectile movement component
 		projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>( TEXT( "ProjectileMovementComponent" ) );
 		projectileMovementComponent->SetUpdatedComponent( collisionComponent );
-		projectileMovementComponent->InitialSpeed = 3000.0f;
-		projectileMovementComponent->MaxSpeed = 3000.0f;
+		projectileMovementComponent->InitialSpeed = m_initialSpeed;
+		projectileMovementComponent->MaxSpeed = m_maxSpeed;
 		projectileMovementComponent->bRotationFollowsVelocity = true;
 		projectileMovementComponent->bShouldBounce = true;
-		projectileMovementComponent->Bounciness = 0.3f;
-		projectileMovementComponent->ProjectileGravityScale = 0.0f;
+		projectileMovementComponent->Bounciness = m_bounciness;
+		projectileMovementComponent->ProjectileGravityScale = m_projectileGravityScale;
 	}
 	
 	if( !projectileMeshComponent )
@@ -69,11 +75,10 @@ AProjectileManager::AProjectileManager()
 			// Set material instance
 			projectileMaterialInstance = UMaterialInstanceDynamic::Create( Material.Object, projectileMeshComponent );
 		}
-		// Set material of projectile
+
+		// Set properties of projectile
 		projectileMeshComponent->SetMaterial( 0, projectileMaterialInstance );
-		// Set scale of projectile
 		projectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
-		// Set attachment of projectile
 		projectileMeshComponent->SetupAttachment( RootComponent );
 	}
 
@@ -87,7 +92,7 @@ AProjectileManager::AProjectileManager()
 	collisionComponent->OnComponentHit.AddDynamic( this, &AProjectileManager::OnHit );
 
 	// Set hit bool to false
-	isHit = false;
+	m_isHit = false;
 }
 
 // Called when the game starts or when spawned
@@ -109,7 +114,7 @@ void AProjectileManager::OnHit( UPrimitiveComponent* hitComponent, AActor* other
 	if( otherActor != this && otherComponent->IsSimulatingPhysics() )
 	{
 		// Set an impulse and shoot object back
-		otherComponent->AddImpulseAtLocation( projectileMovementComponent->Velocity * 100.0f, hit.ImpactPoint );
+		otherComponent->AddImpulseAtLocation( projectileMovementComponent->Velocity * m_impulse, hit.ImpactPoint );
 	}
 	// Destroy once hit
 	Destroy();

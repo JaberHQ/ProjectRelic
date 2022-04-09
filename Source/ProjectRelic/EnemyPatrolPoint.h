@@ -13,17 +13,17 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose:
+ * Purpose: Actor for patrol points for AI to follow
  *
- * Functions:
+ * Functions: N/A
  *
- * References: 
+ * References: N/A
  *
- * See Also:
+ * See Also: SelectEnemyPatrolPoint, EnemyController
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 1.0     ----------------------------------------------
+ * 31/03/2022    JA			 1.0         N/A
  ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AEnemyPatrolPoint : public ATargetPoint

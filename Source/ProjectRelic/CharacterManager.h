@@ -9,6 +9,9 @@
 #include "CharacterManager.generated.h"
 
 /***************************************************************************************
+ * Special thank you to Joseph Gilmore for the headers <3 
+ * 
+ * 
  * Type: Class
  *
  * Name: CharacterManager

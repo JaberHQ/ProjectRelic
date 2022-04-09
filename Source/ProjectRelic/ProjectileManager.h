@@ -18,111 +18,116 @@
 //};
 
 
-/***************************************************************************************
+/*******************************************************************************************************************************************************************
  * Type: Class
  *
  * Name: ProjectileManager
  *
  * Author: Jaber Ahmed
  *
- * Purpose:
+ * Purpose: Projectile manager for characters to shoot 
  *
- * Functions:
+ * Functions: AProjectileManager, ~AProjectileManager, virtual void BeginPlay() override, virtual void Tick( float deltaTime ) override,
+ *			  void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit ),
+ *			  void ShootInDirection( const FVector& shootDirection )
  *
- * References:
+ * References: https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/ProgrammingWithCPP/CPPTutorials/FirstPersonShooter/3/
  *
- * See Also:
+ * See Also: CharacterManager
  *
  * Change Log:
  * Date          Initials    Version     Comments
  * 24/04/2022    JA			 1.0		 
- ***************************************************************************************/
+ *******************************************************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AProjectileManager : public AActor
 {
 	GENERATED_BODY()
 private:
-	bool isHit;
+	bool m_isHit; // Is hit
+	float m_sphereRadius; // Radius of sphere
+	float m_initialSpeed; // Initial projectile speed
+	float m_maxSpeed; // Max projectile speed
+	float m_bounciness; // Projectile bounciness
+	float m_projectileGravityScale; // Porjectile gravity scale
+	float m_impulse; // Impulse multiplier
 public:	
 	/********************************************************
-	   *   Function        :
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Function        : AProjectileManager()
+	   *   Purpose         : Constructor
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	// Sets default values for this actor's properties
 	AProjectileManager();
 
 protected:
 	/********************************************************
-	   *   Function        :
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Function        : virtual void BeginPlay() override
+	   *   Purpose         : On start on play
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	/********************************************************
-	   *   Function        :
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	/*******************************************************************
+	   *   Function        : virtual void Tick(float deltaTime) override
+	   *   Purpose         : Every tick
+	   *   Parameters      : float deltaTime
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
-	*********************************************************/
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	*******************************************************************/
 	// Called every frame
-	virtual void Tick(float deltaTime) override;
+	virtual void Tick( float deltaTime ) override;
 
 	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
-	USphereComponent* collisionComponent;
+	USphereComponent* collisionComponent; // Collision component
 
 	// Projectile movement component
 	UPROPERTY( VisibleAnywhere, Category = Movement )
-	UProjectileMovementComponent* projectileMovementComponent;
+	UProjectileMovementComponent* projectileMovementComponent; // Movement
 
-
-	// Projectile Mesh
 	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
-		UStaticMeshComponent* projectileMeshComponent;
+		UStaticMeshComponent* projectileMeshComponent; // Projectile Mesh
 
-	// Projectile Mesh
 	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
-		UMaterialInstanceDynamic* projectileMaterialInstance;
+		UMaterialInstanceDynamic* projectileMaterialInstance; // Projectile Material
 	
 	
-	/********************************************************
-	   *   Function        :
+	/******************************************************************************************************************************************************************************
+	   *   Function        : void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
 	   *   Purpose         : When projectile hits something
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Parameters      : UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
-	*********************************************************/
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	******************************************************************************************************************************************************************************/
 	UFUNCTION()
 		void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit );
-	/***********************************************************
-	   *   Function        :
+	/******************************************************************************
+	   *   Function        : void ShootInDirection( const FVector& shootDirection )
 	   *   Purpose         : Initalise the projectile's velocity 
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Parameters      : const FVector& shootDirection 
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
-	************************************************************/
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	******************************************************************************/
 	void ShootInDirection( const FVector& shootDirection );
 };

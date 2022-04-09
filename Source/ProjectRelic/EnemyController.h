@@ -23,12 +23,14 @@
  * Functions: virtual void OnPossess( APawn* pawn ) override, AEnemyController(),
  *			  ~AEnemyController(), void SetPlayerCaught( APawn* pawn ), 
  *			  FORCEINLINE UBlackboardComponent* GetBlackboardComp() const,
- *			  FORCEINLINE TArray<AActor*> GetPatrolPoints() const
+ *			  FORCEINLINE TArray<AActor*> GetPatrolPoints() const,
+ *		  	  void SetHasLineOfSight( bool hasLineOfSight ),
+ *			  bool GetHasLineOfSight()
  *
  * References: Reubs via YouTube, https://www.youtube.com/watch?v=3Z1A825gTA8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=4
  *				[Accessed: 20th March 2022 | Has been modified]
  *
- * See Also:
+ * See Also: EnemyCharacter, EnemyController, EnemyPatrolPoint, SelectEnemyPatrolPoint
  *
  * Change Log:
  * Date          Initials    Version     Comments
@@ -40,95 +42,110 @@ class PROJECTRELIC_API AEnemyController : public AAIController
 	GENERATED_BODY()
 
 private:
-	// Behaviour Tree comp
-	UBehaviorTreeComponent* behaviourComp;
-
-	// Blackboard Comp
-	UBlackboardComponent* blackboardComp;
+	UBehaviorTreeComponent* behaviourComp; // Behaviour Tree comp
+	UBlackboardComponent* blackboardComp; // Blackboard Comp
 
 	// BB keys
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName locationToGoKey;
+		FName locationToGoKey; // Patrol location
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName playerKey;
+		FName playerKey; // Target
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName hasLineOfSight;
+		FName hasLineOfSight; // Has line of sight bool
 
 
 	TArray<AActor*> patrolPoints;
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         : 
-	   *   Date altered    :
+	   *   Purpose         : Possess pawn and control behaviour
+	   *   Parameters      : APawn* pawn
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	***********************************************************************/
 	virtual void OnPossess( APawn* pawn ) override;
+
 public:
+	int32 currentPatrolPoint = 0;
 	/********************************************************
 	   *   Function        : AEnemyController()
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Constructor
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	AEnemyController();
 	/********************************************************
 	   *   Function        : ~AEnemyController()
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Deconstructor
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	~AEnemyController();
-	/***********************************************************
-	   *   Function        : void SetPlayerCaught( APawn* pawn )
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	/***********************************************************************************
+	   *   Function        : void SetPlayerCaught( const TArray<AActor*>& caughtActors )
+	   *   Purpose         : Set the target to the player when spotted
+	   *   Parameters      : const TArray<AActor*>& caughtActors
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
-	************************************************************/
-	void SetPlayerCaught( const TArray<AActor*>& CaughtActors );
-	void SetHasLineOfSight( bool hasLineOfSight );
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	***********************************************************************************/
+	void SetPlayerCaught( const TArray<AActor*>& caughtActors );
+	/*****************************************************************************
+		*   Function        : void SetHasLineOfSight( bool hasLineOfSight )
+		*   Purpose         : Set BB key boolean
+		*   Parameters      : bool boolean
+		*   Returns         : N/A
+		*   Date altered    : 09/04/2022
+		*   Contributors    : Jaber Ahmed
+		*   Notes           : N/A
+		*   See also        : N/A
+	*****************************************************************************/
+	void SetHasLineOfSight( bool boolean );
+	/*****************************************************************************
+		*   Function        : bool GetHasLineOfSight()
+		*   Purpose         : Get BB key hasLineOfSight
+		*   Parameters      : N/A
+		*   Returns         : hasLineOfSight
+		*   Date altered    : 09/04/2022
+		*   Contributors    : Jaber Ahmed
+		*   Notes           : N/A
+		*   See also        : N/A
+	*****************************************************************************/
 	bool GetHasLineOfSight();
-
-	// Getters
 	/***********************************************************************************
 	   *   Function        : FORCEINLINE UBlackboardComponent* GetBlackboardComp() const
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Get blackboard component
+	   *   Parameters      : N/A
+	   *   Returns         : blackboardComp
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	************************************************************************************/
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
 	/***********************************************************************************
 	   *   Function        : FORCEINLINE TArray<AActor*> GetPatrolPoints() const
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Get array of patrol points
+	   *   Parameters      : N/A 
+	   *   Returns         : patrolPoints
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	***********************************************************************************/
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
-	
-	int32 currentPatrolPoint = 0;
 };

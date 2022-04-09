@@ -22,17 +22,19 @@
  *
  * Purpose: Child class for enemy patrol
  *
- * Functions: OnPlayerCaught( APawn* pawn ), AEnemyCharacter(), ~AEnemyCharacter(), 
- *			  UpdateWalkSpeed( float chaseSpeed ), void BeginPlay() override, 
+ * Functions: OnPlayerCaught( const TArray<AActor*>& CaughtActors ), AEnemyCharacter(),
+ *			  ~AEnemyCharacter(), UpdateWalkSpeed( float chaseSpeed ), 
+ *			  void BeginPlay() override, 
  *			  AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
  *
- * References:
+ * References: N/A
  *
- * See Also:
+ * See Also: EnemyController, EnemyPatrolPoint, SelectEnemyPatrolPoint, ProjectileManager
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 1.0     ----------------------------------------------
+ * 31/03/2022    JA			 1.0         Pawn sense component
+ * 09/04/2022	 JA			 1.1		 AI Perception component			
  ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager
@@ -40,76 +42,78 @@ class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager
 	GENERATED_BODY()
 	
 private:
-	// Enemy health variable
-	float m_health;
+	
+	float m_health; // health variable
+	float m_detectionTimer; // detection timer
+	float m_sightRadius; // Sight radius
+	float m_loseSightRadius; // Lose sight radius
+	float m_peripheralVisionAngleDegrees; // Peripheral vision
 
-	// Enemy detection timer
-	float m_detectionTimer;
+	float m_patrolSpeed; // Enemy walk (patrol) speed
+	float m_chaseSpeed; // Enemy run (chase) speed
 
-	/**********************************************************
-	   *   Function        : void OnPlayerCaught( APawn* pawn )
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+
+	/**********************************************************************************
+	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
+	   *   Purpose         : What to do when enemy has seen an actor
+	   *   Parameters      : const TArray<AActor*>& CaughtActors
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
-	**********************************************************/
+	   *   Notes           : N/A
+	   *   See also        : EnemyController
+	**********************************************************************************/
 	UFUNCTION()
-		void OnPlayerCaught( const TArray<AActor*>& CaughtActors );
+		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
 
 public:
 	/********************************************************
 	   *   Function        : AEnemyCharacter()
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Constructor
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	AEnemyCharacter();
 	/********************************************************
 	   *   Function        : ~AEnemyCharacter()
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Deconstructor
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	~AEnemyCharacter();
 	/****************************************************************
 	   *   Function        : void UpdateWalkSpeed( float chaseSpeed )
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Increase or decrease enemy walk speed
+	   *   Parameters      : float chaseSpeed
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*****************************************************************/
 	void UpdateWalkSpeed( float chaseSpeed );
 	/********************************************************
 	   *   Function        : void BeginPlay() override
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : On start of play
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*********************************************************/
 	void BeginPlay() override;
 
 	UPROPERTY( EditAnywhere, Category = AI )
 		class UBehaviorTree* behaviourTree;
-
-	/*UPROPERTY( VisibleAnywhere, Category = AI )
-		class UPawnSensingComponent* pawnSensingComp;*/
 
 	UPROPERTY( VisibleAnywhere, Category = AI )
 		class UAIPerceptionComponent* perceptionComp;
@@ -118,13 +122,13 @@ public:
 		class UAISenseConfig_Sight* sightConfig;
 	/*******************************************************************************************
 	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
-	   *   Purpose         :
-	   *   Parameters      :
-	   *   Returns         :
-	   *   Date altered    :
+	   *   Purpose         : Getter for the enemy character
+	   *   Parameters      : APawn* pawn
+	   *   Returns         : enemyCharacter
+	   *   Date altered    : 09/04/2022
 	   *   Contributors    : Jaber Ahmed
-	   *   Notes           :
-	   *   See also        :
+	   *   Notes           : N/A
+	   *   See also        : N/A
 	*******************************************************************************************/
 	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const;
 };
