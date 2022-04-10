@@ -39,11 +39,7 @@ AEnemyCharacter::~AEnemyCharacter()
 {	
 }
 
-void AEnemyCharacter::UpdateWalkSpeed( float chaseSpeed )
-{
-	// Set walk speed
-	GetCharacterMovement()->MaxWalkSpeed = chaseSpeed;
-}
+
 
 void AEnemyCharacter::BeginPlay()
 {

@@ -89,17 +89,7 @@ public:
 	   *   See also        : N/A
 	*********************************************************/
 	~AEnemyCharacter();
-	/****************************************************************
-	   *   Function        : void UpdateWalkSpeed( float chaseSpeed )
-	   *   Purpose         : Increase or decrease enemy walk speed
-	   *   Parameters      : float chaseSpeed
-	   *   Returns         : N/A
-	   *   Date altered    : 09/04/2022
-	   *   Contributors    : Jaber Ahmed
-	   *   Notes           : N/A
-	   *   See also        : N/A
-	*****************************************************************/
-	void UpdateWalkSpeed( float chaseSpeed );
+	
 	/********************************************************
 	   *   Function        : void BeginPlay() override
 	   *   Purpose         : On start of play

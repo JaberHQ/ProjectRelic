@@ -8,6 +8,11 @@
 
 // Sets default values
 ACharacterManager::ACharacterManager()
+	:m_holdADS( false )
+	,m_muzzleRotationPitch( 3.0f )
+	,m_walkSpeed( 600.0f )
+	,m_sprintSpeed( 1000.0f )
+	,m_crouchSpeed( 300.0f )
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -17,6 +22,7 @@ ACharacterManager::ACharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	aDSCameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "ADSCameraComp" ) );
+
 	// Set the location and rotation of the Characrer Mesh Transform
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
@@ -40,8 +46,6 @@ ACharacterManager::ACharacterManager()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bIgnoreBaseRotation = true;
-
-	m_holdADS = false;
 
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
@@ -126,25 +130,27 @@ void ACharacterManager::MoveRight( float inputAxis )
 void ACharacterManager::BeginSprint()
 {
 	// Set speed
-	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
+	GetCharacterMovement()->MaxWalkSpeed = m_sprintSpeed;
 }
 
 void ACharacterManager::EndSprint()
 {
 	// Set speed
-	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	GetCharacterMovement()->MaxWalkSpeed = m_walkSpeed;
 }
 
 void ACharacterManager::BeginCrouch()
 {
 	// Crouch function
 	Crouch();
+
 }
 
 void ACharacterManager::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
+
 }
 
 void ACharacterManager::AimIn()
@@ -161,6 +167,11 @@ void ACharacterManager::AimOut()
 	aDSCameraComp->Deactivate();
 }
 
+void ACharacterManager::UpdateWalkSpeed( float speed )
+{
+	// Set walk speed
+	GetCharacterMovement()->MaxWalkSpeed = speed;
+}
 
 void ACharacterManager::SetHoldADS( bool holdADS )
 {
@@ -187,7 +198,7 @@ void ACharacterManager::Shoot()
 
 		// Skew aim to be upwards
 		FRotator muzzleRotation = cameraRotation;
-		muzzleRotation.Pitch += 3.0f;
+		muzzleRotation.Pitch += m_muzzleRotationPitch;
 
 		UWorld* world = GetWorld();
 		if( world )
