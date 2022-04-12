@@ -11,7 +11,7 @@ AEnemyCharacter::AEnemyCharacter()
 	,m_detectionTimer( 0.0f )	
 	,m_sightRadius( 1000.0f )
 	,m_loseSightRadius( 1020.0f )
-	,m_peripheralVisionAngleDegrees( 90.0f )
+	,m_peripheralVisionAngleDegrees( 35.0f )
 	,m_patrolSpeed( 300.0f )
 	,m_chaseSpeed( 600.0f )
 {

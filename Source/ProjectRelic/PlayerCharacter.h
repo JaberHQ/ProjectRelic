@@ -55,5 +55,7 @@ public:
 	   *   See also        :
 	*********************************************************/
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
+	
+	virtual void Takedown();
 
 };

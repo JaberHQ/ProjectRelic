@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "ProjectileManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Math/Vector.h"
 #include "CharacterManager.generated.h"
 
 /***************************************************************************************
@@ -91,6 +93,8 @@ protected:
 	*********************************************************/
 	virtual void BeginPlay() override;
 	
+
+
 	// Spring Arm Component to follow the camera behind the player
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp;
@@ -109,6 +113,11 @@ protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = Projectile )
 		TSubclassOf<class AProjectileManager> projectileClass;
+
+
+	
+
+
 
 	/********************************************************
 	   *   Function        : void MoveForward()
@@ -202,6 +211,17 @@ protected:
 	*********************************************************/
 	void AimOut();
 	/********************************************************
+	   *   Function        : Takedown
+	   *   Purpose         : Melee takedown the enemy
+	   *   Parameters      :
+	   *   Returns         : N/A
+	   *   Date altered    :
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	*********************************************************/
+	void Takedown();
+	/********************************************************
 	   *   Function        : void SetHoldADS()
 	   *   Purpose         :
 	   *   Parameters      : bool holdADS 
@@ -234,6 +254,10 @@ protected:
 	   *   See also        : N/A
 	*****************************************************************/
 	void UpdateWalkSpeed( float speed );
+
+	void TakedownTrace();
+
+
 public:
 	/*********************************************************************
 	   *   Function        : virtual void Tick( float deltaTime ) override
@@ -258,5 +282,5 @@ public:
 	***********************************************************************************************************************/
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
 
-
+	void LineTrace();
 };

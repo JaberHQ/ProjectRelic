@@ -15,7 +15,7 @@ ACharacterManager::ACharacterManager()
 	,m_crouchSpeed( 300.0f )
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	// Instantiating class components
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
@@ -49,6 +49,8 @@ ACharacterManager::ACharacterManager()
 
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -96,6 +98,26 @@ void ACharacterManager::SetupPlayerInputComponent( UInputComponent* playerInputC
 
 	// Shoot
 	playerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACharacterManager::Shoot );
+
+	// Takedown
+	playerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACharacterManager::Takedown );
+}
+
+void ACharacterManager::LineTrace()
+{
+	// Line tracing
+	FVector Loc;
+	FRotator Rot;
+	FHitResult Hit;
+
+	GetController()->GetPlayerViewPoint( Loc, Rot );
+	FVector Start = Loc;
+	FVector End = Start + ( Rot.Vector() * 2000.0f );
+
+	FCollisionQueryParams TraceParams;
+	GetWorld()->LineTraceSingleByChannel( Hit, Start, End, ECC_Visibility, TraceParams );
+
+	DrawDebugLine( GetWorld(), Start, End, FColor::Red, false, 2.0f );
 }
 
 
@@ -125,6 +147,44 @@ void ACharacterManager::MoveRight( float inputAxis )
 		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
 		AddMovementInput( Direction, inputAxis );
 	}
+}
+
+void ACharacterManager::Takedown()
+{
+
+	// Line tracing
+	FVector Loc;
+	FRotator Rot;
+	FHitResult Hit;
+
+	GetController()->GetPlayerViewPoint( Loc, Rot );
+	FVector Start = Loc;
+	FVector End = Start + ( Rot.Vector() * 2000.0f );
+
+	FCollisionQueryParams TraceParams;
+	GetWorld()->LineTraceSingleByChannel( Hit, Start, End, ECC_Camera, TraceParams );
+
+	DrawDebugLine( GetWorld(), Start, End, FColor::Red, false, 2.0f );
+
+	if( Hit.GetActor() != NULL )
+	{
+		float m_dotProduct = FVector::DotProduct( Hit.GetActor()->GetActorForwardVector(), GetActorForwardVector() );
+		
+		// A = dot product
+		float B = 1.0f; // Close to 1
+		float m_errorTolerance = 0.1f; // Error tolerance
+
+		if( FMath::IsNearlyEqual( m_dotProduct, B, m_errorTolerance ) )
+		{
+			//FString timerString = FString::SanitizeFloat( Hit.GetActor()->GetName );
+			GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, Hit.GetActor()->GetName() );
+		}
+	}
+
+	
+
+	
+	
 }
 
 void ACharacterManager::BeginSprint()
@@ -171,6 +231,11 @@ void ACharacterManager::UpdateWalkSpeed( float speed )
 {
 	// Set walk speed
 	GetCharacterMovement()->MaxWalkSpeed = speed;
+}
+
+void ACharacterManager::TakedownTrace()
+{
+
 }
 
 void ACharacterManager::SetHoldADS( bool holdADS )
