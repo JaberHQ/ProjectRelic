@@ -14,6 +14,8 @@ AEnemyCharacter::AEnemyCharacter()
 	,m_peripheralVisionAngleDegrees( 35.0f )
 	,m_patrolSpeed( 300.0f )
 	,m_chaseSpeed( 600.0f )
+	,m_canTakedown( true )
+	//,m_pCombatInterface( nullptr )
 {
 	// Set default walk speed
 	UpdateWalkSpeed( m_patrolSpeed );
@@ -33,10 +35,13 @@ AEnemyCharacter::AEnemyCharacter()
 	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	sightConfig->DetectionByAffiliation.bDetectFriendlies = false;
+
 }
 
 AEnemyCharacter::~AEnemyCharacter()
 {	
+	//delete[] m_combatInterface;
+	//m_combatInterface = nullptr;
 }
 
 
@@ -53,6 +58,13 @@ AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
 {
 	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
 	return enemyCharacter;
+}
+
+
+
+bool AEnemyCharacter::GetCanTakedown()
+{
+	return m_canTakedown;
 }
 
 void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
@@ -81,6 +93,8 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 
 
+
+
 /*if( enemycontroller->GetPlayerCaught() == false && detectionTimer > 0 )
 	{
 		detectionTimer -= 1.0f;
@@ -99,11 +113,11 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 
 	//if( pawnSensingComp->SightRadius >= GetDistanceTo( pawn ) )
-		//{
+	//{
 		//	// Set has line of sight = false
 		//	enemyController->SetHasLineOfSight( true );
 		//}
 		//else
 		//{
 		//	enemyController->SetHasLineOfSight( false );
-		//}
+	//}

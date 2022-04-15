@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Math/Vector.h"
+
 #include "CharacterManager.generated.h"
 
 /***************************************************************************************
@@ -80,7 +81,8 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
 		FVector muzzleOffset;
 
-protected:
+	
+public:
 	/********************************************************
 	   *   Function        : virtual void BeginPlay() override
 	   *   Purpose         : Called when the game starts or when spawned
@@ -113,11 +115,6 @@ protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = Projectile )
 		TSubclassOf<class AProjectileManager> projectileClass;
-
-
-	
-
-
 
 	/********************************************************
 	   *   Function        : void MoveForward()
@@ -220,7 +217,7 @@ protected:
 	   *   Notes           : N/A
 	   *   See also        : N/A
 	*********************************************************/
-	void Takedown();
+	virtual void Takedown();
 	/********************************************************
 	   *   Function        : void SetHoldADS()
 	   *   Purpose         :
@@ -280,7 +277,7 @@ public:
 	   *   Notes           : N/A
 	   *   See also        : N/A
 	***********************************************************************************************************************/
-	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
+	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent );
 
 	void LineTrace();
 };

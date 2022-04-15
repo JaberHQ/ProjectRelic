@@ -54,8 +54,9 @@ public:
 	   *   Notes           :
 	   *   See also        :
 	*********************************************************/
-	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
-	
-	virtual void Takedown();
+	void Takedown();
 
+	void MoveForward( float inputAxis );
+
+	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
 };

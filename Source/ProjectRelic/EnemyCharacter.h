@@ -11,6 +11,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include <UObject/ObjectMacros.h>
 #include <Perception/AISenseConfig_Sight.h>
+#include "CombatInterface.h"
 #include "EnemyCharacter.generated.h"
 
 /***************************************************************************************
@@ -37,7 +38,7 @@
  * 09/04/2022	 JA			 1.1		 AI Perception component			
  ***************************************************************************************/
 UCLASS()
-class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager
+class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager, public ICombatInterface
 {
 	GENERATED_BODY()
 	
@@ -51,8 +52,11 @@ private:
 
 	float m_patrolSpeed; // Enemy walk (patrol) speed
 	float m_chaseSpeed; // Enemy run (chase) speed
+	
+	bool m_canTakedown;
 
-
+	// Reference to interface
+	//TUniquePtr<ICombatInterface> m_pCombatInterface = MakeUnique<ICombatInterface>();
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
 	   *   Purpose         : What to do when enemy has seen an actor
@@ -67,6 +71,7 @@ private:
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
 
 public:
+
 	/********************************************************
 	   *   Function        : AEnemyCharacter()
 	   *   Purpose         : Constructor
@@ -121,4 +126,8 @@ public:
 	   *   See also        : N/A
 	*******************************************************************************************/
 	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const;
+
+
+	bool GetCanTakedown() override;
+	
 };
