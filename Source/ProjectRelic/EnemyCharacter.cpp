@@ -60,12 +60,17 @@ AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
 	return enemyCharacter;
 }
 
-
-
-bool AEnemyCharacter::GetCanTakedown()
+bool AEnemyCharacter::CanTakedown()
 {
 	return m_canTakedown;
 }
+
+void AEnemyCharacter::Interact()
+{
+	UE_LOG( LogTemp, Warning, TEXT( "Implementation" ) );
+}
+
+
 
 void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {

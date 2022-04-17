@@ -23,8 +23,11 @@ class PROJECTRELIC_API ICombatInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 private:
 public:
-	ICombatInterface();
+	
 	UFUNCTION()
-		virtual bool GetCanTakedown() = 0;
+		virtual bool CanTakedown() = 0;
+	
+	UFUNCTION()
+		virtual void Interact() = 0;
 	
 };

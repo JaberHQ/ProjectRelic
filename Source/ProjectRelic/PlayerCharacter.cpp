@@ -2,13 +2,17 @@
 
 
 #include "PlayerCharacter.h"
-#include "EnemyCharacter.h"
 
+#include "EnemyController.h"
 APlayerCharacter::APlayerCharacter()
 {
 }
 
-void APlayerCharacter::Takedown()
+APlayerCharacter::~APlayerCharacter()
+{
+}
+
+void APlayerCharacter::TakedownTrace()
 {
 	// Line tracing
 	FVector Loc;
@@ -24,11 +28,6 @@ void APlayerCharacter::Takedown()
 
 	DrawDebugLine( GetWorld(), Start, End, FColor::Red, false, 2.0f );
 
-
-
-	
-
-
 	if( Hit.GetActor() != NULL )
 	{
 		float m_dotProduct = FVector::DotProduct( Hit.GetActor()->GetActorForwardVector(), GetActorForwardVector() );
@@ -40,18 +39,52 @@ void APlayerCharacter::Takedown()
 		if( FMath::IsNearlyEqual( m_dotProduct, B, m_errorTolerance ) )
 		{
 			
-			GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, Hit.GetActor()->GetName() );
-			
-			if( bHit )
+			ICombatInterface* Interface = Cast<ICombatInterface>( Hit.GetActor() );
+			if( Interface )
 			{
-				if( Hit.GetActor()->GetClass()->ImplementsInterface( UCombatInterface::StaticClass() ) )
+				if( Interface->CanTakedown() == true )
 				{
-					ICombatInterface::execCanTakedown();
+					// Debug
+					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, Hit.GetActor()->GetName() );
+					
+					// HUD ------
+
+					// Takedown action
+					//Takedown(); ---
+
+					// Players Location
+					FVector playerLocation = GetActorLocation() + ( GetActorForwardVector() * -50.0f );
+
+					//DisableInput( playerController);
+					//DisableInput( ThirdPersonPlayerController )
+					
+					// Unpossess pawn from Controller
+					UnPossessed();
+
+					
+					// AI controller 
+					AAIController* controllerAI = Cast<AEnemyController>( GetController() );
+
+					// Possess Pawn from AI Controller
+					PossessedBy( controllerAI );
+
+					// Move to playerLocation
+					SetActorLocation( playerLocation );
+
 				}
 			}
-			
 		}
 	}
+}
+
+void APlayerCharacter::Takedown()
+{
+	
+	
+}
+
+void APlayerCharacter::PrepareTakedown()
+{
 }
 
 
@@ -59,7 +92,7 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputCo
 {
 	Super::SetupPlayerInputComponent( playerInputComponent );
 
-	playerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &APlayerCharacter::Takedown );
+	playerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &APlayerCharacter::TakedownTrace );
 }
 
 

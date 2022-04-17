@@ -128,6 +128,7 @@ public:
 	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const;
 
 
-	bool GetCanTakedown() override;
+	bool CanTakedown() override;
 	
+	void Interact() override;
 };

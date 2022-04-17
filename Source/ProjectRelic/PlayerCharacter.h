@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CharacterManager.h"
-
+#include "EnemyCharacter.h"
 #include "PlayerCharacter.generated.h"
 
 /*************************************************************************************************
@@ -31,7 +31,7 @@ UCLASS()
 class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 {
 	GENERATED_BODY()
-
+private:
 public:
 	/********************************************************
 	   *   Function        :
@@ -44,6 +44,10 @@ public:
 	   *   See also        :
 	*********************************************************/
 	APlayerCharacter();
+
+
+	~APlayerCharacter();
+
 	/********************************************************
 	   *   Function        :
 	   *   Purpose         :
@@ -54,9 +58,13 @@ public:
 	   *   Notes           :
 	   *   See also        :
 	*********************************************************/
+	void TakedownTrace();
+
 	void Takedown();
 
-	void MoveForward( float inputAxis );
+	void PrepareTakedown();
+
+	
 
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
 };
