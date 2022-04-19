@@ -32,6 +32,7 @@ class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 {
 	GENERATED_BODY()
 private:
+	
 public:
 	/********************************************************
 	   *   Function        :

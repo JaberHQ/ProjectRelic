@@ -147,4 +147,7 @@ public:
 	   *   See also        : N/A
 	***********************************************************************************/
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
+
+	//void UnPossess();
+
 };
