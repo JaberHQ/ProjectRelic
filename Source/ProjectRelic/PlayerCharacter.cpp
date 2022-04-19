@@ -4,7 +4,9 @@
 #include "PlayerCharacter.h"
 
 #include "EnemyController.h"
+
 APlayerCharacter::APlayerCharacter()
+
 {
 }
 
@@ -14,72 +16,60 @@ APlayerCharacter::~APlayerCharacter()
 
 void APlayerCharacter::TakedownTrace()
 {
-	// Line tracing
-	FVector Loc;
-	FRotator Rot;
-	FHitResult Hit;
+	//// Line tracing
+	//FVector Loc;
+	//FRotator Rot;
+	//FHitResult Hit;
 
-	GetController()->GetPlayerViewPoint( Loc, Rot );
-	FVector Start = Loc;
-	FVector End = Start + ( Rot.Vector() * 2000.0f );
+	//GetController()->GetPlayerViewPoint( Loc, Rot );
+	//FVector Start = Loc;
+	//FVector End = Start + ( Rot.Vector() * 2000.0f );
 
-	FCollisionQueryParams TraceParams;
-	bool bHit = GetWorld()->LineTraceSingleByChannel( Hit, Start, End, ECC_Camera, TraceParams );
+	//FCollisionQueryParams TraceParams;
+	//bool bHit = GetWorld()->LineTraceSingleByChannel( Hit, Start, End, ECC_Camera, TraceParams );
 
-	DrawDebugLine( GetWorld(), Start, End, FColor::Red, false, 2.0f );
+	//DrawDebugLine( GetWorld(), Start, End, FColor::Red, false, 2.0f );
 
-	if( Hit.GetActor() != NULL )
-	{
-		float m_dotProduct = FVector::DotProduct( Hit.GetActor()->GetActorForwardVector(), GetActorForwardVector() );
+	//if( Hit.GetActor() != NULL )
+	//{
+	//	float m_dotProduct = FVector::DotProduct( Hit.GetActor()->GetActorForwardVector(), GetActorForwardVector() );
 
-		// A = dot product
-		float B = 1.0f; // Close to 1
-		float m_errorTolerance = 0.1f; // Error tolerance
+	//	// A = dot product
+	//	float B = 1.0f; // Close to 1
+	//	float m_errorTolerance = 0.1f; // Error tolerance
 
-		if( FMath::IsNearlyEqual( m_dotProduct, B, m_errorTolerance ) )
-		{
-			
-			ICombatInterface* Interface = Cast<ICombatInterface>( Hit.GetActor() );
-			if( Interface )
-			{
-				if( Interface->CanTakedown() == true )
-				{
-					// Debug
-					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, Hit.GetActor()->GetName() );
-					
-					// HUD ------
+	//	if( FMath::IsNearlyEqual( m_dotProduct, B, m_errorTolerance ) )
+	//	{
+	//		
+	//		ICombatInterface* Interface = Cast<ICombatInterface>( Hit.GetActor() );
+	//		if( Interface )
+	//		{
+	//			if( Interface->CanTakedown() == true )
+	//			{
+	//				// Debug
+	//				GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, Hit.GetActor()->GetName() );
+	//				AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
 
-					// Takedown action
-					//Takedown(); ---
 
-					// Players Location
-					FVector playerLocation = GetActorLocation() + ( GetActorForwardVector() * -50.0f );
+	//				FVector playerLocation = Hit.GetActor()->GetActorLocation() + ( Hit.GetActor()->GetActorForwardVector() * -50.0f );
+	//				
+	//				PossessedBy( enemyController );
+	//				//enemyController->MoveToLocation( playerLocation );
 
-					//DisableInput( playerController);
-					//DisableInput( ThirdPersonPlayerController )
-					
-					// Unpossess pawn from Controller
-					UnPossessed();
+	//				//AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
 
-					
-					// AI controller 
-					AAIController* controllerAI = Cast<AEnemyController>( GetController() );
+	//				//enemyCharacter->UnPossessed();
 
-					// Possess Pawn from AI Controller
-					PossessedBy( controllerAI );
 
-					// Move to playerLocation
-					SetActorLocation( playerLocation );
-
-				}
-			}
-		}
-	}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void APlayerCharacter::Takedown()
 {
-	
+	//AActor Target = GetActorLocation() + ( GetActorForwardVector() * -50.0f );
 	
 }
 
@@ -94,6 +84,5 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputCo
 
 	playerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &APlayerCharacter::TakedownTrace );
 }
-
 
 
