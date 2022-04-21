@@ -73,11 +73,11 @@ AProjectileManager::AProjectileManager()
 		if( Material.Succeeded() )
 		{
 			// Set material instance
-			projectileMaterialInstance = UMaterialInstanceDynamic::Create( Material.Object, projectileMeshComponent );
+			//projectileMaterialInstance = UMaterialInstanceDynamic::Create( Material.Object, projectileMeshComponent );
 		}
 
 		// Set properties of projectile
-		projectileMeshComponent->SetMaterial( 0, projectileMaterialInstance );
+		//projectileMeshComponent->SetMaterial( 0, projectileMaterialInstance );
 		projectileMeshComponent->SetRelativeScale3D( FVector( 0.09f, 0.09f, 0.09f ) );
 		projectileMeshComponent->SetupAttachment( RootComponent );
 	}
