@@ -100,31 +100,3 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 
 
-
-
-/*if( enemycontroller->GetPlayerCaught() == false && detectionTimer > 0 )
-	{
-		detectionTimer -= 1.0f;
-	}*/
-
-	/*if( detectionTimer < 5.0f )
-	{
-		detectionTimer += 1.0f;
-		FString timerString = FString::SanitizeFloat( detectionTimer );
-		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, *timerString );
-	}*/
-
-	/*if( detectionTimer >= 5.0f )
-	{
-	}*/
-
-
-	//if( pawnSensingComp->SightRadius >= GetDistanceTo( pawn ) )
-	//{
-		//	// Set has line of sight = false
-		//	enemyController->SetHasLineOfSight( true );
-		//}
-		//else
-		//{
-		//	enemyController->SetHasLineOfSight( false );
-	//}
