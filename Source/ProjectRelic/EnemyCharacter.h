@@ -12,6 +12,7 @@
 #include <UObject/ObjectMacros.h>
 #include <Perception/AISenseConfig_Sight.h>
 #include "CombatInterface.h"
+#include "Components/WidgetComponent.h"
 #include "EnemyCharacter.generated.h"
 
 /***************************************************************************************
@@ -115,6 +116,9 @@ public:
 
 	UPROPERTY( VisibleAnywhere, Category = AI )
 		class UAISenseConfig_Sight* sightConfig;
+
+	/*UPROPERTY( VisibleAnywhere, Category = AI )
+		class UWidgetComponent* widgetComp;*/
 	/*******************************************************************************************
 	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
 	   *   Purpose         : Getter for the enemy character

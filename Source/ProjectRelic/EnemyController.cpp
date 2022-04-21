@@ -51,6 +51,7 @@ void AEnemyController::OnPossess( APawn* pawn )
 	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
 	if( enemyCharacter )
 	{
+
 		if( enemyCharacter->behaviourTree->BlackboardAsset )
 		{
 			// Initialise BB
@@ -74,6 +75,5 @@ TArray<AActor*> AEnemyController::GetPatrolPoints() const
 {
 	return patrolPoints;
 }
-
 
 

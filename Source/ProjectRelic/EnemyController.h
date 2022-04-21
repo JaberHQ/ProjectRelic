@@ -36,6 +36,8 @@
  * Date          Initials    Version     Comments
  * 31/03/2022    JA          1.0         Prototype, very basic pathing and vision
  ******************************************************************************************************************************/
+
+
 UCLASS()
 class PROJECTRELIC_API AEnemyController : public AAIController
 {
@@ -54,6 +56,8 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName hasLineOfSight; // Has line of sight bool
+
+	
 
 	TArray<AActor*> patrolPoints; // Patrol points array
 	/**********************************************************************
@@ -149,5 +153,8 @@ public:
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const;
 
 	//void UnPossess();
+
+
+	
 
 };

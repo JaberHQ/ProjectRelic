@@ -23,10 +23,12 @@ AEnemyCharacter::AEnemyCharacter()
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerception Component" ) );
 	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "Sight Config" ) );
-
+	/*widgetComp = CreateDefaultSubobject<UWidgetComponent>( TEXT( "Widget Component" ) );*/
 	// Perception config
 	perceptionComp->ConfigureSense( *sightConfig );
 	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
+
+	
 
 	// Sight config
 	sightConfig->SightRadius = m_sightRadius;
