@@ -41,7 +41,7 @@
  ***************************************************************************************/
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed, const TArray<AActor*>&, caughtActors );
 
 UCLASS()
 class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager, public ICombatInterface

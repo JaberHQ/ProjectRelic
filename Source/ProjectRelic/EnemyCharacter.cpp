@@ -109,7 +109,7 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 		m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
 		
 		// Call Sight Registered Event Dispatcher( Target = self, Bool = Has been seen, Float DetectionSpeed)
-		sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed );
+		sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed, caughtActors );
 
 		// Debug message
 		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );

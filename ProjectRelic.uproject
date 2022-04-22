@@ -11,7 +11,9 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"AIModule",
-				"UnrealEd"
+				"UnrealEd",
+				"UMGEditor",
+				"UMG"
 			]
 		}
 	],
