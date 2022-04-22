@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "CharacterManager.h"
+#include "Curves/CurveFloat.h"
+#include "Components/WidgetComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Perception/AISense.h"
@@ -12,7 +14,6 @@
 #include <UObject/ObjectMacros.h>
 #include <Perception/AISenseConfig_Sight.h>
 #include "CombatInterface.h"
-#include "Components/WidgetComponent.h"
 #include "EnemyCharacter.generated.h"
 
 /***************************************************************************************
@@ -38,6 +39,10 @@
  * 31/03/2022    JA			 1.0         Pawn sense component
  * 09/04/2022	 JA			 1.1		 AI Perception component			
  ***************************************************************************************/
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed );
+
 UCLASS()
 class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager, public ICombatInterface
 {
@@ -56,6 +61,9 @@ private:
 	
 	bool m_canTakedown;
 
+	bool m_hasBeenSeen;
+	float m_detectionSpeed;
+
 	// Reference to interface
 	//TUniquePtr<ICombatInterface> m_pCombatInterface = MakeUnique<ICombatInterface>();
 	/**********************************************************************************
@@ -70,6 +78,9 @@ private:
 	**********************************************************************************/
 	UFUNCTION()
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
+
+	
+
 
 public:
 
@@ -117,8 +128,15 @@ public:
 	UPROPERTY( VisibleAnywhere, Category = AI )
 		class UAISenseConfig_Sight* sightConfig;
 
-	/*UPROPERTY( VisibleAnywhere, Category = AI )
-		class UWidgetComponent* widgetComp;*/
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = UserInterface )
+		class UWidgetComponent* widgetComp;
+	
+	UPROPERTY( BlueprintAssignable )
+		FSightRegisteredD sightRegisteredD;
+
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
+		UCurveFloat* myCurve;
+	
 	/*******************************************************************************************
 	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
 	   *   Purpose         : Getter for the enemy character
@@ -135,4 +153,7 @@ public:
 	bool CanTakedown() override;
 	
 	void Interact() override;
+
+	
+	
 };
