@@ -18,20 +18,9 @@ class PROJECTRELIC_API UWidgetDetectionMeter : public UUserWidget
 	GENERATED_BODY()
 	
 private:
-	bool m_hasBeenSeen;
-	float m_sightValuePercent;
-	float m_detectionSpeed;
 	
-	UPROPERTY()
-		UProgressBar* progressBar;
 public:
 	
 
-	void Construct( bool isDesignTime, const TArray<AActor*>& caughtActors );
-
-	FSightRegisteredD sightRegisteredDelegate;
-
-	UFUNCTION()
-		void RespondToDetection( bool hasBeenSeen, float detectionSpeed, const TArray<AActor*>& caughtActors );
 
 };

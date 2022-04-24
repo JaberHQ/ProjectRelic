@@ -4,6 +4,7 @@
 #include "EnemyCharacter.h"
 #include "EnemyController.h"
 
+
 //#include "Engine.h".
 
 AEnemyCharacter::AEnemyCharacter()
@@ -16,6 +17,7 @@ AEnemyCharacter::AEnemyCharacter()
 	,m_chaseSpeed( 600.0f )
 	,m_canTakedown( true )
 	,m_hasBeenSeen( false )
+
 	//,m_pCombatInterface( nullptr )
 {
 	// Set default walk speed
@@ -40,7 +42,8 @@ AEnemyCharacter::AEnemyCharacter()
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	sightConfig->DetectionByAffiliation.bDetectFriendlies = false;
 
-
+	widgetComp->SetupAttachment( RootComponent );
+	//widgetComp->AttachTo( GetMesh() );
 }
 
 AEnemyCharacter::~AEnemyCharacter()
@@ -57,14 +60,7 @@ void AEnemyCharacter::BeginPlay()
 
 	// If enemy 'senses' the player
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
-	
 
-	// Get user widget object
-	widgetComp->GetUserWidgetObject();
-
-	// Cast to BP_SightDetectionWidget
-	// Set Pawn Owner to Self
-	// Set Target
 }
 
 AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
@@ -83,6 +79,21 @@ void AEnemyCharacter::Interact()
 	UE_LOG( LogTemp, Warning, TEXT( "Implementation" ) );
 }
 
+void AEnemyCharacter::SetHasBeenSeen( bool hasBeenSeen )
+{
+	m_hasBeenSeen = hasBeenSeen;
+}
+
+bool AEnemyCharacter::GetHasBeenSeen() const
+{
+	return m_hasBeenSeen;
+}
+
+float AEnemyCharacter::GetDetectionSpeed() const
+{
+	return m_detectionSpeed;
+}
+
 
 
 void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
@@ -96,36 +107,43 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 		
 
 		// Get location of player and enemy
-		FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ])->GetStimulusLocation( sightConfig->GetSenseID() );
-		FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+		//FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ])->GetStimulusLocation( sightConfig->GetSenseID() );
+		//FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+		//
+		//// Find the distance between the two
+		//float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
+
+		//// Normalize to range
+
+
+		//// Get float value (curve) && Set detection speed = float value
+		//m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+		//m_hasBeenSeen = true;
 		
-		// Find the distance between the two
-		float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 
-		// Normalize to range
+		//// Call Sight Registered Event Dispatcher( Target = self, Bool = Has been seen, Float DetectionSpeed)
+		//sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed, caughtActors );
 
-
-		// Get float value (curve) && Set detection speed = float value
-		m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
-		
-		// Call Sight Registered Event Dispatcher( Target = self, Bool = Has been seen, Float DetectionSpeed)
-		sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed, caughtActors );
-
-		// Debug message
+		//// Debug message
 		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
 
-		// Set actor (player) as caught
+		//// Set actor (player) as caught
 		//enemyController->SetPlayerCaught( caughtActors );
 
-		// Shoot at player
+		//// Shoot at player
 		//Shoot();
 
-		// Sight config
+		// //Sight config
 		//UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
-		
-		// Speed up enemy to sprint
+		//
+		////Speed up enemy to sprint
 		//UpdateWalkSpeed( m_chaseSpeed );				
 	}			
+}
+
+void AEnemyCharacter::SightDetectionDelegate()
+{
+	sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed );
 }
 
 

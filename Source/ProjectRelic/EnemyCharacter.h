@@ -41,7 +41,7 @@
  ***************************************************************************************/
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed, const TArray<AActor*>&, caughtActors );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed );
 
 UCLASS()
 class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager, public ICombatInterface
@@ -63,6 +63,7 @@ private:
 
 	bool m_hasBeenSeen;
 	float m_detectionSpeed;
+
 
 	// Reference to interface
 	//TUniquePtr<ICombatInterface> m_pCombatInterface = MakeUnique<ICombatInterface>();
@@ -131,12 +132,15 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = UserInterface )
 		class UWidgetComponent* widgetComp;
 	
-	UPROPERTY( BlueprintAssignable )
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FSightRegisteredD sightRegisteredD;
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
 		UCurveFloat* myCurve;
 	
+	
+	
+
 	/*******************************************************************************************
 	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
 	   *   Purpose         : Getter for the enemy character
@@ -155,5 +159,12 @@ public:
 	void Interact() override;
 
 	
-	
+	UFUNCTION( BlueprintCallable )
+		void SightDetectionDelegate();
+
+
+	void SetHasBeenSeen( bool hasBeenSeen );
+	bool GetHasBeenSeen() const;
+
+	float GetDetectionSpeed() const;
 };
