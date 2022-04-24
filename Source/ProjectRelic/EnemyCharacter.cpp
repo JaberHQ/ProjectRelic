@@ -103,41 +103,43 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 	if( enemyController )
 	{	
-		// If Actor == Player
+		
+		// Debug message
+		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
+
+		//// Set actor (player) as caught
+		enemyController->SetPlayerCaught( caughtActors );
+
+		// Shoot at player
+		//Shoot();
+
+		// //Sight config
+		UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
+
+		//Speed up enemy to sprint
+		UpdateWalkSpeed( m_chaseSpeed );			
+
 		
 
-		// Get location of player and enemy
-		//FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ])->GetStimulusLocation( sightConfig->GetSenseID() );
-		//FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+		// // If Actor == Player
+		FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ])->GetStimulusLocation( sightConfig->GetSenseID() );
+		FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
 		//
-		//// Find the distance between the two
-		//float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
+		// Find the distance between the two
+		float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 
 		//// Normalize to range
 
 
 		//// Get float value (curve) && Set detection speed = float value
-		//m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+		m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
 		//m_hasBeenSeen = true;
-		
+
+		m_hasBeenSeen = true;
+		SightDetectionDelegate();
 
 		//// Call Sight Registered Event Dispatcher( Target = self, Bool = Has been seen, Float DetectionSpeed)
 		//sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed, caughtActors );
-
-		//// Debug message
-		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Pew" ) ) );
-
-		//// Set actor (player) as caught
-		//enemyController->SetPlayerCaught( caughtActors );
-
-		//// Shoot at player
-		//Shoot();
-
-		// //Sight config
-		//UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
-		//
-		////Speed up enemy to sprint
-		//UpdateWalkSpeed( m_chaseSpeed );				
 	}			
 }
 

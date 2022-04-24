@@ -18,9 +18,11 @@ class PROJECTRELIC_API UWidgetDetectionMeter : public UUserWidget
 	GENERATED_BODY()
 	
 private:
-	
+	UProgressBar* m_progressBar;
+
+	APawn* m_pawn;
 public:
-	
+	void Construct( APawn* pawn );
 
 
 };
