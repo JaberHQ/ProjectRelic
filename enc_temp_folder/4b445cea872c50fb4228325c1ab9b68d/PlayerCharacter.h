@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "CharacterManager.h"
 #include "EnemyCharacter.h"
 #include "PlayerCharacter.generated.h"
@@ -38,10 +39,12 @@ private:
 
 	void Invisibility();
 
-	
+	void Tick(float DeltaTime) override;
 	FTimerHandle m_invisibilityTimer;
 
 	void InvisibilityTimer();
+
+	UMaterialInterface* m_material;
 public:
 	/********************************************************
 	   *   Function        :
@@ -80,4 +83,6 @@ public:
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
 
 	virtual void BeginPlay() override;
+
+	
 };

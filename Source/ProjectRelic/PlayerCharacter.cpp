@@ -4,7 +4,7 @@
 #include "PlayerCharacter.h"
 #include "Misc/App.h"
 #include "EnemyController.h"
-
+#include "Materials/MaterialInstanceDynamic.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -24,6 +24,15 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GetWorldTimerManager().SetTimer( m_invisibilityTimer, this, &APlayerCharacter::InvisibilityTimer, 1.0f, true, 2.0f );
+
+	m_material = GetMesh()->GetMaterial( 0 );
+
+	dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
+
+	GetMesh()->SetMaterial( 0, dynamicMaterial );
+
+	dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+	dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Yellow );
 }
 void APlayerCharacter::TakedownTrace()
 {
@@ -122,10 +131,12 @@ void APlayerCharacter::Invisibility()
 	if( m_invisible )
 	{
 		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY ON" ) ) );
+		dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 50 );
 	}
 	else
 	{
 		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY OFF" ) ) );
+		dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
 	}
 	
 }
@@ -139,11 +150,13 @@ void APlayerCharacter::Tick( float DeltaTime )
 	if( m_invisibilityPercent > 0.0f && m_invisible == true )
 	{
 		m_invisibilityPercent--;
+		// Use delta time instead --------------------
 	}
 
-	if( m_invisibilityPercent < 100.0f && m_invisible == false )
+	if( m_invisibilityPercent < 100.0f && m_invisible == false || m_invisibilityPercent == 0 )
 	{
 		m_invisibilityPercent++;
+		// Use delta time instead --------------------
 	}
 }
 

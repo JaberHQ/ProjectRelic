@@ -4,7 +4,7 @@
 #include "PlayerCharacter.h"
 #include "Misc/App.h"
 #include "EnemyController.h"
-
+#include "Materials/MaterialInstanceDynamic.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -24,6 +24,15 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GetWorldTimerManager().SetTimer( m_invisibilityTimer, this, &APlayerCharacter::InvisibilityTimer, 1.0f, true, 2.0f );
+
+	m_material = GetMesh()->GetMaterial( 0 );
+
+	UMaterialInstanceDynamic* dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
+
+	GetMesh()->SetMaterial( 0, dynamicMaterial );
+
+	dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 50 );
+	dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Yellow );
 }
 void APlayerCharacter::TakedownTrace()
 {
@@ -113,22 +122,10 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputCo
 void APlayerCharacter::Invisibility()
 {
 	
-	if( m_invisibilityPercent > 0.0f && m_invisible == false  )
+	if( m_invisibilityPercent > 0.0f )
 	{
-		m_invisible = true;
-		// Deplete Timer
+		m_invisible = !m_invisible;
 	}
-
-	if( m_invisibilityPercent > 0.0f && m_invisible == true )
-	{
-		m_invisible = false;
-		// Increase timer
-	}
-
-	
-
-	
-
 
 	// Debug
 	if( m_invisible )
@@ -142,25 +139,30 @@ void APlayerCharacter::Invisibility()
 	
 }
 
+void APlayerCharacter::Tick( float DeltaTime )
+{
+	Super::Tick( DeltaTime );
+	FString TheFloatStr = FString::SanitizeFloat( m_invisibilityPercent );
+	GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( *TheFloatStr ) );
+
+	if( m_invisibilityPercent > 0.0f && m_invisible == true )
+	{
+		m_invisibilityPercent--;
+		// Use delta time instead --------------------
+	}
+
+	if( m_invisibilityPercent < 100.0f && m_invisible == false || m_invisibilityPercent == 0 )
+	{
+		m_invisibilityPercent++;
+		// Use delta time instead --------------------
+	}
+}
+
 void APlayerCharacter::InvisibilityTimer()
 {
 	GetWorldTimerManager().ClearTimer( m_invisibilityTimer );
 
-	if( m_invisibilityPercent == 0.0f )
-	{
-		m_invisible = false;
-		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY RAN OUT" ) ) );
-	}
+	
 
-	if( m_invisible && m_invisibilityPercent > 0.0f )
-	{
-		// Decrease Timer
-		m_invisibilityPercent -= GetWorldTimerManager().GetTimerElapsed( m_invisibilityTimer );
-	}
-
-	if( m_invisible == false && m_invisibilityPercent < 100.0f )
-	{
-		// Increase timer
-		m_invisibilityPercent += GetWorldTimerManager().GetTimerElapsed( m_invisibilityTimer );
-	}
+	
 }
