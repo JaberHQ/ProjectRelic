@@ -279,4 +279,8 @@ public:
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent );
 
 	void LineTrace();
+
+
+	void TimerFunction();
+	FTimerHandle timerHandle;
 };

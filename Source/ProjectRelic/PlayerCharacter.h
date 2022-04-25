@@ -26,13 +26,20 @@
  * Change Log:
  * Date          Initials    Version     Comments
  * 15/03/2022    JA			 1.0         Prototype version
+ * 25/04/2022	 JA			 1.1		 Adding invisiblity
  **************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 {
 	GENERATED_BODY()
 private:
+	bool m_invisible;
+	float m_invisibilityPercent;
+
+	void Invisibility();
+
 	
+
 public:
 	/********************************************************
 	   *   Function        :
@@ -65,7 +72,10 @@ public:
 
 	void PrepareTakedown();
 
-	
+	void SetInvisible( bool invisible );
+	bool GetInvisible() const;
 
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override;
+
+	
 };

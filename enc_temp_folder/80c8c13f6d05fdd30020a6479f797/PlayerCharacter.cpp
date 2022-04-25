@@ -105,16 +105,39 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputCo
 void APlayerCharacter::Invisibility()
 {
 	
-	// If invisiblityPercentage > 0
-		// Switch bool
-
+	// If invisibility percent greater than 0
+		// Turn invisible = true
+		// Deplete timer
+	
 	if( m_invisibilityPercent > 0 )
+	{
+		m_invisible = !m_invisible;
+		m_invisibilityPercent -= GetWorld()->GetDeltaSeconds();
+	}
+
+	if( m_invisibilityPercent == 0 )
+	{
+		m_invisible = false;
+	}
+	// If invisibility percent is 0
+		// Invisible = false
+		// Timer can increase (increase the timer)
+		
+	// If invisibility percent > 0 && m_invisible == false
+		// Timer can increase
+
+	// If invisibility is 100
+		//Timer cannot increase
+
+	// If m_invisible = true
+		// Timer cannot increase
+
+
+	if( m_invisibilityPercent > 0.0f )
 	{
 		m_invisible = !m_invisible;
 	}
 
-
-	
 
 
 	// Debug

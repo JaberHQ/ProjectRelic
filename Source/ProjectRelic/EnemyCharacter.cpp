@@ -3,7 +3,7 @@
 
 #include "EnemyCharacter.h"
 #include "EnemyController.h"
-
+#include "PlayerCharacter.h"
 
 //#include "Engine.h".
 
@@ -97,53 +97,58 @@ float AEnemyCharacter::GetDetectionSpeed() const
 	return m_detectionSpeed;
 }
 
-
-
 void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	// Reference to player controller
 	AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
 
+	APlayerCharacter* playerCharacter = Cast<APlayerCharacter>( UGameplayStatics::GetPlayerPawn(GetWorld(), 0 ));
+
 	if( enemyController )
 	{	
-		if( m_detectionSpeed < 1.0f )
+		if( playerCharacter )
 		{
-			// Debug message
-			GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
+			if( playerCharacter->GetInvisible() == false )
+			{
+				// Debug message
+				GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
 
-			// Set actor (player) as caught
-			enemyController->SetPlayerCaught( caughtActors );
+				// Set actor (player) as caught
+				enemyController->SetPlayerCaught( caughtActors );
 
-			// Shoot at player
-			Shoot();
+				// Shoot at player
+				Shoot();
 
-			// //Sight config
-			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
+				// //Sight config
+				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), enemyController );
 
-			//Speed up enemy to sprint
-			UpdateWalkSpeed( m_chaseSpeed );
+				//Speed up enemy to sprint
+				UpdateWalkSpeed( m_chaseSpeed );
 
-			// Get location
-			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
-			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+				// Get location
+				FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+				FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
 
-			// Find the distance between the two
-			float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
+				// Find the distance between the two
+				float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 
-			// Normalize to range
+				// Normalize to range
 
 
-			// Get float value (curve) && Set detection speed = float value
-			m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+				// Get float value (curve) && Set detection speed = float value
+				m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
 
-			// Set bool to true
-			m_hasBeenSeen = true;
+				// Set bool to true
+				m_hasBeenSeen = true;
 
-			// Broadcast delegate
-			SightDetectionDelegate();
+				// Broadcast delegate
+				SightDetectionDelegate();
 
+			}
 		}
-	}		
+		
+	}
+		
 }
 
 void AEnemyCharacter::SightDetectionDelegate()
