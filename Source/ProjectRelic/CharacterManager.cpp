@@ -58,7 +58,6 @@ ACharacterManager::ACharacterManager()
 void ACharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorldTimerManager().SetTimer( timerHandle, this, &ACharacterManager::TimerFunction, 3.0f, true, 0.5f );
 }
 
 // Called every frame

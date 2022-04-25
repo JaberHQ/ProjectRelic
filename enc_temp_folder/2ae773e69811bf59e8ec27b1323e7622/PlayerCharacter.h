@@ -38,7 +38,7 @@ private:
 
 	void Invisibility();
 
-	void Tick(float DeltaTime) override;
+	
 	FTimerHandle m_invisibilityTimer;
 
 	void InvisibilityTimer();

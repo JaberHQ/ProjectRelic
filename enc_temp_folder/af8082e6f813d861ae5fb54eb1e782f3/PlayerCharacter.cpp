@@ -19,6 +19,12 @@ APlayerCharacter::~APlayerCharacter()
 {
 }
 
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	GetWorldTimerManager().SetTimer( m_invisibilityTimer, this, &APlayerCharacter::InvisibilityTimer, 1.0f, true, 2.0f );
+}
 void APlayerCharacter::TakedownTrace()
 {
 	//// Line tracing
@@ -102,42 +108,26 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputCo
 }
 
 
+
+
 void APlayerCharacter::Invisibility()
 {
 	
-	// If invisibility percent greater than 0
-		// Turn invisible = true
-		// Deplete timer
-	
-	if( m_invisibilityPercent > 0 )
+	if( m_invisibilityPercent > 0.0f && m_invisible == false  )
 	{
-		m_invisible = !m_invisible;
-		m_invisibilityPercent -= GetWorld()->GetDeltaSeconds();
+		m_invisible = true;
+		// Deplete Timer
 	}
 
-	if( m_invisibilityPercent == 0 )
+	if( m_invisibilityPercent > 0.0f && m_invisible == true )
 	{
 		m_invisible = false;
-	}
-	// If invisibility percent is 0
-		// Invisible = false
-		// Timer can increase (increase the timer)
-		
-	// If invisibility percent > 0 && m_invisible == false
-		// Timer can increase
-
-	// If invisibility is 100
-		//Timer cannot increase
-
-	// If m_invisible = true
-		// Timer cannot increase
-
-
-	if( m_invisibilityPercent > 0.0f )
-	{
-		m_invisible = !m_invisible;
+		// Increase timer
 	}
 
+	
+
+	
 
 
 	// Debug
@@ -150,4 +140,27 @@ void APlayerCharacter::Invisibility()
 		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY OFF" ) ) );
 	}
 	
+}
+
+void APlayerCharacter::InvisibilityTimer()
+{
+	GetWorldTimerManager().ClearTimer( m_invisibilityTimer );
+
+	if( m_invisibilityPercent == 0.0f )
+	{
+		m_invisible = false;
+		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY RAN OUT" ) ) );
+	}
+
+	if( m_invisible && m_invisibilityPercent > 0.0f )
+	{
+		// Decrease Timer
+		m_invisibilityPercent -= GetWorldTimerManager().GetTimerElapsed( m_invisibilityTimer );
+	}
+
+	if( m_invisible == false && m_invisibilityPercent < 100.0f )
+	{
+		// Increase timer
+		m_invisibilityPercent += GetWorldTimerManager().GetTimerElapsed( m_invisibilityTimer );
+	}
 }

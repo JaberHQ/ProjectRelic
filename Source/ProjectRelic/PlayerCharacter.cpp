@@ -19,6 +19,12 @@ APlayerCharacter::~APlayerCharacter()
 {
 }
 
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	GetWorldTimerManager().SetTimer( m_invisibilityTimer, this, &APlayerCharacter::InvisibilityTimer, 1.0f, true, 2.0f );
+}
 void APlayerCharacter::TakedownTrace()
 {
 	//// Line tracing
@@ -102,20 +108,15 @@ void APlayerCharacter::SetupPlayerInputComponent( UInputComponent* playerInputCo
 }
 
 
+
+
 void APlayerCharacter::Invisibility()
 {
 	
-	// If invisiblityPercentage > 0
-		// Switch bool
-
-	if( m_invisibilityPercent > 0 )
+	if( m_invisibilityPercent > 0.0f )
 	{
 		m_invisible = !m_invisible;
 	}
-
-
-	
-
 
 	// Debug
 	if( m_invisible )
@@ -126,5 +127,31 @@ void APlayerCharacter::Invisibility()
 	{
 		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY OFF" ) ) );
 	}
+	
+}
+
+void APlayerCharacter::Tick( float DeltaTime )
+{
+	Super::Tick( DeltaTime );
+	FString TheFloatStr = FString::SanitizeFloat( m_invisibilityPercent );
+	GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( *TheFloatStr ) );
+
+	if( m_invisibilityPercent > 0.0f && m_invisible == true )
+	{
+		m_invisibilityPercent--;
+	}
+
+	if( m_invisibilityPercent < 100.0f && m_invisible == false )
+	{
+		m_invisibilityPercent++;
+	}
+}
+
+void APlayerCharacter::InvisibilityTimer()
+{
+	GetWorldTimerManager().ClearTimer( m_invisibilityTimer );
+
+	
+
 	
 }
