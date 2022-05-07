@@ -3,14 +3,16 @@
 
 #include "CPP_PlayerManager.h"
 
+void ACPP_PlayerManager::BeginPlay()
+{
+	Super::BeginPlay();
+	Crouch();
+}
+
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
-
 }
 
-void ACPP_PlayerManager::BeginPlay()
-{
-	//Crouch();
-}
+

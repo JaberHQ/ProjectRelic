@@ -10,7 +10,8 @@ UCLASS()
 class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
 {
 	GENERATED_BODY()
-
+private:
+	bool m_isCrouched;
 public:
 	// Sets default values for this character's properties
 	ACPP_CharacterManager();

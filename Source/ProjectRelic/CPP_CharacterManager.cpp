@@ -9,6 +9,7 @@
 
 // Sets default values
 ACPP_CharacterManager::ACPP_CharacterManager()
+	:m_isCrouched( true )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -31,12 +32,14 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	GetCharacterMovement()->bIgnoreBaseRotation = true;
 
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	
 }
 
 // Called when the game starts or when spawned
 void ACPP_CharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 // Called every frame
@@ -59,7 +62,7 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
 	PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
 	PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACPP_CharacterManager::BeginCrouch );
-	PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
+	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_CharacterManager::BeginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_CharacterManager::EndSprint );
 
@@ -111,7 +114,15 @@ void ACPP_CharacterManager::EndSprint()
 
 void ACPP_CharacterManager::BeginCrouch()
 {
-	Crouch();
+	m_isCrouched = !m_isCrouched;
+	if( m_isCrouched == true )
+	{
+		Crouch();
+	}
+	else
+	{
+		UnCrouch();
+	}
 }
 
 void ACPP_CharacterManager::EndCrouch()
