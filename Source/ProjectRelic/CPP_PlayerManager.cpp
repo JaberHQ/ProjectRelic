@@ -9,3 +9,8 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 
 
 }
+
+void ACPP_PlayerManager::BeginPlay()
+{
+	//Crouch();
+}

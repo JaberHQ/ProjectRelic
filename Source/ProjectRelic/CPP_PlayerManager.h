@@ -16,4 +16,6 @@ class PROJECTRELIC_API ACPP_PlayerManager : public ACPP_CharacterManager
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+
+	
 };
