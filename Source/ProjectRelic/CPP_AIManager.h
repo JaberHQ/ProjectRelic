@@ -14,4 +14,8 @@ class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
 {
 	GENERATED_BODY()
 	
+
+private:
+public:
+	ACPP_AIManager();
 };

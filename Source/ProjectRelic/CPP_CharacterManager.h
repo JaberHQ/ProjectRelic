@@ -45,4 +45,6 @@ protected:
 
 	void BeginCrouch();
 	void EndCrouch();
+
+	void UpdateWalkSpeed( float speed );
 };

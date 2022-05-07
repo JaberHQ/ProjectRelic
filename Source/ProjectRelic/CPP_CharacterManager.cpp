@@ -130,3 +130,9 @@ void ACPP_CharacterManager::EndCrouch()
 	UnCrouch();
 }
 
+void ACPP_CharacterManager::UpdateWalkSpeed( float speed )
+{
+	// Set walk speed
+	GetCharacterMovement()->MaxWalkSpeed = speed;
+}
+
