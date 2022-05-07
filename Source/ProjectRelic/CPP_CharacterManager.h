@@ -27,6 +27,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
+	void UpdateWalkSpeed( float speed );
 protected:
 	// Spring Arm Component to follow the camera behind the player
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
@@ -46,5 +47,5 @@ protected:
 	void BeginCrouch();
 	void EndCrouch();
 
-	void UpdateWalkSpeed( float speed );
+	
 };
