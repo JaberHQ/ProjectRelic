@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CPP_CharacterManager.h"
+#include "NavigationSystem.h"
 #include "CPP_AIManager.generated.h"
 
 /**
