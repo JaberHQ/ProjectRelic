@@ -1,11 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "EnemyCharacter.h"
 #include "EnemyController.h"
 #include "PlayerCharacter.h"
-
-//#include "Engine.h".
 
 AEnemyCharacter::AEnemyCharacter()
 	:m_health( 100.0f )
@@ -17,8 +14,6 @@ AEnemyCharacter::AEnemyCharacter()
 	,m_chaseSpeed( 600.0f )
 	,m_canTakedown( true )
 	,m_hasBeenSeen( false )
-
-	//,m_pCombatInterface( nullptr )
 {
 	// Set default walk speed
 	UpdateWalkSpeed( m_patrolSpeed );
@@ -32,8 +27,6 @@ AEnemyCharacter::AEnemyCharacter()
 	perceptionComp->ConfigureSense( *sightConfig );
 	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
 
-	
-
 	// Sight config
 	sightConfig->SightRadius = m_sightRadius;
 	sightConfig->LoseSightRadius = m_loseSightRadius;
@@ -42,34 +35,20 @@ AEnemyCharacter::AEnemyCharacter()
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	sightConfig->DetectionByAffiliation.bDetectFriendlies = false;
 
+	// Attatch widget
 	widgetComp->SetupAttachment( RootComponent );
-	//widgetComp->AttachTo( GetMesh() );
 }
 
 AEnemyCharacter::~AEnemyCharacter()
 {	
-	//delete[] m_combatInterface;
-	//m_combatInterface = nullptr;
 }
-
-
 
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
 	// If enemy 'senses' the player
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &AEnemyCharacter::OnPlayerCaught );
-
-	
-
-}
-
-AEnemyCharacter* AEnemyCharacter::GetEnemyCharacter( APawn* pawn ) const
-{
-	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
-	return enemyCharacter;
 }
 
 bool AEnemyCharacter::CanTakedown()
@@ -99,15 +78,17 @@ float AEnemyCharacter::GetDetectionSpeed() const
 
 void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
-	// Reference to player controller
+	// Pointer to Enemy controller
 	AEnemyController* enemyController = Cast<AEnemyController>( GetController() );
 
+	// Pointer to Player character
 	APlayerCharacter* playerCharacter = Cast<APlayerCharacter>( UGameplayStatics::GetPlayerPawn(GetWorld(), 0 ));
 
 	if( enemyController )
 	{	
 		if( playerCharacter )
 		{
+			// If player is not invisible
 			if( playerCharacter->GetInvisible() == false )
 			{
 				// Debug message
@@ -133,7 +114,7 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 
 				// Normalize to range
-
+				// -- NEEDS IMPLEMENTATION --
 
 				// Get float value (curve) && Set detection speed = float value
 				m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
@@ -143,16 +124,14 @@ void AEnemyCharacter::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 				// Broadcast delegate
 				SightDetectionDelegate();
-
 			}
-		}
-		
-	}
-		
+		}		
+	}		
 }
 
 void AEnemyCharacter::SightDetectionDelegate()
 {
+	// Broadcast delegate variables
 	sightRegisteredD.Broadcast( m_hasBeenSeen, m_detectionSpeed );
 }
 

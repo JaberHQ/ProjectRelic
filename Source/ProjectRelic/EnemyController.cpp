@@ -33,12 +33,13 @@ void AEnemyController::SetPlayerCaught( const TArray<AActor*>& caughtActors )
 
 void AEnemyController::SetHasLineOfSight( bool boolean )
 {
-	// Set boolean
+	// Set bool
 	blackboardComp->SetValueAsBool( hasLineOfSight, boolean );
 }
 
 bool AEnemyController::GetHasLineOfSight()
 {
+	// Return bool
 	return blackboardComp->GetValueAsBool( hasLineOfSight );
 }
 
@@ -51,13 +52,11 @@ void AEnemyController::OnPossess( APawn* pawn )
 	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
 	if( enemyCharacter )
 	{
-
 		if( enemyCharacter->behaviourTree->BlackboardAsset )
 		{
 			// Initialise BB
 			blackboardComp->InitializeBlackboard( *( enemyCharacter->behaviourTree->BlackboardAsset ) );
 		}
-
 		// Populate patrol point array
 		UGameplayStatics::GetAllActorsOfClass( GetWorld(), AEnemyPatrolPoint::StaticClass(), patrolPoints );
 

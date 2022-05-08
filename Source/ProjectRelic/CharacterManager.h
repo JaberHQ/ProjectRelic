@@ -26,7 +26,8 @@
  *			  void EndSprint(), void BeginCrouch(), void EndCrouch(), void AimIn(),
  *			  void AimOut(), void SetHoldADS(), bool GetHoldADS(),
  *			  virtual void Tick( float deltaTime ), 
- *			  virtual void SetupPlayerInputComponent()
+ *			  virtual void SetupPlayerInputComponent(), void TimerFunction(), 
+ *			  void LineTrace(), void TakedownTrace(), void UpdateWalkSpeed( float speed )
  *
  * References: N/A
  *

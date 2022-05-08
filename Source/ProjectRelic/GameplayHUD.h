@@ -7,9 +7,25 @@
 #include "Engine/Canvas.h" 
 #include "GameplayHUD.generated.h"
 
-/**
- * 
- */
+/***************************************************************************************
+ * Type: Class
+ *
+ * Name: GameplayHUD
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Player's heads up display for the game
+ *
+ * Functions: virtual void DrawHUD() override
+ *
+ * References: N/A
+ *
+ * See Also: N/A
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * ----------    JA          -------     ----------------------------------------------
+ ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AGameplayHUD : public AHUD
 {

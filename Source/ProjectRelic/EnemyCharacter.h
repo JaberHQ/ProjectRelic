@@ -80,7 +80,6 @@ private:
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
 
 public:
-
 	/********************************************************
 	   *   Function        : AEnemyCharacter()
 	   *   Purpose         : Constructor
@@ -132,17 +131,6 @@ public:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
 		UCurveFloat* myCurve;
-	/*******************************************************************************************
-	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
-	   *   Purpose         : Getter for the enemy character
-	   *   Parameters      : APawn* pawn
-	   *   Returns         : enemyCharacter
-	   *   Date altered    : 09/04/2022
-	   *   Contributors    : Jaber Ahmed
-	   *   Notes           : N/A
-	   *   See also        : N/A
-	*******************************************************************************************/
-	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const;
 	/*****************************************************************************
 	*   Function        : bool CanTakedown() 
 	*   Purpose         : Get bool to check if enemy can be taken down

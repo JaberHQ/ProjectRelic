@@ -8,21 +8,35 @@
 #include "Components/ProgressBar.h"
 #include "WidgetDetectionMeter.generated.h"
 
-/**
- * 
- */
+/***************************************************************************************
+ * Type: Class
+ *
+ * Name: WidgetDetectionMeter
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: User widget for sight detection
+ *
+ * Functions: void Construct( APawn* pawn )
+ *
+ * References: N/A
+ *
+ * See Also: N/A
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * ----------    JA          -------     ----------------------------------------------
+ *****************************************************************************************/
 
 UCLASS()
 class PROJECTRELIC_API UWidgetDetectionMeter : public UUserWidget
 {
 	GENERATED_BODY()
-	
-private:
-	UProgressBar* m_progressBar;
 
-	APawn* m_pawn;
+private:
+	UProgressBar* m_progressBar; // Progress bar
+	APawn* m_pawn; // Pawn
+
 public:
 	void Construct( APawn* pawn );
-
-
 };

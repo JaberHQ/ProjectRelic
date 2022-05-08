@@ -43,6 +43,7 @@ UCLASS()
 class PROJECTRELIC_API AProjectileManager : public AActor
 {
 	GENERATED_BODY()
+
 private:
 	bool m_isHit; // Is hit
 	float m_sphereRadius; // Radius of sphere
@@ -51,7 +52,21 @@ private:
 	float m_bounciness; // Projectile bounciness
 	float m_projectileGravityScale; // Porjectile gravity scale
 	float m_impulse; // Impulse multiplier
+
 public:	
+	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
+	USphereComponent* collisionComponent; // Collision component
+
+	UPROPERTY( VisibleAnywhere, Category = Movement )
+	UProjectileMovementComponent* projectileMovementComponent; // Movement
+
+	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
+		UStaticMeshComponent* projectileMeshComponent; // Projectile Mesh
+
+	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
+		UMaterialInstanceDynamic* projectileMaterialInstance; // Projectile Material
+
+public:
 	/********************************************************
 	   *   Function        : AProjectileManager()
 	   *   Purpose         : Constructor
@@ -62,10 +77,7 @@ public:
 	   *   Notes           : N/A
 	   *   See also        : N/A
 	*********************************************************/
-	// Sets default values for this actor's properties
 	AProjectileManager();
-
-protected:
 	/********************************************************
 	   *   Function        : virtual void BeginPlay() override
 	   *   Purpose         : On start on play
@@ -76,10 +88,7 @@ protected:
 	   *   Notes           : N/A
 	   *   See also        : N/A
 	*********************************************************/
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
 	/*******************************************************************
 	   *   Function        : virtual void Tick(float deltaTime) override
 	   *   Purpose         : Every tick
@@ -92,21 +101,6 @@ public:
 	*******************************************************************/
 	// Called every frame
 	virtual void Tick( float deltaTime ) override;
-
-	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
-	USphereComponent* collisionComponent; // Collision component
-
-	// Projectile movement component
-	UPROPERTY( VisibleAnywhere, Category = Movement )
-	UProjectileMovementComponent* projectileMovementComponent; // Movement
-
-	UPROPERTY( VisibleDefaultsOnly, Category = Projectile )
-		UStaticMeshComponent* projectileMeshComponent; // Projectile Mesh
-
-	UPROPERTY( VisibleDefaultsOnly, Category = Movement )
-		UMaterialInstanceDynamic* projectileMaterialInstance; // Projectile Material
-	
-	
 	/******************************************************************************************************************************************************************************
 	   *   Function        : void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
 	   *   Purpose         : When projectile hits something
