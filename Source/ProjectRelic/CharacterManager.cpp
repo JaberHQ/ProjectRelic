@@ -1,11 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "CharacterManager.h"
 #include "Camera/CameraComponent.h"
-
 #include "GameFramework/SpringArmComponent.h"
-
 
 // Sets default values
 ACharacterManager::ACharacterManager()
@@ -28,11 +25,10 @@ ACharacterManager::ACharacterManager()
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
 	// Attatch your class Components to the default Skeletal Mesh Component 
-
-
 	springArmComp->SetupAttachment( GetMesh() );
 	springArmComp->bUsePawnControlRotation = true;
 
+	// Attach camera to spring arm
 	cameraComp->AttachTo( springArmComp, USpringArmComponent::SocketName );
 
 	// Gun
@@ -50,8 +46,6 @@ ACharacterManager::ACharacterManager()
 
 	// Set Nav Agent property
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
-
-	
 }
 
 // Called when the game starts or when spawned
@@ -70,8 +64,6 @@ void ACharacterManager::Tick( float DeltaTime )
 // Called to bind functionality to input
 void ACharacterManager::SetupPlayerInputComponent( UInputComponent* playerInputComponent )
 {
-	
-
 	// Movement
 	playerInputComponent->BindAxis( "MoveForward", this, &ACharacterManager::MoveForward );
 	playerInputComponent->BindAxis( "MoveRight", this, &ACharacterManager::MoveRight );
@@ -98,8 +90,6 @@ void ACharacterManager::SetupPlayerInputComponent( UInputComponent* playerInputC
 
 	// Shoot
 	playerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACharacterManager::Shoot );
-
-
 }
 
 void ACharacterManager::LineTrace()
@@ -109,20 +99,22 @@ void ACharacterManager::LineTrace()
 	FRotator Rot;
 	FHitResult Hit;
 
+	// Get player viewpoint
 	GetController()->GetPlayerViewPoint( Loc, Rot );
+
+	// Start & end
 	FVector Start = Loc;
 	FVector End = Start + ( Rot.Vector() * 2000.0f );
 
+	// Defines paramaters passed into collision function
 	FCollisionQueryParams TraceParams;
+
+	// Raytrace, return first blocking hit
 	GetWorld()->LineTraceSingleByChannel( Hit, Start, End, ECC_Visibility, TraceParams );
 
+	// Draw a line for debug purposes
 	DrawDebugLine( GetWorld(), Start, End, FColor::Red, false, 2.0f );
-
-
 }
-
-
-
 
 void ACharacterManager::MoveForward( float inputAxis )
 {
@@ -154,7 +146,8 @@ void ACharacterManager::MoveRight( float inputAxis )
 
 void ACharacterManager::Takedown()
 {
-	// Moved to player
+	// Move to player
+	// --NEEDS IMPLEMENTATION--
 }
 
 void ACharacterManager::BeginSprint()
@@ -173,27 +166,29 @@ void ACharacterManager::BeginCrouch()
 {
 	// Crouch function
 	Crouch();
-
 }
 
 void ACharacterManager::EndCrouch()
 {
 	// UnCrouch function
 	UnCrouch();
-
 }
 
 void ACharacterManager::AimIn()
 {
-	// Deactivate Camera
+	// Deactivate main camera
 	cameraComp->Deactivate();
+
+	// Activate ADS camera
 	aDSCameraComp->Activate();
 }
 
 void ACharacterManager::AimOut()
 {
-	// Activate Camera
+	// Activate main camera
 	cameraComp->Activate();
+
+	// Deactivate ADS camera
 	aDSCameraComp->Deactivate();
 }
 
@@ -205,15 +200,17 @@ void ACharacterManager::UpdateWalkSpeed( float speed )
 
 void ACharacterManager::TakedownTrace()
 {
-
+	// -- NEEDS IMPLEMENTATION --
 }
 
 void ACharacterManager::SetHoldADS( bool holdADS )
 {
+	// -- NEEDS IMPLEMENTATION --
 }
 
 bool ACharacterManager::GetHoldADS()
 {
+	// Return bool
 	return m_holdADS;
 }
 
@@ -221,8 +218,10 @@ void ACharacterManager::Shoot()
 {
 	if( projectileClass )
 	{
-		FVector cameraLocation;
-		FRotator cameraRotation;
+		FVector cameraLocation; // Camera location
+		FRotator cameraRotation; // Camera rotation
+
+		// Point of view of the actor
 		GetActorEyesViewPoint( cameraLocation, cameraRotation );
 
 		// Muzzle offset
@@ -235,11 +234,17 @@ void ACharacterManager::Shoot()
 		FRotator muzzleRotation = cameraRotation;
 		muzzleRotation.Pitch += m_muzzleRotationPitch;
 
+		// World
 		UWorld* world = GetWorld();
 		if( world )
 		{
+			// Struct of optional parameters 
 			FActorSpawnParameters spawnParams;
+
+			// Set owner
 			spawnParams.Owner = this;
+
+			// Damage done by spawned Actor
 			spawnParams.Instigator = GetInstigator();
 
 			// Spawn projectile
@@ -247,6 +252,7 @@ void ACharacterManager::Shoot()
 
 			if( projectile )
 			{
+				// Shoot projectile in the direction
 				FVector launchDirection = muzzleRotation.Vector();
 				projectile->ShootInDirection( launchDirection );
 			}
@@ -256,5 +262,5 @@ void ACharacterManager::Shoot()
 
 void ACharacterManager::TimerFunction()
 {
-
+	// --NEEDS IMPLEMENTATION--
 }

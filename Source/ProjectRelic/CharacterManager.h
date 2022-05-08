@@ -13,7 +13,6 @@
 /***************************************************************************************
  * Special thank you to Joseph Gilmore for the headers <3 
  * 
- * 
  * Type: Class
  *
  * Name: CharacterManager
@@ -44,12 +43,32 @@ class PROJECTRELIC_API ACharacterManager : public ACharacter
 	GENERATED_BODY()
 
 private:
-	
 	bool m_holdADS; // Toggle holding ADS setting
-	float m_muzzleRotationPitch;
-	float m_walkSpeed;
-	float m_sprintSpeed;
-	float m_crouchSpeed;
+	float m_muzzleRotationPitch; // Muzzle rotation
+	float m_walkSpeed; // Walk speed
+	float m_sprintSpeed; // Sprint speed
+	float m_crouchSpeed; // Crouch speed
+
+public:
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
+	
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UCameraComponent* cameraComp; // Player follow camera
+	
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UCameraComponent* aDSCameraComp; // Player ADS camera
+	
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USkeletalMeshComponent* gunComp; // Gun
+	
+	UPROPERTY( EditDefaultsOnly, Category = Projectile )
+		TSubclassOf<class AProjectileManager> projectileClass; // Projectile class
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
+		FVector muzzleOffset; // Muzzle offset
+
+	FTimerHandle timerHandle; // Timer
 
 public:
 	/********************************************************
@@ -75,14 +94,7 @@ public:
 	***********************************************************/
 	UFUNCTION()
 		void Shoot();
-
-	// Muzzle offset
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Gameplay )
-		FVector muzzleOffset;
-
-	
-public:
-	/********************************************************
+	/*******************************************************************
 	   *   Function        : virtual void BeginPlay() override
 	   *   Purpose         : Called when the game starts or when spawned
 	   *   Parameters      : N/A
@@ -91,30 +103,8 @@ public:
 	   *   Contributors    : Jaber Ahmed
 	   *   Notes           : N/A
 	   *   See also        : N/A
-	*********************************************************/
+	********************************************************************/
 	virtual void BeginPlay() override;
-	
-
-
-	// Spring Arm Component to follow the camera behind the player
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USpringArmComponent* springArmComp;
-
-	// Player follow camera
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UCameraComponent* cameraComp;
-
-	// Player ADS camera
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UCameraComponent* aDSCameraComp;
-
-	// Gun
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USkeletalMeshComponent* gunComp;
-
-	UPROPERTY( EditDefaultsOnly, Category = Projectile )
-		TSubclassOf<class AProjectileManager> projectileClass;
-
 	/********************************************************
 	   *   Function        : void MoveForward()
 	   *   Purpose         :
@@ -124,8 +114,7 @@ public:
 	   *   Contributors    : Jaber Ahmed
 	   *   Notes           : N/A
 	   *   See also        : N/A
-	*********************************************************/
-	// Input 
+	*********************************************************/ 
 	void MoveForward( float inputAxis );
 	/********************************************************
 	   *   Function        : MoveRight()
@@ -140,7 +129,7 @@ public:
 	void MoveRight( float inputAxis );
 	/********************************************************
 	   *   Function        : void BeginSprint()
-	   *   Purpose         :
+	   *   Purpose         : Start sprinting
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -148,11 +137,10 @@ public:
 	   *   Notes           : N/A
 	   *   See also        : N/A
 	*********************************************************/
-	// Sprint
 	void BeginSprint();
 	/********************************************************
 	   *   Function        : void EndSprint()
-	   *   Purpose         :
+	   *   Purpose         : Stop sprinting
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -163,7 +151,7 @@ public:
 	void EndSprint();
 	/********************************************************
 	   *   Function        : void BeginCrouch()
-	   *   Purpose         :
+	   *   Purpose         : Start crouching
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -171,11 +159,10 @@ public:
 	   *   Notes           : N/A
 	   *   See also        : N/A
 	*********************************************************/
-	// Crouch
 	void BeginCrouch();
 	/********************************************************
 	   *   Function        : void EndCrouch()
-	   *   Purpose         :
+	   *   Purpose         : Stop crouching
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -186,7 +173,7 @@ public:
 	void EndCrouch();
 	/********************************************************
 	   *   Function        : void AimIn()
-	   *   Purpose         :
+	   *   Purpose         : Aim gun in
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -197,7 +184,7 @@ public:
 	void AimIn();
 	/********************************************************
 	   *   Function        : void AimOut()
-	   *   Purpose         :
+	   *   Purpose         : Aim gun out
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -209,9 +196,9 @@ public:
 	/********************************************************
 	   *   Function        : Takedown
 	   *   Purpose         : Melee takedown the enemy
-	   *   Parameters      :
+	   *   Parameters      : N/A
 	   *   Returns         : N/A
-	   *   Date altered    :
+	   *   Date altered    : 18/04/2022
 	   *   Contributors    : Jaber Ahmed
 	   *   Notes           : N/A
 	   *   See also        : N/A
@@ -219,7 +206,7 @@ public:
 	virtual void Takedown();
 	/********************************************************
 	   *   Function        : void SetHoldADS()
-	   *   Purpose         :
+	   *   Purpose         : Setting to toggle holding of ADS
 	   *   Parameters      : bool holdADS 
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -230,7 +217,7 @@ public:
 	void SetHoldADS( bool holdADS );
 	/********************************************************
 	   *   Function        : bool GetHoldADS()
-	   *   Purpose         :
+	   *   Purpose         : Get if ADS is held or pressed
 	   *   Parameters      : N/A
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -250,11 +237,17 @@ public:
 	   *   See also        : N/A
 	*****************************************************************/
 	void UpdateWalkSpeed( float speed );
-
+	/**********************************************************************
+	   *   Function        : void TakedownTrace();
+	   *   Purpose         : Line to check if enemy is infront for takedown
+	   *   Parameters      : N/A
+	   *   Returns         : N/A
+	   *   Date altered    : 18/04/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	**********************************************************************/
 	void TakedownTrace();
-
-
-public:
 	/*********************************************************************
 	   *   Function        : virtual void Tick( float deltaTime ) override
 	   *   Purpose         : Called every frame
@@ -277,10 +270,27 @@ public:
 	   *   See also        : N/A
 	***********************************************************************************************************************/
 	virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent );
-
+	/*********************************************************************
+	   *   Function        : virtual void Tick( float deltaTime ) override
+	   *   Purpose         : Called every frame
+	   *   Parameters      : float deltaTime
+	   *   Returns         : N/A
+	   *   Date altered    : 15/03/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	***********************************************************************/
 	void LineTrace();
-
-
+	/*****************************************************************************
+	  *   Function        : void TimerFunction()
+	  *   Purpose         : Set timer
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 18/04/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	*****************************************************************************/
 	void TimerFunction();
-	FTimerHandle timerHandle;
+	
 };

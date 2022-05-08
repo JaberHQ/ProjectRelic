@@ -40,7 +40,7 @@
  * 09/04/2022	 JA			 1.1		 AI Perception component			
  ***************************************************************************************/
 
-
+// Declare delegate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed );
 
 UCLASS()
@@ -48,8 +48,7 @@ class PROJECTRELIC_API AEnemyCharacter : public ACharacterManager, public IComba
 {
 	GENERATED_BODY()
 	
-private:
-	
+private:	
 	float m_health; // health variable
 	float m_detectionTimer; // detection timer
 	float m_sightRadius; // Sight radius
@@ -59,10 +58,10 @@ private:
 	float m_patrolSpeed; // Enemy walk (patrol) speed
 	float m_chaseSpeed; // Enemy run (chase) speed
 	
-	bool m_canTakedown;
+	bool m_canTakedown; // If enemy can be taken down
 
-	bool m_hasBeenSeen;
-	float m_detectionSpeed;
+	bool m_hasBeenSeen; // Has seen the player
+	float m_detectionSpeed; // Speed of detection
 
 
 	// Reference to interface
@@ -79,9 +78,6 @@ private:
 	**********************************************************************************/
 	UFUNCTION()
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
-
-	
-
 
 public:
 
@@ -107,7 +103,6 @@ public:
 	   *   See also        : N/A
 	*********************************************************/
 	~AEnemyCharacter();
-	
 	/********************************************************
 	   *   Function        : void BeginPlay() override
 	   *   Purpose         : On start of play
@@ -137,10 +132,6 @@ public:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
 		UCurveFloat* myCurve;
-	
-	
-	
-
 	/*******************************************************************************************
 	   *   Function        : FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
 	   *   Purpose         : Getter for the enemy character
@@ -152,19 +143,71 @@ public:
 	   *   See also        : N/A
 	*******************************************************************************************/
 	FORCEINLINE AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const;
-
-
-	bool CanTakedown() override;
-	
-	void Interact() override;
-
-	
+	/*****************************************************************************
+	*   Function        : bool CanTakedown() 
+	*   Purpose         : Get bool to check if enemy can be taken down
+	*   Parameters      : N/A
+	*   Returns         : m_canTakedown
+	*   Date altered    : 18/04/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	bool CanTakedown();
+	/*****************************************************************************
+	*   Function        : void Interact() 
+	*   Purpose         : Function for when Player and Enemy interact
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 18/04/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	void Interact();
+	/*****************************************************************************
+	*   Function        : void SightDetectionDelegate()
+	*   Purpose         : Event for when player has been detected
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 20/04/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void SightDetectionDelegate();
-
-
+	/*****************************************************************************
+	*   Function        : void SetHasBeenSeen( bool hasBeenSeen )
+	*   Purpose         : Set bool
+	*   Parameters      : bool hasBeenSeen 
+	*   Returns         : N/A
+	*   Date altered    : 20/04/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void SetHasBeenSeen( bool hasBeenSeen );
+	/*****************************************************************************
+	*   Function        : bool GetHasBeenSeen() const
+	*   Purpose         : Get bool
+	*   Parameters      : N/A
+	*   Returns         : return m_hasBeenSeen
+	*   Date altered    : 20/04/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	bool GetHasBeenSeen() const;
-
+	/*****************************************************************************
+	*   Function        : float GetDetectionSpeed() const
+	*   Purpose         : Get the speed of detection
+	*   Parameters      : N/A
+	*   Returns         : return m_detectionSpeed
+	*   Date altered    : 21/04/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	float GetDetectionSpeed() const;
 };
