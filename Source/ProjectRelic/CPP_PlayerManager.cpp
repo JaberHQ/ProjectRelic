@@ -6,6 +6,8 @@
 void ACPP_PlayerManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Start player off as crouching
 	Crouch();
 }
 

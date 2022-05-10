@@ -9,10 +9,25 @@
 #include "BehaviorTree/BehaviorTree.h"
 
 #include "CPP_AIController.generated.h"
-
-/**
- * 
- */
+/**************************************************************************************
+ * Type: Class
+ *
+ * Name:
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose:
+ *
+ * Functions:
+ *
+ * References: N/A
+ *
+ * See Also: N/A
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * ----------    JA          -------     ----------------------------------------------
+ **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIController : public AAIController
 {

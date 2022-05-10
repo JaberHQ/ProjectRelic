@@ -210,7 +210,6 @@ void ACharacterManager::SetHoldADS( bool holdADS )
 
 bool ACharacterManager::GetHoldADS()
 {
-	// Return bool
 	return m_holdADS;
 }
 

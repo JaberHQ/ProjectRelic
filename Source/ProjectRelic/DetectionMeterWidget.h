@@ -23,7 +23,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * ----------    JA          -------     ----------------------------------------------
+ * 18/04/2022    JA          v1.0        Created a widget blueprint
  **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API UDetectionMeterWidget : public UBaseWidgetBlueprint

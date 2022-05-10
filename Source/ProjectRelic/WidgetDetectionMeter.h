@@ -11,7 +11,7 @@
 /***************************************************************************************
  * Type: Class
  *
- * Name: WidgetDetectionMeter
+ * Name: WidgetDetectionMeter (Prototype)
  *
  * Author: Jaber Ahmed
  *
@@ -25,7 +25,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * ----------    JA          -------     ----------------------------------------------
+ * 18/04/2022    JA          v1.0		 Created BP widget
  *****************************************************************************************/
 
 UCLASS()
@@ -35,8 +35,18 @@ class PROJECTRELIC_API UWidgetDetectionMeter : public UUserWidget
 
 private:
 	UProgressBar* m_progressBar; // Progress bar
-	APawn* m_pawn; // Pawn
+	APawn* m_pawn; // Pawn reference
 
 public:
+	/*****************************************************************************
+	*  Function         : void Construct( APawn* pawn )
+	*   Purpose         : Construct event
+	*   Parameters      : APawn* pawn
+	*   Returns         : N/A
+	*   Date altered    : 18/04/2022 
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void Construct( APawn* pawn );
 };

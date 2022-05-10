@@ -9,11 +9,11 @@
 /***************************************************************************************
  * Type: Class
  *
- * Name: EnemyPatrolPoint
+ * Name: EnemyPatrolPoint (Prototype)
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Actor for patrol points for AI to follow
+ * Purpose: Actor for patrol points for AI to follow (Prototype)
  *
  * Functions: N/A
  *
@@ -23,7 +23,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 1.0         N/A
+ * 31/03/2022    JA			 1.0         Created patrol point
  ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AEnemyPatrolPoint : public ATargetPoint

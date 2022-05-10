@@ -16,19 +16,23 @@
 #include "CombatInterface.h"
 #include "EnemyCharacter.generated.h"
 
-/***************************************************************************************
+/**********************************************************************************************
  * Type: Class
  *
- * Name: EnemyCharacter
+ * Name: EnemyCharacter 
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Child class for enemy patrol
+ * Purpose: Child class for enemy patrol (Prototype)
  *
  * Functions: OnPlayerCaught( const TArray<AActor*>& CaughtActors ), AEnemyCharacter(),
  *			  ~AEnemyCharacter(), UpdateWalkSpeed( float chaseSpeed ), 
  *			  void BeginPlay() override, 
- *			  AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const
+ *			  AEnemyCharacter* GetEnemyCharacter( APawn* pawn ) const,
+ *			  float GetDetectionSpeed() const, bool GetHasBeenSeen() const,
+ *			  void SetHasBeenSeen( bool hasBeenSeen ), void SightDetectionDelegate(),
+ *			  bool CanTakedown(), void Interact()
+ *			  
  *
  * References: N/A
  *
@@ -36,9 +40,12 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 1.0         Pawn sense component
- * 09/04/2022	 JA			 1.1		 AI Perception component			
- ***************************************************************************************/
+ * 31/03/2022    JA			 v1.0        Pawn sense component
+ * 09/04/2022	 JA			 v1.1		 Changed to AI Perception component		
+ * 18/04/2022    JA			 v1.2		 Detection indicator
+ * 25/04/2022	 JA			 v1.3		 Player to be invisible
+ * 02/05/2022	 JA			 v1.31		 Depreciated, going to be replaced with CPP_AIManager
+ **********************************************************************************************/
 
 // Declare delegate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightRegisteredD, bool, hasBeenSeen, float, detectionSpeed );
@@ -54,18 +61,16 @@ private:
 	float m_sightRadius; // Sight radius
 	float m_loseSightRadius; // Lose sight radius
 	float m_peripheralVisionAngleDegrees; // Peripheral vision
-
 	float m_patrolSpeed; // Enemy walk (patrol) speed
 	float m_chaseSpeed; // Enemy run (chase) speed
-	
-	bool m_canTakedown; // If enemy can be taken down
-
-	bool m_hasBeenSeen; // Has seen the player
 	float m_detectionSpeed; // Speed of detection
+	bool m_canTakedown; // If enemy can be taken down
+	bool m_hasBeenSeen; // Has seen the player
 
 
 	// Reference to interface
 	//TUniquePtr<ICombatInterface> m_pCombatInterface = MakeUnique<ICombatInterface>();
+
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
 	   *   Purpose         : What to do when enemy has seen an actor

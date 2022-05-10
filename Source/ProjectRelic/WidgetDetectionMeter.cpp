@@ -11,6 +11,5 @@ void UWidgetDetectionMeter::Construct( APawn* pawn )
 
 	// Reference to player controller
 	AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>( pawn );
-
 	
 }

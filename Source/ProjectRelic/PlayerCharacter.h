@@ -8,19 +8,19 @@
 #include "EnemyCharacter.h"
 #include "PlayerCharacter.generated.h"
 
-/*************************************************************************************************
+/****************************************************************************************************************
  * Type: Class
  *
- * Name: PlayerCharacter
+ * Name: PlayerCharacter (Prototype)
  *
  * Author: Jaber Ahmed
  *
  * Purpose: Child class for the player 
  *
  * Functions: APlayerCharacter(), ~APlayerCharacter(), 
- *   virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override,
- *	 virtual void BeginPlay() override, void TakedownTrace(), void Takedown(), void PrepareTakedown(),
- *	 void SetInvisible( bool invisible ), bool GetInvisible() const
+ *			  virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override,
+ *			  virtual void BeginPlay() override, void TakedownTrace(), void Takedown(), void PrepareTakedown(),
+ *			  void SetInvisible( bool invisible ), bool GetInvisible() const
  *
  * References: N/A
  *
@@ -28,9 +28,11 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 15/03/2022    JA			 1.0         Prototype version
- * 25/04/2022	 JA			 1.1		 Adding invisiblity
- **************************************************************************************************/
+ * 15/03/2022    JA			 v1.0        Prototype version
+ * 11/04/2022	 JA			 v1.1		 Melee and cover
+ * 25/04/2022	 JA			 v1.2		 Adding invisiblity
+ * 02/05/2022	 JA			 v1.21		 Depreciated, going to be using CPP_PlayerCharacter
+****************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API APlayerCharacter : public ACharacterManager
 {
@@ -180,6 +182,4 @@ public:
 	   *   See also        : N/A
 	***********************************************************/
 	virtual void BeginPlay() override;
-
-	
 };

@@ -14,11 +14,11 @@
 /******************************************************************************************************************************
  * Type: Class
  *
- * Name: EnemyController
+ * Name: EnemyController (Prototype)
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Control the enemy patrol pawn and set its behaviour
+ * Purpose: Control the enemy patrol pawn and set its behaviour (Prototype)
  *
  * Functions: virtual void OnPossess( APawn* pawn ) override, AEnemyController(),
  *			  ~AEnemyController(), void SetPlayerCaught( APawn* pawn ), 
@@ -34,7 +34,8 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA          1.0         Prototype, very basic pathing and vision, using AIPerception instead of PawnSense
+ * 31/03/2022    JA          v1.0        Prototype, very basic pathing and vision, using AIPerception instead of PawnSense
+ * 02/05/2022	 JA			 v1.01		 Depreciated, going to be replaced with CPP_AIController 
  ******************************************************************************************************************************/
 
 UCLASS()

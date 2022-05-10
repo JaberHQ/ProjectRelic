@@ -25,7 +25,7 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Projectile manager for characters to shoot 
+ * Purpose: Projectile manager for characters to shoot (Prototype)
  *
  * Functions: AProjectileManager, ~AProjectileManager, virtual void BeginPlay() override, virtual void Tick( float deltaTime ) override,
  *			  void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit ),
@@ -37,7 +37,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 24/04/2022    JA			 1.0		 
+ * 24/04/2022    JA			 1.0		 Created an actor for projectile shooting	 
  *******************************************************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AProjectileManager : public AActor

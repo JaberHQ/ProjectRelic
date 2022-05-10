@@ -7,6 +7,14 @@
 #include "CombatInterface.generated.h"
 
 
+
+// This class does not need to be modified.
+UINTERFACE(MinimalAPI)
+class UCombatInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+
 /***************************************************************************************
  * Type: Class
  *
@@ -14,7 +22,7 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: User interface for combat
+ * Purpose: Interface for combat
  *
  * Functions: virtual bool CanTakedown(), virtual void Interact()
  *
@@ -24,24 +32,11 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * ----------    JA          -------     ----------------------------------------------
+ * 11/04/2022    JA          v1.0        Created an interface for melee takedown
  ***************************************************************************************/
-
-// This class does not need to be modified.
-UINTERFACE(MinimalAPI)
-class UCombatInterface : public UInterface
-{
-	GENERATED_BODY()
-};
-
-/**
- * 
- */
 class PROJECTRELIC_API ICombatInterface
 {
-	GENERATED_BODY()
-
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+	GENERATED_BODY()	
 private:
 public:
 	/*****************************************************************************

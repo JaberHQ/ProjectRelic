@@ -10,7 +10,7 @@
 #include "Math/Vector.h"
 #include "CharacterManager.generated.h"
 
-/***************************************************************************************
+/******************************************************************************************************
  * Special thank you to Joseph Gilmore for the headers <3 
  * 
  * Type: Class
@@ -19,7 +19,7 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Parent class for characters
+ * Purpose: Parent class for characters (Prototype)
  *
  * Functions: ACharacterManager(), ~ACharacterManager(), void Shoot(), 
  *			  void MoveForward(), void MoveRight(), void BeginSprint(),
@@ -35,8 +35,11 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 12/03/2022    JA          1.0         Needs to be reworked, good for prototype
- ***************************************************************************************/
+ * 21/03/2022    JA          v1.0        Needs to be reworked, good for prototype
+ * 28/03/2022    JA			 v1.1		 Added bullets
+ * 18/04/2022	 JA			 v1.2		 Melee takedown features
+ * 02/04/2022	 JA			 v1.21		 Depreciated, will be replaced with CPP_CharacterManager
+******************************************************************************************************/
 
 UCLASS()
 class PROJECTRELIC_API ACharacterManager : public ACharacter
@@ -108,7 +111,7 @@ public:
 	virtual void BeginPlay() override;
 	/********************************************************
 	   *   Function        : void MoveForward()
-	   *   Purpose         :
+	   *   Purpose         : Allow player to move forward
 	   *   Parameters      : float inputAxis
 	   *   Returns         : N/A
 	   *   Date altered    : 15/03/2022
@@ -220,7 +223,7 @@ public:
 	   *   Function        : bool GetHoldADS()
 	   *   Purpose         : Get if ADS is held or pressed
 	   *   Parameters      : N/A
-	   *   Returns         : N/A
+	   *   Returns         : return m_holdADS;
 	   *   Date altered    : 15/03/2022
 	   *   Contributors    : Jaber Ahmed
 	   *   Notes           : N/A

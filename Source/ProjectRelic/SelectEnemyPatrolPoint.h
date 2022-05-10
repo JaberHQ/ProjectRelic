@@ -12,7 +12,7 @@
 /*****************************************************************************************************************************
  * Type: Class
  *
- * Name: SelectEnemyPatrolPoint
+ * Name: SelectEnemyPatrolPoint (Prototype)
  *
  * Author: Jaber Ahmed
  *
@@ -27,7 +27,8 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 1.0         
+ * 31/03/2022    JA			 1.0         Created script to find patrol points and have BB
+ * 03/05/2022	 JA			 1.01		 Depreciated, going to be using CPP_FindPatrolPath
  *****************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API USelectEnemyPatrolPoint : public UBTTaskNode
