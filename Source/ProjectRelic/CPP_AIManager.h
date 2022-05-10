@@ -10,11 +10,11 @@
 /**************************************************************************************
  * Type: Class
  *
- * Name:
+ * Name: CPP_AIManager
  *
  * Author: Jaber Ahmed
  *
- * Purpose: CPP_AIManager
+ * Purpose: Manager all AI
  *
  * Functions: ACPP_AIManager()
  *

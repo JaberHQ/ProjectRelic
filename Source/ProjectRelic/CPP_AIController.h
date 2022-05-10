@@ -12,11 +12,11 @@
 /**************************************************************************************
  * Type: Class
  *
- * Name:
+ * Name: CPP_AIController
  *
  * Author: Jaber Ahmed
  *
- * Purpose:
+ * Purpose: 
  *
  * Functions:
  *
@@ -26,7 +26,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * ----------    JA          -------     ----------------------------------------------
+ * 02/05/2022   JA           v2.0        Create a better EnemyController
  **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIController : public AAIController

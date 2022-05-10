@@ -24,7 +24,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * ----------    JA          -------     ----------------------------------------------
+ * 28/03/2022    JA          v1.0        Created a HUD for the crosshair
  ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AGameplayHUD : public AHUD

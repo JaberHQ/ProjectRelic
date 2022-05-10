@@ -13,7 +13,7 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: A redone version of PlayerManager
+ * Purpose: Create the player character (Version 2 and above of PlayerManager)
  *
  * Functions: virtual void BeginPlay() override,
  *			  virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override

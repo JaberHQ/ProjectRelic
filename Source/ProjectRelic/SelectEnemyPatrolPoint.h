@@ -12,11 +12,11 @@
 /*****************************************************************************************************************************
  * Type: Class
  *
- * Name: SelectEnemyPatrolPoint (Prototype)
+ * Name: SelectEnemyPatrolPoint 
  *
  * Author: Jaber Ahmed
  *
- * Purpose: BB Task for enemy to select node and walk path
+ * Purpose: BB Task for enemy to select node and walk path (Prototype)
  *
  * Functions: virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override
  *

@@ -31,7 +31,16 @@ UCLASS()
 class PROJECTRELIC_API UCPP_FindPatrolPoint : public UBTTaskNode
 {
 	GENERATED_BODY()
-	
+		/*******************************************************************************************************************************
+		*   Function        : virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override
+		*   Purpose         : Execute task to find patrol points
+		*   Parameters      : UBehaviorTreeComponent& ownerComp, uint8* nodeMemory
+		*   Returns         : EBTNodeResult::Succeeded, EBTNodeResult::Failed
+		*   Date altered    : 03/05/2022
+		*   Contributors    : Jaber Ahmed
+		*   Notes           : N/A
+		*   See also        : N/A
+		*******************************************************************************************************************************/
 	virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
 
 };

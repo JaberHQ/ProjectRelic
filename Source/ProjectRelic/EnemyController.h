@@ -14,7 +14,7 @@
 /******************************************************************************************************************************
  * Type: Class
  *
- * Name: EnemyController (Prototype)
+ * Name: EnemyController 
  *
  * Author: Jaber Ahmed
  *

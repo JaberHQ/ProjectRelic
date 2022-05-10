@@ -11,11 +11,11 @@
 /****************************************************************************************************************
  * Type: Class
  *
- * Name: PlayerCharacter (Prototype)
+ * Name: PlayerCharacter 
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Child class for the player 
+ * Purpose: Child class for the player (Prototype)
  *
  * Functions: APlayerCharacter(), ~APlayerCharacter(), 
  *			  virtual void SetupPlayerInputComponent( class UInputComponent* playerInputComponent ) override,

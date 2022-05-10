@@ -12,7 +12,7 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Version 2 (and above) of the CharacterManager
+ * Purpose: Parent class for characters (Version 2 and above of the CharacterManager)
  *
  * Functions: ACPP_CharacterManager() virtual void BeginPlay() override,
  *			  virtual void Tick( float DeltaTime ) override,

@@ -11,11 +11,11 @@
 /***************************************************************************************
  * Type: Class
  *
- * Name: WidgetDetectionMeter (Prototype)
+ * Name: WidgetDetectionMeter 
  *
  * Author: Jaber Ahmed
  *
- * Purpose: User widget for sight detection
+ * Purpose: User widget for sight detection (Prototype)
  *
  * Functions: void Construct( APawn* pawn )
  *
