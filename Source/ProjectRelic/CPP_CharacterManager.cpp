@@ -14,9 +14,11 @@ ACPP_CharacterManager::ACPP_CharacterManager()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+	// Initialise components
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 
+	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
 	// Attatch components to mesh
@@ -31,6 +33,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->bIgnoreBaseRotation = true;
 
+	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 	
 }
@@ -74,6 +77,7 @@ void ACPP_CharacterManager::MoveForward( float inputAxis )
 {
 	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
 	{
+		// Rotation
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
 		
@@ -90,6 +94,7 @@ void ACPP_CharacterManager::MoveRight( float inputAxis )
 {
 	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
 	{
+		// Rotation
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
 
@@ -114,11 +119,16 @@ void ACPP_CharacterManager::EndSprint()
 
 void ACPP_CharacterManager::BeginCrouch()
 {
+	// Set bool to opposite value
 	m_isCrouched = !m_isCrouched;
+
+	// If crouched is true, crouch
 	if( m_isCrouched == true )
 	{
 		Crouch();
 	}
+
+	// Else, stop crouching
 	else
 	{
 		UnCrouch();

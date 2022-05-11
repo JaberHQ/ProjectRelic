@@ -30,11 +30,28 @@ UCLASS()
 class PROJECTRELIC_API AGameplayHUD : public AHUD
 {
 	GENERATED_BODY()
-protected:
-	// Centre
+public:
+	/*****************************************************************************
+	*   Function        : UTexture2D* CrosshairTexture
+	*   Purpose         : Crosshair texture
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 28/03/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/	// Centre
 	UPROPERTY( EditDefaultsOnly )
 		UTexture2D* CrosshairTexture;
-public:
-	// Primary draw call for HUD
+	/*****************************************************************************
+	*   Function        : virtual void DrawHUD() override
+	*   Purpose         : Draw the heads up display
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 28/03/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/	// Primary draw call for HUD
 	virtual void DrawHUD() override;
 };

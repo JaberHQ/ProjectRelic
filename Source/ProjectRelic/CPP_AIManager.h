@@ -14,7 +14,7 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Manager all AI
+ * Purpose: Parent class for all AI
  *
  * Functions: ACPP_AIManager()
  *

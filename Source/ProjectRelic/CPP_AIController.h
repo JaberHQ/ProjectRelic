@@ -16,9 +16,9 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: 
+ * Purpose: AI Controller to control Enemy Behaviour
  *
- * Functions:
+ * Functions: ACPP_AIController(), UBlackboardComponent* GetBlackboardComp() const
  *
  * References: N/A
  *
@@ -48,6 +48,26 @@ private:
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName hasLineOfSight; // Has line of sight bool
 public:
+	/*****************************************************************************
+	*   Function        : ACPP_AIController()
+	*   Purpose         : Constructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	ACPP_AIController();
+	/**********************************************************************************
+	*   Function        : FORCEINLINE UBlackboardComponent* GetBlackboardComp() const
+	*   Purpose         : Get Blackboard component
+	*   Parameters      : N/A
+	*   Returns         : blackboardComp
+	*   Date altered    : 02/05/2022 
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	**********************************************************************************/
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
 };

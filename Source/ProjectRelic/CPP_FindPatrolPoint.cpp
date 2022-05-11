@@ -5,7 +5,9 @@
 
 EBTNodeResult::Type UCPP_FindPatrolPoint::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
+	// Reference to enemy controller
 	ACPP_AIController* enemyController = Cast<ACPP_AIController>( ownerComp.GetAIOwner() );
+
 	if( enemyController )
 	{
 		// Get BB

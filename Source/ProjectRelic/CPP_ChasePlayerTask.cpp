@@ -5,7 +5,7 @@
 
 EBTNodeResult::Type UCPP_ChasePlayerTask::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
-	// Get ai controller
+	// Get AI controller
 	ACPP_AIController* enemyController = Cast<ACPP_AIController>( ownerComp.GetAIOwner() );
 
 	if( enemyController )

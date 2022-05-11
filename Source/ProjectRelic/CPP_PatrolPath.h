@@ -31,13 +31,38 @@ class PROJECTRELIC_API ACPP_PatrolPath : public AActor
 	GENERATED_BODY()
 private:
 public:	
-	// Sets default values for this actor's properties
+	/*****************************************************************************
+	*   Function        : ACPP_PatrolPath()
+	*   Purpose         : Constructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	ACPP_PatrolPath();
-
-	// Called when the game starts or when spawned
+	/*****************************************************************************
+	*   Function        : virtual void BeginPlay() override
+	*   Purpose         : BeginPlay event when the game starts or when spawned
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	virtual void BeginPlay() override;
-
-	// Called every frame
+	/*****************************************************************************
+	*   Function        : virtual void Tick(float DeltaTime) override
+	*   Purpose         : Tick event for every frame
+	*   Parameters      : N/A
+	*   Returns         : N/A 
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	virtual void Tick(float DeltaTime) override;
 
 

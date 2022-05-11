@@ -9,13 +9,13 @@
 /**************************************************************************************
  * Type: Class
  *
- * Name:
+ * Name: CPP_AI
  *
  * Author: Jaber Ahmed
  *
- * Purpose:
+ * Purpose: Accidental script, ensure to delete
  *
- * Functions:
+ * Functions: N/A
  *
  * References: N/A
  *
@@ -23,7 +23,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * ----------    JA          -------     ----------------------------------------------
+ * 02/05/2020    JA          v1.0        DELETE
  **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AI : public ACPP_CharacterManager

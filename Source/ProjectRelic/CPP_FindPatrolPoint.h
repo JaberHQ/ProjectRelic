@@ -25,6 +25,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
+ * 31/03/2022    JA			 v1.0         Created script to find patrol points and have BB
  * 03/05/2022    JA          v2.0        Created a task and implemented it into behaviour tree
  **********************************************************************************************************************/
 UCLASS()
