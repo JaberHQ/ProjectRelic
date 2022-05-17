@@ -26,15 +26,18 @@ EBTNodeResult::Type UCPP_FindPatrolPathTask::ExecuteTask( UBehaviorTreeComponent
 
 		// Use index to get patrol path
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
-		FVector point = managerAI->GetPatrolPath()->GetPatrolPoint( index );
+		if( managerAI )
+		{
+			FVector point = managerAI->GetPatrolPath()->GetPatrolPoint( index );
 
-		// Transform point to global position
-		FVector globalPoint = managerAI->GetPatrolPath()->GetActorTransform().TransformPosition( point );
-		controllerAI->GetBlackboardComp()->SetValueAsVector( "PatrolPathVector", globalPoint );
+			// Transform point to global position
+			FVector globalPoint = managerAI->GetPatrolPath()->GetActorTransform().TransformPosition( point );
+			controllerAI->GetBlackboardComp()->SetValueAsVector( "PatrolPathVector", globalPoint );
 
-		// Success
-		FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
-		return EBTNodeResult::Succeeded;
+			// Success
+			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
+			return EBTNodeResult::Succeeded;
+		}
 	}
 	return EBTNodeResult::Failed;
 }

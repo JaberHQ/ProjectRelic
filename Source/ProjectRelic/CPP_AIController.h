@@ -52,6 +52,18 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName patrolPathIndex; // Patrol path index
+private:
+	/**********************************************************************
+	   *   Function        : virtual void OnPossess( APawn* pawn ) override
+	   *   Purpose         : Possess pawn and control behaviour
+	   *   Parameters      : APawn* pawn
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	***********************************************************************/
+	virtual void OnPossess( APawn* pawn ) override;
 
 public:
 	/*****************************************************************************

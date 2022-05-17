@@ -2,6 +2,7 @@
 
 
 #include "CPP_AIController.h"
+#include "CPP_AIManager.h"
 
 ACPP_AIController::ACPP_AIController()
 {
@@ -15,6 +16,22 @@ ACPP_AIController::ACPP_AIController()
 	hasLineOfSight = "HasLineOfSight";
 	patrolPathVector = "PatrolPathVector";
 	patrolPathIndex = "PatrolPathIndex";
+}
+
+void ACPP_AIController::OnPossess( APawn* pawn )
+{
+	Super::OnPossess( pawn );
+
+	ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( pawn );
+	if( managerAI )
+	{
+		if( managerAI->behaviourTree->BlackboardAsset )
+		{
+			blackboardComp->InitializeBlackboard( *( managerAI->behaviourTree->BlackboardAsset ) );
+		}
+
+		behaviourComp->StartTree( *managerAI->behaviourTree );
+	}
 }
 
 UBlackboardComponent* ACPP_AIController::GetBlackboardComp() const

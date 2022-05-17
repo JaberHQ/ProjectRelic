@@ -39,6 +39,10 @@ private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* patrolPath;
 public:
+	UPROPERTY( EditAnywhere, Category = "AI" )
+		class UBehaviorTree* behaviourTree;
+
+public:
 	ACPP_AIManager();
 	ACPP_PatrolPoint* GetPatrolPath();
 };
