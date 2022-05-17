@@ -13,6 +13,8 @@ ACPP_AIController::ACPP_AIController()
 	patrolLocation = "PatrolLocation";
 	enemyActor = "EnemyActor";
 	hasLineOfSight = "HasLineOfSight";
+	patrolPathVector = "PatrolPathVector";
+	patrolPathIndex = "PatrolPathIndex";
 }
 
 UBlackboardComponent* ACPP_AIController::GetBlackboardComp() const

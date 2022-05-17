@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	ACPP_PatrolPoint();
 
+	FVector GetPatrolPoint( int index ) const;
+	int Num() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -24,6 +27,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	//UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( MakeEditWidget = "true" ) );
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( MakeEditWidget = "true", AllowPrivateAccess = "true" ) )
+		TArray<FVector> patrolPoints;
+
 
 };

@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BehaviorTree/BTTaskNode.h"
-#include "CPP_AIController.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "CPP_FindPatrolPoint.generated.h"
+#include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
+#include "CPP_FindPatrolPathTask.generated.h"
 
 /**********************************************************************************************************************
  * Type: Class
@@ -29,9 +27,13 @@
  * 03/05/2022    JA          v2.0         Created a task and implemented it into behaviour tree
  **********************************************************************************************************************/
 UCLASS()
-class PROJECTRELIC_API UCPP_FindPatrolPoint : public UBTTaskNode
+class PROJECTRELIC_API UCPP_FindPatrolPathTask : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
+
+public:
+
+	UCPP_FindPatrolPathTask( FObjectInitializer const& objectInitalizer );
 		/*******************************************************************************************************************************
 		*   Function        : virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override
 		*   Purpose         : Execute task to find patrol points
@@ -42,6 +44,5 @@ class PROJECTRELIC_API UCPP_FindPatrolPoint : public UBTTaskNode
 		*   Notes           : N/A
 		*   See also        : N/A
 		*******************************************************************************************************************************/
-	virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
-
+		virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
 };

@@ -32,7 +32,6 @@ UCLASS()
 class PROJECTRELIC_API ACPP_AIController : public AAIController
 {
 	GENERATED_BODY()
-	
 
 private:
 	UBehaviorTreeComponent* behaviourComp; // Behaviour Tree comp
@@ -47,6 +46,13 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName hasLineOfSight; // Has line of sight bool
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName patrolPathVector; // Patrol path vector
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName patrolPathIndex; // Patrol path index
+
 public:
 	/*****************************************************************************
 	*   Function        : ACPP_AIController()

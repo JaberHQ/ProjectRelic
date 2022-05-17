@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CPP_CharacterManager.h"
 #include "NavigationSystem.h"
+#include "CPP_PatrolPoint.h"
 #include "CPP_AIManager.generated.h"
 
 /**************************************************************************************
@@ -35,6 +36,9 @@ class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
 {
 	GENERATED_BODY()
 private:
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
+		ACPP_PatrolPoint* patrolPath;
 public:
 	ACPP_AIManager();
+	ACPP_PatrolPoint* GetPatrolPath();
 };

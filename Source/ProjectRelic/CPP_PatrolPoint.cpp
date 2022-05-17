@@ -11,6 +11,16 @@ ACPP_PatrolPoint::ACPP_PatrolPoint()
 
 }
 
+FVector ACPP_PatrolPoint::GetPatrolPoint( int index ) const
+{
+	return patrolPoints[ index ];
+}
+
+int ACPP_PatrolPoint::Num() const
+{
+	return patrolPoints.Num();
+}
+
 // Called when the game starts or when spawned
 void ACPP_PatrolPoint::BeginPlay()
 {
