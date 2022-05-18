@@ -30,4 +30,18 @@ class PROJECTRELIC_API ACPP_AssaultSoldier : public ACPP_AIManager
 {
 	GENERATED_BODY()
 	
+private:
+public:
+	ACPP_AssaultSoldier();
+	/*****************************************************************************
+	 *   Function        : virtual void BeginPlay() override
+	 *   Purpose         : BeginPlay event
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	virtual void BeginPlay() override;
 };
