@@ -23,7 +23,8 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 v1.0         Created patrol point
+ * 31/03/2022    JA			 v1.0        Created patrol point
+ * 17/05/2022	 JA			 v1.1		 Depreciated, look at CPP_PatrolPoint
  ***************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AEnemyPatrolPoint : public ATargetPoint

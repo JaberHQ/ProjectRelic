@@ -8,7 +8,7 @@
 #include "CPP_PatrolPoint.h"
 #include "CPP_AIManager.generated.h"
 
-/**************************************************************************************
+/***********************************************************************************************
  * Type: Class
  *
  * Name: CPP_AIManager
@@ -30,19 +30,22 @@
  * 18/04/2022    JA			 v1.2		 Detection indicator
  * 25/04/2022	 JA			 v1.3		 Player to be invisible
  * 02/05/2022	 JA			 v2.0		 Redone EnemyCharacter
- **************************************************************************************/
+ * 17/05/2022    JA			 v2.1		 Added new patrol point features
+ * 18/05/2022	 JA			 v2.2		 Multiple enemies can now follow different patrol points
+ ***********************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
 {
 	GENERATED_BODY()
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
-		ACPP_PatrolPoint* patrolPath;
+		ACPP_PatrolPoint* patrolPath; // Choose patrol points
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
-		class UBehaviorTree* behaviourTree;
+		class UBehaviorTree* behaviourTree; // Behaviour tree
 
 public:
+
 	ACPP_AIManager();
 	ACPP_PatrolPoint* GetPatrolPath();
 };

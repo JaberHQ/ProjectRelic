@@ -5,8 +5,6 @@
 
 ACPP_AIManager::ACPP_AIManager()
 {
-	// Call function to change AI walk speed
-	UpdateWalkSpeed( 300.0f );
 }
 
 ACPP_PatrolPoint* ACPP_AIManager::GetPatrolPath()

@@ -9,7 +9,7 @@
 /**********************************************************************************************************************
  * Type: Class
  *
- * Name: CPP_FindPatrolPoint
+ * Name: CPP_FindPatrolPathTask
  *
  * Author: Jaber Ahmed
  *
@@ -23,8 +23,9 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 31/03/2022    JA			 v1.0         Created script to find patrol points and have BB
- * 03/05/2022    JA          v2.0         Created a task and implemented it into behaviour tree
+ * 31/03/2022    JA			 v1.0        Created script to find patrol points and have BB
+ * 03/05/2022    JA          v2.0        Created a task and implemented it into behaviour tree
+ * 18/05/2022	 JA			 v2.1		 Added features to allow multiple enemies to patrol
  **********************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API UCPP_FindPatrolPathTask : public UBTTask_BlackboardBase
@@ -32,7 +33,16 @@ class PROJECTRELIC_API UCPP_FindPatrolPathTask : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 
 public:
-
+	/*********************************************************************************************
+	  *   Function        : UCPP_FindPatrolPathTask( FObjectInitializer const& objectInitalizer )
+	  *   Purpose         : Constructor
+	  *   Parameters      : FObjectInitializer const& objectInitalizer
+	  *   Returns         : N/A
+	  *   Date altered    : 17/05/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	*********************************************************************************************/
 	UCPP_FindPatrolPathTask( FObjectInitializer const& objectInitalizer );
 		/*******************************************************************************************************************************
 		*   Function        : virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override

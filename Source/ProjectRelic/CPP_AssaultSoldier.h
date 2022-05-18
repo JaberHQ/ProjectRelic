@@ -24,6 +24,7 @@
  * Change Log:
  * Date          Initials    Version     Comments
  * 02/05/2022    JA          v1.0        Created a new type of AI for AR's
+ * 18/05/2022    JA			 v1.1		 Set default walk speed, got animations working
  **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AssaultSoldier : public ACPP_AIManager
@@ -31,7 +32,18 @@ class PROJECTRELIC_API ACPP_AssaultSoldier : public ACPP_AIManager
 	GENERATED_BODY()
 	
 private:
+	float m_defaultWalkSpeed; // Default walk speed
 public:
+	/*****************************************************************************
+	 *   Function        : ACPP_AssaultSoldier()
+	 *   Purpose         : Constructor
+	 *   Parameters      : FObjectInitializer const& objectInitalizer
+	 *   Returns         : N/A
+	 *   Date altered    : 18/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	ACPP_AssaultSoldier();
 	/*****************************************************************************
 	 *   Function        : virtual void BeginPlay() override
