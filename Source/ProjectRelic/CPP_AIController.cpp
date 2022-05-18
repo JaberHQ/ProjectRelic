@@ -27,9 +27,10 @@ void ACPP_AIController::OnPossess( APawn* pawn )
 	{
 		if( managerAI->behaviourTree->BlackboardAsset )
 		{
+			// Initalise BB
 			blackboardComp->InitializeBlackboard( *( managerAI->behaviourTree->BlackboardAsset ) );
 		}
-
+		// Initalise BT
 		behaviourComp->StartTree( *managerAI->behaviourTree );
 	}
 }
