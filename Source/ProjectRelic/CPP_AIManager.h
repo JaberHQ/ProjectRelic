@@ -6,6 +6,15 @@
 #include "CPP_CharacterManager.h"
 #include "NavigationSystem.h"
 #include "CPP_PatrolPoint.h"
+#include "Curves/CurveFloat.h"
+#include "Components/WidgetComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "Perception/PawnSensingComponent.h"
+#include "Perception/AISense.h"
+#include "Perception/AIPerceptionSystem.h"
+#include "Perception/AIPerceptionComponent.h"
+#include <UObject/ObjectMacros.h>
+#include <Perception/AISenseConfig_Sight.h>
 #include "CPP_AIManager.generated.h"
 
 /***********************************************************************************************
@@ -38,14 +47,46 @@ class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
 {
 	GENERATED_BODY()
 private:
+	float m_health; // health variable
+	float m_detectionTimer; // detection timer
+	float m_sightRadius; // Sight radius
+	float m_loseSightRadius; // Lose sight radius
+	float m_peripheralVisionAngleDegrees; // Peripheral vision
+	float m_patrolSpeed; // Enemy walk (patrol) speed
+	float m_chaseSpeed; // Enemy run (chase) speed
+	float m_detectionSpeed; // Speed of detection
+	bool m_canTakedown; // If enemy can be taken down
+	bool m_hasBeenSeen; // Has seen the player
+
+private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* patrolPath; // Choose patrol points
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UBehaviorTree* behaviourTree; // Behaviour tree
 
-public:
+	UPROPERTY( VisibleAnywhere, Category = "AI")
+		class UAIPerceptionComponent* perceptionComp; // Perception Component
 
+	UPROPERTY( VisibleAnywhere, Category = "AI" )
+		class UAISenseConfig_Sight* sightConfig; // Sight configuration
+
+
+private:
+	/**********************************************************************************
+	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
+	   *   Purpose         : What to do when enemy has seen an actor
+	   *   Parameters      : const TArray<AActor*>& CaughtActors
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : EnemyController
+	**********************************************************************************/
+	UFUNCTION()
+		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
+public:
+	virtual void BeginPlay() override;
 	ACPP_AIManager();
 	ACPP_PatrolPoint* GetPatrolPath();
 };

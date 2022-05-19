@@ -2,12 +2,74 @@
 
 
 #include "CPP_AIManager.h"
+#include "CPP_AIController.h"
+#include "CPP_PlayerManager.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 ACPP_AIManager::ACPP_AIManager()
+	:m_health( 100.0f )
+	,m_sightRadius( 1000.0f )
+	,m_loseSightRadius( 1020.0f )
+	,m_peripheralVisionAngleDegrees( 35.0f )
+	,m_patrolSpeed( 300.0f )
+	,m_chaseSpeed( 600.0f )
 {
+	// Initialise components
+	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerception Component" ) );
+	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "Sight Config" ) );
+
+	// Perception config
+	perceptionComp->ConfigureSense( *sightConfig );
+	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
+
+	// Sight config
+	sightConfig->SightRadius = m_sightRadius;
+	sightConfig->LoseSightRadius = m_loseSightRadius;
+	sightConfig->PeripheralVisionAngleDegrees = m_peripheralVisionAngleDegrees;
+	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	sightConfig->DetectionByAffiliation.bDetectFriendlies = false;
+}
+
+void ACPP_AIManager::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// If enemy 'senses' the player
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
 }
 
 ACPP_PatrolPoint* ACPP_AIManager::GetPatrolPath()
 {
 	return patrolPath;
+}
+
+void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
+{
+	// AI Controller reference
+	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	if( controllerAI )
+	{
+		if( playerManager )
+		{
+			// Debug message
+			GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
+
+			// Set actor (player) as caught
+			controllerAI->SetPlayerCaught( caughtActors );
+
+			// //Sight config
+			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
+			// Get location
+			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+			// Find the distance between the two
+			float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
+			
+		}
+	}
 }

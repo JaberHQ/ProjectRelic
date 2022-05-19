@@ -88,4 +88,37 @@ public:
 	*   See also        : N/A
 	**********************************************************************************/
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const;
+	/***********************************************************************************
+	   *   Function        : void SetPlayerCaught( const TArray<AActor*>& caughtActors )
+	   *   Purpose         : Set the target to the player when spotted
+	   *   Parameters      : const TArray<AActor*>& caughtActors
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	***********************************************************************************/
+	void SetPlayerCaught( const TArray<AActor*>& caughtActors );
+	/*****************************************************************************
+		*   Function        : void SetHasLineOfSight( bool hasLineOfSight )
+		*   Purpose         : Set BB key boolean
+		*   Parameters      : bool boolean
+		*   Returns         : N/A
+		*   Date altered    : 09/04/2022
+		*   Contributors    : Jaber Ahmed
+		*   Notes           : N/A
+		*   See also        : N/A
+	*****************************************************************************/
+	void SetHasLineOfSight( bool boolean );
+	/*****************************************************************************
+		*   Function        : bool GetHasLineOfSight()
+		*   Purpose         : Get BB key hasLineOfSight
+		*   Parameters      : N/A
+		*   Returns         : hasLineOfSight
+		*   Date altered    : 09/04/2022
+		*   Contributors    : Jaber Ahmed
+		*   Notes           : N/A
+		*   See also        : N/A
+	*****************************************************************************/
+	bool GetHasLineOfSight();
 };

@@ -6,12 +6,20 @@
 EBTNodeResult::Type UCPP_ChasePlayerTask::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
 	// Get AI controller
-	ACPP_AIController* enemyController = Cast<ACPP_AIController>( ownerComp.GetAIOwner() );
+	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( ownerComp.GetAIOwner() );
 
-	if( enemyController )
+	if( controllerAI )
 	{
-		// Return node has succeeded
-		return EBTNodeResult::Succeeded;
+		// Get AI manager
+		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
+		if( managerAI )
+		{
+			// Speed up enemy
+			managerAI->UpdateWalkSpeed( 600.0f );
+
+			// Return node has succeeded
+			return EBTNodeResult::Succeeded;
+		}
 	}
 	// Return node has failed
 	return EBTNodeResult::Failed;

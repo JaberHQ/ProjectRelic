@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "CPP_AIController.h"
+#include "CPP_AIManager.h"
 #include "CPP_ChasePlayerTask.generated.h"
 
 /*********************************************************************************************************************
