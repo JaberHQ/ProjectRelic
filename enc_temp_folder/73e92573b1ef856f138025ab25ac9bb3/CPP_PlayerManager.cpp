@@ -91,8 +91,8 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 
 			//Add float to return value (length of montage)
 			//delay
-			//SetActorLocation( GetActorLocation() + GetActorForwardVector() * 175.0f );
-			//GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
+			SetActorLocation( GetActorLocation() + GetActorForwardVector() * 175.0f );
+			GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
 
 			// --- Move back camera 
 		}

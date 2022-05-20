@@ -74,10 +74,10 @@ public:
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
 	UPROPERTY( VisibleAnywhere, Category = "MeleeTakedown" )
-		class UBoxComponent* boxComponent; // Sight configuration
+		class UBoxComponent* boxComponent; // Box Component
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "MeleeTakedown", meta = ( AllowPrivateAccess = "true" ) )
-		class UAnimMontage* animTakedown;
+		class UAnimMontage* animTakedown; // Animation Montage
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )

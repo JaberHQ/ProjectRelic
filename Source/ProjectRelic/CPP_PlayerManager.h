@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CPP_CharacterManager.h"
+#include "Animation/AnimMontage.h"
 #include "CPP_PlayerManager.generated.h"
 
 /**************************************************************************************************************
@@ -39,6 +40,9 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float m_takedownTraceDistance;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "MeleeTakedown", meta = ( AllowPrivateAccess = "true" ) )
+		class UAnimMontage* animTakedown; // Animation Montage
 
 	ACPP_PlayerManager();
 	/*****************************************************************************
