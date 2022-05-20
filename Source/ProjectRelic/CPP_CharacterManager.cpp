@@ -2,10 +2,7 @@
 
 
 #include "CPP_CharacterManager.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "Components/InputComponent.h"
+
 
 // Sets default values
 ACPP_CharacterManager::ACPP_CharacterManager()

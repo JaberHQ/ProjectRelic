@@ -34,8 +34,13 @@ class PROJECTRELIC_API ACPP_PlayerManager : public ACPP_CharacterManager
 {
 	GENERATED_BODY()
 private:
+	bool m_canTakedown;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
+		float m_takedownTraceDistance;
+
+	ACPP_PlayerManager();
 	/*****************************************************************************
 	*   Function        : virtual void BeginPlay() override
 	*   Purpose         : Begin event
@@ -59,5 +64,11 @@ public:
 	*******************************************************************************************************************/
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
+	void SetCanTakedown( bool canTakedown );
+	bool GetCanTakedown();
 	
+	void Takedown();
+
+	void TraceForward_Implementation();
+
 };

@@ -15,6 +15,8 @@
 #include "Perception/AIPerceptionComponent.h"
 #include <UObject/ObjectMacros.h>
 #include <Perception/AISenseConfig_Sight.h>
+#include "Components/BoxComponent.h"
+#include "Animation/AnimMontage.h"
 #include "CPP_AIManager.generated.h"
 
 /***********************************************************************************************
@@ -71,7 +73,11 @@ public:
 	UPROPERTY( VisibleAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
+	UPROPERTY( VisibleAnywhere, Category = "MeleeTakedown" )
+		class UBoxComponent* boxComponent; // Sight configuration
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "MeleeTakedown", meta = ( AllowPrivateAccess = "true" ) )
+		class UAnimMontage* animTakedown;
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
@@ -89,4 +95,13 @@ public:
 	virtual void BeginPlay() override;
 	ACPP_AIManager();
 	ACPP_PatrolPoint* GetPatrolPath();
+
+	UFUNCTION()
+		void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  );
+
+	UFUNCTION()
+		void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex );
+
+	UFUNCTION()
+		void Takedown();
 };

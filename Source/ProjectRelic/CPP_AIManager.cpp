@@ -17,6 +17,7 @@ ACPP_AIManager::ACPP_AIManager()
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerception Component" ) );
 	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "Sight Config" ) );
+	boxComponent = CreateDefaultSubobject<UBoxComponent>( TEXT( "Takedown Box" ) );
 
 	// Perception config
 	perceptionComp->ConfigureSense( *sightConfig );
@@ -37,11 +38,41 @@ void ACPP_AIManager::BeginPlay()
 
 	// If enemy 'senses' the player
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
+	boxComponent->OnComponentEndOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxEndOverlap );
 }
 
 ACPP_PatrolPoint* ACPP_AIManager::GetPatrolPath()
 {
 	return patrolPath;
+}
+
+void ACPP_AIManager::OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult )
+{
+	// Player reference
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	// Set bool to takedown
+	playerManager->SetCanTakedown( true );
+}
+
+void ACPP_AIManager::OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex )
+{
+
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	// Set bool to takedown
+	/*if( playerManager->GetCanTakedown() == true )
+	{
+		playerManager->SetCanTakedown( false );
+	}*/
+}
+
+void ACPP_AIManager::Takedown()
+{
+	GetCharacterMovement()->DisableMovement();
+	SetActorEnableCollision( false );
+	PlayAnimMontage( animTakedown );
 }
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
