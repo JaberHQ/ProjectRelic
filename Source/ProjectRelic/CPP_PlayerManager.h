@@ -42,7 +42,7 @@ public:
 		float m_takedownTraceDistance;
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "MeleeTakedown", meta = ( AllowPrivateAccess = "true" ) )
-		class UAnimMontage* animTakedown; // Animation Montage
+		UAnimMontage* animTakedown; // Animation Montage
 
 	ACPP_PlayerManager();
 	/*****************************************************************************

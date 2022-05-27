@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "CPP_AIController.h"
+#include "Animation/AnimInstance.h"
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
@@ -83,10 +84,14 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 			m_canTakedown = false;
 
 			// Meant to be new transform rotation, not actor rotation
+			// SetActorTransform( managerAI->GetActorTransform() );	
 			SetActorRotation( managerAI->GetActorRotation() );
 			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -175.0f ) );
-			PlayAnimMontage( animTakedown );
-			
+
+			PlayAnimMontage( animTakedown, 1.0f, NAME_None );
+			//PlayAnimMontage( animTakedown );
+			//GetMesh()->PlayAnimation( animTakedown, false );
+			//managerAI->GetMesh()->PlayAnimation( animTakedown, false );
 			managerAI->Takedown();
 
 			//Add float to return value (length of montage)
