@@ -70,10 +70,13 @@ void ACPP_AIManager::OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActo
 
 void ACPP_AIManager::Takedown()
 {
+	if( animTakedown )
+	{
+		PlayAnimMontage( animTakedown, 1.0f, NAME_None );
+	}
 	GetCharacterMovement()->DisableMovement();
 	SetActorEnableCollision( false );
 	UnPossessed();
-	//PlayAnimMontage( animTakedown );
 }
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
