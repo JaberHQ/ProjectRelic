@@ -5,6 +5,7 @@
 #include "CPP_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "CPP_AIManager.h"
+
 UCPP_FindPatrolPathTask::UCPP_FindPatrolPathTask( FObjectInitializer const& objectInitalizer )
 {
 	NodeName = TEXT( "Find Patrol Path Point" );

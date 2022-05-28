@@ -64,7 +64,7 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 	FVector end = ( GetActorLocation() + ( GetActorForwardVector() * m_takedownTraceDistance ) );
 
 	// Line trace
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_Camera, traceParams );
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
 
 	// Draw a line for debug
 	DrawDebugLine( GetWorld(), start, end, FColor::Red, false, 5.0f );

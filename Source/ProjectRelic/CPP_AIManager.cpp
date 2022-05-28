@@ -74,9 +74,12 @@ void ACPP_AIManager::Takedown()
 	// Disable movement
 	GetCharacterMovement()->DisableMovement();
 
+	//Unpossess
+	UnPossessed();
+
 	// Set collision
 	SetActorEnableCollision( false );
-
+	
 	// Play animation
 	if( animTakedown )
 	{
@@ -85,8 +88,7 @@ void ACPP_AIManager::Takedown()
 
 	// Delay then death
 	FTimerHandle deathDelayTimer;
-	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 10.0f, false );
-	
+	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 5.0f, false );
 }
 
 void ACPP_AIManager::DelayDeath()
@@ -99,6 +101,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+	// Player reference
 	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
 
 	if( controllerAI )
