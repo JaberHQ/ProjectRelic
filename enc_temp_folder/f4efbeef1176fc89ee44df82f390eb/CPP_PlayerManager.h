@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "CPP_CharacterManager.h"
 #include "Animation/AnimMontage.h"
-#include "TimerManager.h"
 #include "CPP_PlayerManager.generated.h"
 
 /**************************************************************************************************************
@@ -76,5 +75,4 @@ public:
 
 	void TraceForward_Implementation();
 
-	void AnimationExecuted();
 };

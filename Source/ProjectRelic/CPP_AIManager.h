@@ -17,6 +17,7 @@
 #include <Perception/AISenseConfig_Sight.h>
 #include "Components/BoxComponent.h"
 #include "Animation/AnimMontage.h"
+#include "TimerManager.h"
 #include "CPP_AIManager.generated.h"
 
 /***********************************************************************************************
@@ -73,10 +74,10 @@ public:
 	UPROPERTY( VisibleAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
-	UPROPERTY( EditAnywhere, Category = "MeleeTakedown" )
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UBoxComponent* boxComponent; // Box Component
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Animations )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animTakedown; // Animation Montage
 private:
 	/**********************************************************************************
@@ -104,4 +105,6 @@ public:
 
 	UFUNCTION()
 		void Takedown();
+
+	void DelayDeath();
 };

@@ -6,11 +6,10 @@
 #include "DrawDebugHelpers.h"
 #include "CPP_AIController.h"
 #include "Animation/AnimInstance.h"
-#include "Engine/World.h"
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
-	:m_canTakedown( true )
+	:m_canTakedown( false )
 	,m_takedownTraceDistance( 250.0f )
 {
 }
@@ -79,43 +78,31 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );
 		if( managerAI )
 		{
-			// Debug
-			GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, hit.GetActor()->GetName() );
-			
-			// --- Spring arm stuff ---
+			//Spring arm stuff---
 
-			// Disable character movement
 			GetCharacterMovement()->DisableMovement();
-
-			// Set bool
 			m_canTakedown = false;
 
-			SetActorRotation( managerAI->GetActorRotation() ); // Meant to be new transform rotation, not actor rotation
-			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -175.0f ) ); 
-			
+			// Meant to be new transform rotation, not actor rotation
+			// SetActorTransform( managerAI->GetActorTransform() );	
+			SetActorRotation( managerAI->GetActorRotation() );
+			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -175.0f ) );
 			if( animTakedown )
 			{
-				// Play animation
 				PlayAnimMontage( animTakedown, 1.0f, NAME_None );
-				
-				// Takedown AI
-				managerAI->Takedown();
-
-				// Delay 
-				FTimerHandle delayTimer;
-				GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, 1.0f, false );		
 			}
+			//PlayAnimMontage( animTakedown );
+			//GetMesh()->PlayAnimation( animTakedown, false );
+			
+			//managerAI->GetMesh()->PlayAnimation( animTakedown, false );
+			managerAI->Takedown();
+
+			//Add float to return value (length of montage)
+			//delay
+			//SetActorLocation( GetActorLocation() + GetActorForwardVector() * 175.0f );
+			//GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
+
+			// --- Move back camera 
 		}
 	}
-}
-
-void ACPP_PlayerManager::AnimationExecuted()
-{
-	// Return character back to position
-	SetActorLocation( GetActorLocation() + GetActorForwardVector() * 175.0f );
-
-	// Re-enable movement
-	GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
-
-	// --- Move back camera ---
 }

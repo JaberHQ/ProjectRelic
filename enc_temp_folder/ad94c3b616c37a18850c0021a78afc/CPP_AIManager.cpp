@@ -85,7 +85,7 @@ void ACPP_AIManager::Takedown()
 
 	// Delay then death
 	FTimerHandle deathDelayTimer;
-	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 10.0f, false );
+	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 1.0f, false );
 	
 }
 
