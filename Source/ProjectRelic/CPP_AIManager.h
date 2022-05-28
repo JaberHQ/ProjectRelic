@@ -78,7 +78,7 @@ public:
 		class UBoxComponent* boxComponent; // Box Component
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
-		UAnimMontage* animTakedown; // Animation Montage
+		UAnimMontage* animTakedownAI; // Animation Montage
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
