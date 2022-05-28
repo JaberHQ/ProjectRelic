@@ -87,10 +87,13 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 			// SetActorTransform( managerAI->GetActorTransform() );	
 			SetActorRotation( managerAI->GetActorRotation() );
 			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -175.0f ) );
-
-			PlayAnimMontage( animTakedown, 1.0f, NAME_None );
+			if( animTakedown )
+			{
+				PlayAnimMontage( animTakedown, 1.0f, NAME_None );
+			}
 			//PlayAnimMontage( animTakedown );
 			//GetMesh()->PlayAnimation( animTakedown, false );
+			
 			//managerAI->GetMesh()->PlayAnimation( animTakedown, false );
 			managerAI->Takedown();
 

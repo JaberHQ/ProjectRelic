@@ -72,7 +72,8 @@ void ACPP_AIManager::Takedown()
 {
 	GetCharacterMovement()->DisableMovement();
 	SetActorEnableCollision( false );
-	PlayAnimMontage( animTakedown );
+	UnPossessed();
+	//PlayAnimMontage( animTakedown );
 }
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
