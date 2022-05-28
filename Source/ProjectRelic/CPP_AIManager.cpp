@@ -15,9 +15,9 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_chaseSpeed( 600.0f )
 {
 	// Initialise components
-	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerception Component" ) );
-	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "Sight Config" ) );
-	boxComponent = CreateDefaultSubobject<UBoxComponent>( TEXT( "Takedown Box" ) );
+	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
+	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "SightConfig" ) );
+	boxComponent = CreateDefaultSubobject<UBoxComponent>( TEXT( "TakedownBox" ) );
 
 	// Perception config
 	perceptionComp->ConfigureSense( *sightConfig );
@@ -74,9 +74,9 @@ void ACPP_AIManager::Takedown()
 	{
 		PlayAnimMontage( animTakedown, 1.0f, NAME_None );
 	}
-	GetCharacterMovement()->DisableMovement();
+	/*GetCharacterMovement()->DisableMovement();
 	SetActorEnableCollision( false );
-	UnPossessed();
+	UnPossessed();*/
 }
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )

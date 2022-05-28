@@ -73,7 +73,7 @@ public:
 	UPROPERTY( VisibleAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
-	UPROPERTY( VisibleAnywhere, Category = "MeleeTakedown" )
+	UPROPERTY( EditAnywhere, Category = "MeleeTakedown" )
 		class UBoxComponent* boxComponent; // Box Component
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Animations )

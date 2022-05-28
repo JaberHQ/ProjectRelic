@@ -9,7 +9,7 @@
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
-	:m_canTakedown( true )
+	:m_canTakedown( false )
 	,m_takedownTraceDistance( 250.0f )
 {
 }
