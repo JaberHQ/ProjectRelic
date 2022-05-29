@@ -20,7 +20,7 @@ ACPP_AIController::ACPP_AIController()
 
 void ACPP_AIController::OnPossess( APawn* pawn )
 {
-	//Super::OnPossess( pawn );
+	Super::OnPossess( pawn );
 
 	// Reference to AI Pawn
 	ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( pawn );
