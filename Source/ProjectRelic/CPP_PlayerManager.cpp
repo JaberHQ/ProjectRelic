@@ -87,11 +87,13 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 			// Disable character movement
 			GetCharacterMovement()->DisableMovement();
 
+			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+			DisableInput( PlayerController );
 			// Set bool
 			m_canTakedown = false;
 
 			SetActorRotation( managerAI->GetActorRotation() ); // Meant to be new transform rotation, not actor rotation
-			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -175.0f ) ); 
+			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -30.0f ) ); 
 			
 			if( animTakedown )
 			{
@@ -103,7 +105,7 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 
 				// Delay 
 				FTimerHandle delayTimer;
-				GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, 1.0f, false );		
+				GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, 5.0f, false );		
 			}
 		}
 	}
@@ -112,10 +114,15 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 void ACPP_PlayerManager::AnimationExecuted()
 {
 	// Return character back to position
-	SetActorLocation( GetActorLocation() + GetActorForwardVector() * 175.0f );
+	SetActorLocation( GetActorLocation() + GetActorForwardVector() * -30.0f );
 
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	EnableInput( PlayerController );
 	// Re-enable movement
 	GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
 
 	// --- Move back camera ---
+
+	m_canTakedown = true;
+
 }

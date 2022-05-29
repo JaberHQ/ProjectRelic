@@ -72,13 +72,13 @@ void ACPP_AIManager::OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActo
 void ACPP_AIManager::Takedown()
 {
 	// Disable movement
-	//GetCharacterMovement()->DisableMovement();
+	GetCharacterMovement()->DisableMovement();
 
 	//Unpossess
-	//UnPossessed();
+	UnPossessed();
 
 	// Set collision
-	//SetActorEnableCollision( false );
+	SetActorEnableCollision( false );
 	
 	// Play animation
 	if( animTakedownAI )
@@ -87,8 +87,8 @@ void ACPP_AIManager::Takedown()
 	}
 
 	// Delay then death
-	//FTimerHandle deathDelayTimer;
-	//GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 5.0f, false );
+	FTimerHandle deathDelayTimer;
+	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 25.0f, false );
 }
 
 void ACPP_AIManager::DelayDeath()
