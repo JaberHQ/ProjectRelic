@@ -25,6 +25,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Set class variables of the spring arm
 	springArmComp->bUsePawnControlRotation = true;
 
+	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
+
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -123,12 +125,14 @@ void ACPP_CharacterManager::BeginCrouch()
 	if( m_isCrouched == true )
 	{
 		Crouch();
+		springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 140.0f ) );
 	}
 
 	// Else, stop crouching
 	else
 	{
 		UnCrouch();
+		springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
 	}
 }
 
