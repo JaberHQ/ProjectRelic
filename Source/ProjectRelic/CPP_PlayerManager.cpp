@@ -28,6 +28,7 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
+	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::ShootProjectile );
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )

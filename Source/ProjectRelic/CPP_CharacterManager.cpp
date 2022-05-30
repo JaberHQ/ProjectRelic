@@ -10,6 +10,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	:m_isCrouched( true )
 	,m_projectileRange( 1000.0f )
 	,m_canBeShot( true )
+	,m_muzzleRotationPitch( 3.0f )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -70,7 +71,7 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_CharacterManager::BeginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_CharacterManager::EndSprint );
-	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::ShootProjectile );
+
 
 
 
@@ -156,24 +157,40 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 {
 	FVector cameraLocation;
 	FRotator cameraRotation;
-	FVector startTrace = FVector::ZeroVector;
-	FVector endTrace = FVector::ZeroVector;
 
-	startTrace = cameraLocation;
-	endTrace = cameraLocation + ( cameraRotation.Vector() * m_projectileRange );
+	GetController()->GetPlayerViewPoint( cameraLocation, cameraRotation );
 
+	FVector startTrace = cameraLocation;
+	FVector endTrace = ( GetActorLocation() + ( GetActorForwardVector() * m_projectileRange ) );
+	//endTrace = cameraLocation + ( cameraRotation.Vector() * m_projectileRange );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
+
+	FHitResult hit( ForceInit );
+	//GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_Visibility, traceParams );
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_WorldDynamic, traceParams );
 	// Draw a line for debug
 	DrawDebugLine( GetWorld(), startTrace, endTrace, FColor::Red, false, 5.0f );
-
-	GetActorEyesViewPoint( cameraLocation, cameraRotation );
-
-	
-	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
-	FHitResult hit( ForceInit );
-	GetWorld()->LineTraceSingleByChannel( hit, cameraLocation, endTrace, ECC_Visibility, traceParams );
-
+	if( bHit )
+	{
+		// Box where collision has occured
+		DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
+	}
 	return hit;
+
 }
+
+
+
+
+//m_muzzleOffset.Set( 100.0f, 0.0f, 0.0f );
+
+	//// Transform Muzzleoffset from camera space to world space
+	//FVector muzzleLocation = cameraLocation + FTransform( cameraRotation ).TransformVector( m_muzzleOffset );
+
+	//// Skew aim to be upwards
+	//FRotator muzzleRotation = cameraRotation;
+	//muzzleRotation.Pitch += m_muzzleRotationPitch;
 
 void ACPP_CharacterManager::ShootProjectile()
 {

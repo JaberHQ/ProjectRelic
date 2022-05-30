@@ -44,6 +44,7 @@ class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
 
 private:
 	bool m_isCrouched; // If Player is crouched
+	float m_muzzleRotationPitch; // Muzzle rotation
 
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
@@ -58,6 +59,8 @@ public:
 	UPROPERTY( EditAnywhere, Category = "Projectiles" )
 		bool m_canBeShot; // If character can be shot and destroyed by projectile
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
+		FVector m_muzzleOffset; // Muzzle offset
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
