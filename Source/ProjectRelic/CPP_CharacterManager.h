@@ -184,11 +184,38 @@ public:
 	 *   See also        : N/A
 	*****************************************************************************/
 	void EndCrouch();
-
+	 /*****************************************************************************
+	  *   Function        : FHitResult RaycastShot()
+	  *   Purpose         : Send raycast which portrays a projectile being shot
+	  *   Parameters      : N/A
+	  *   Returns         : hit
+	  *   Date altered    : 30/05/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A           
+	  *****************************************************************************/
 	FHitResult RaycastShot();
-
+	/*****************************************************************************
+	  *   Function        : void ShootProjectile()
+	  *   Purpose         : Call to shoot projectile
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 30/05/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable, Category = "Projectiles" )
 		void ShootProjectile();
-
+	/*********************************************************************************************************
+	  *   Function        : virtual void TakeAttack()
+	  *   Purpose         : When Character has been hit by projectile
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 30/05/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : This function can be overriden for desired effect on specific characters and pawns
+	  *   See also        : CPP_PlayerManager::TakeAttack, CPP_AIManager::TakeAttack
+	 *********************************************************************************************************/
 	virtual void TakeAttack();
 };

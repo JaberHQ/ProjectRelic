@@ -45,7 +45,7 @@ void ACPP_AIManager::BeginPlay()
 
 ACPP_PatrolPoint* ACPP_AIManager::GetPatrolPath()
 {
-	return patrolPath;
+	return m_patrolPath;
 }
 
 void ACPP_AIManager::OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult )
@@ -99,15 +99,24 @@ void ACPP_AIManager::DelayDeath()
 
 void ACPP_AIManager::TakeAttack()
 {
-	// Debug
+	// If health remains
 	if( m_health > 0 )
 	{
+		// Decrease health
 		m_health -= 23.3f;
 	}
+	// If there is not health left
 	if( m_health <= 0 )
 	{
+		// -- IMPLEMENTATION NEEDED --
+		// Play death animation
+		// --		--			--
+		
+		// Destroy actor
 		Destroy();
+
 	}
+	// Debug to show health
 	FString healthDebug = FString::SanitizeFloat( m_health );
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug ) ;
 }
@@ -127,10 +136,10 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			// Debug message
 			GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
 
-			// Set actor (player) as caught
+			// Set actor (Player) as caught
 			controllerAI->SetPlayerCaught( caughtActors );
 
-			// //Sight config
+			// Sight config
 			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
 
 			// Get location
@@ -140,6 +149,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			// Find the distance between the two
 			float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 			
+			// Shoot towards Player
 			ShootProjectile();
 		}
 	}

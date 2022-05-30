@@ -41,10 +41,11 @@
  * 09/04/2022	 JA			 v1.1		 Changed to AI Perception component		
  * 18/04/2022    JA			 v1.2		 Detection indicator
  * 25/04/2022	 JA			 v1.3		 Player to be invisible
- * 02/05/2022	 JA			 v2.0		 Redone EnemyCharacter
+ * 02/05/2022	 JA			 v2.0		 Redone EnemyCharacter.cpp
  * 17/05/2022    JA			 v2.1		 Added new patrol point features
  * 18/05/2022	 JA			 v2.2		 Multiple enemies can now follow different patrol points
  * 30/05/2022	 JA			 v2.3		 Added features for stealth takedown
+ * 30/05/2022	 JA			 v2.4	     Added projectile features
  ***********************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
@@ -64,7 +65,7 @@ private:
 
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
-		ACPP_PatrolPoint* patrolPath; // Choose patrol points
+		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UBehaviorTree* behaviourTree; // Behaviour tree
@@ -94,20 +95,99 @@ private:
 	UFUNCTION()
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
 public:
+	/*****************************************************************************
+	 *   Function        : virtual void BeginPlay() override
+	 *   Purpose         : BeginPlay event
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+   *****************************************************************************/
 	virtual void BeginPlay() override;
+	/*****************************************************************************
+	 *   Function        : ACPP_AIManager()
+	 *   Purpose         : Constructor
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+   *****************************************************************************/
 	ACPP_AIManager();
+
+public:
+	/*****************************************************************************
+	 *   Function        : ACPP_PatrolPoint* GetPatrolPath();
+	 *   Purpose         : Get Patrol Points
+	 *   Parameters      : N/A
+	 *   Returns         : m_patrolPath
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_PatrolPoint
+   *****************************************************************************/
 	ACPP_PatrolPoint* GetPatrolPath();
-
+	 /********************************************************************************************************************************************************************
+	  *   Function        : void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, 
+	  *							AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  )
+	  *   Purpose         : When Character overlaps (enters) the collision box
+	  *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
+	  *							UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+	  *   Returns         : N/A
+	  *   Date altered    : 30/05/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A           
+	 *********************************************************************************************************************************************************************/
 	UFUNCTION()
-		void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  );
-
+		void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
+	/*****************************************************************************
+	 *   Function        : void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex )
+	 *   Purpose         : When Character leaves the collision box after overlap
+	 *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+   *****************************************************************************/
 	UFUNCTION()
 		void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex );
-
+	/*****************************************************************************
+	 *   Function        : void Takedown()
+	 *   Purpose         : Action when AI has been stealth taken down
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_PlayerManager::Takedown
+   *****************************************************************************/
 	UFUNCTION()
 		void Takedown();
-
+	/*****************************************************************************
+	 *   Function        : void DelayDeath()
+	 *   Purpose         : After AI takedown, a delay before they are destroyed
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_AIManager::Takedown
+   *****************************************************************************/
 	void DelayDeath();
-
+	/*****************************************************************************
+	 *   Function        : virtual void TakeAttack() override
+	 *   Purpose         : When AI has been hit by projectiles
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Overriden for specific effect on relative actor
+	 *   See also        : CPP_CharacterManager::ShootProjectile
+   *****************************************************************************/
 	virtual void TakeAttack() override;
 };

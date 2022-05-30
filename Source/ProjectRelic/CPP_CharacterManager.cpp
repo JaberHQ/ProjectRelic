@@ -72,9 +72,6 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_CharacterManager::BeginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_CharacterManager::EndSprint );
 
-
-
-
 }
 
 void ACPP_CharacterManager::MoveForward( float inputAxis )
@@ -130,6 +127,8 @@ void ACPP_CharacterManager::BeginCrouch()
 	if( m_isCrouched == true )
 	{
 		Crouch();
+
+		// Move camera
 		springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 140.0f ) );
 	}
 
@@ -137,6 +136,8 @@ void ACPP_CharacterManager::BeginCrouch()
 	else
 	{
 		UnCrouch();
+
+		// Move camera
 		springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
 	}
 }
@@ -155,19 +156,23 @@ void ACPP_CharacterManager::UpdateWalkSpeed( float speed )
 
 FHitResult ACPP_CharacterManager::RaycastShot()
 {
-	FVector cameraLocation;
-	FRotator cameraRotation;
+	FVector cameraLocation; // Camera location
+	FRotator cameraRotation; // Camera rotation
 
+	// Get cameras viewpoint
 	GetController()->GetPlayerViewPoint( cameraLocation, cameraRotation );
 
+	// Start and end of raycast
 	FVector startTrace = cameraLocation;
 	FVector endTrace = ( GetActorLocation() + ( GetActorForwardVector() * m_projectileRange ) );
 	//endTrace = cameraLocation + ( cameraRotation.Vector() * m_projectileRange );
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
 
+	// Hit result
 	FHitResult hit( ForceInit );
 
+	// Send line trace to check if it can hit something
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_WorldDynamic, traceParams );
 
 	// Draw a line for debug
@@ -179,23 +184,28 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 		DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
 	}
 
+	// Return hit collision
 	return hit;
 
 }
 
 void ACPP_CharacterManager::ShootProjectile()
 {
+	// Get the hit that has been returned
 	FHitResult hit = RaycastShot();
+
+	// Get the actor that has been hit
 	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
+
+	// If the actor can be shot and has been hit
 	if( hitActor && m_canBeShot )
 	{
-		hitActor->TakeAttack();
+		// Call function that decides what happens when hit 
+		hitActor->TakeAttack(); // Function is overridable 
 	}
 }
 
 void ACPP_CharacterManager::TakeAttack()
 {
-	// Take damage
-	// Currenthealth -= incomingDamage
-	//Destroy();
+	// -- IMPLEMENTATION NEEDED --
 }
