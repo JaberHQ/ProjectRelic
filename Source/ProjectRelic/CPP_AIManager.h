@@ -44,6 +44,7 @@
  * 02/05/2022	 JA			 v2.0		 Redone EnemyCharacter
  * 17/05/2022    JA			 v2.1		 Added new patrol point features
  * 18/05/2022	 JA			 v2.2		 Multiple enemies can now follow different patrol points
+ * 30/05/2022	 JA			 v2.3		 Added features for stealth takedown
  ***********************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager

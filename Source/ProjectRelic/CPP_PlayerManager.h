@@ -30,6 +30,7 @@
  * 11/04/2022	 JA			 v1.1		 Melee and cover
  * 25/04/2022	 JA			 v1.2		 Adding invisiblity
  * 02/05/2022    JA          v2.0        Created a better PlayerManager
+ * 30/05/2022	 JA			 v2.1		 Stealth Takedown
 **************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_PlayerManager : public ACPP_CharacterManager
@@ -70,6 +71,7 @@ public:
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
 	void SetCanTakedown( bool canTakedown );
+
 	bool GetCanTakedown();
 	
 	void Takedown();

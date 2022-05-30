@@ -51,6 +51,13 @@ public:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* cameraComp; // Player follow camera
+
+	UPROPERTY( EditAnywhere, Category = "Projectiles" )
+		float m_projectileRange; // Range for projectile ray cast
+
+	UPROPERTY( EditAnywhere, Category = "Projectiles" )
+		bool m_canBeShot; // If character can be shot and destroyed by projectile
+
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
@@ -174,5 +181,12 @@ public:
 	*****************************************************************************/
 	void EndCrouch();
 
-	
+	FHitResult RaycastShot();
+
+	UFUNCTION( BlueprintCallable, Category = "Projectiles" )
+		void ShootProjectile();
+
+
+
+	void TakeAttack();
 };

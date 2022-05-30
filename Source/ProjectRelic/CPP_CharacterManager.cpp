@@ -2,11 +2,14 @@
 
 
 #include "CPP_CharacterManager.h"
-
+#include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ACPP_CharacterManager::ACPP_CharacterManager()
 	:m_isCrouched( true )
+	,m_projectileRange( 1000.0f )
+	,m_canBeShot( true )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -67,6 +70,7 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_CharacterManager::BeginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_CharacterManager::EndSprint );
+	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::ShootProjectile );
 
 
 
@@ -141,9 +145,50 @@ void ACPP_CharacterManager::EndCrouch()
 	UnCrouch();
 }
 
+
 void ACPP_CharacterManager::UpdateWalkSpeed( float speed )
 {
 	// Set walk speed
 	GetCharacterMovement()->MaxWalkSpeed = speed;
 }
 
+FHitResult ACPP_CharacterManager::RaycastShot()
+{
+	FVector cameraLocation;
+	FRotator cameraRotation;
+	FVector startTrace = FVector::ZeroVector;
+	FVector endTrace = FVector::ZeroVector;
+
+	startTrace = cameraLocation;
+	endTrace = cameraLocation + ( cameraRotation.Vector() * m_projectileRange );
+
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), startTrace, endTrace, FColor::Red, false, 5.0f );
+
+	GetActorEyesViewPoint( cameraLocation, cameraRotation );
+
+	
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
+	FHitResult hit( ForceInit );
+	GetWorld()->LineTraceSingleByChannel( hit, cameraLocation, endTrace, ECC_Visibility, traceParams );
+
+	return hit;
+}
+
+void ACPP_CharacterManager::ShootProjectile()
+{
+	
+	FHitResult hit = RaycastShot();
+	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
+	if( hitActor && m_canBeShot )
+	{
+		hitActor->TakeAttack();
+	}
+}
+
+void ACPP_CharacterManager::TakeAttack()
+{
+	// Take damage
+	// Currenthealth -= incomingDamage
+	Destroy();
+}
