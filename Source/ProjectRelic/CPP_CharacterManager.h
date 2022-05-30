@@ -36,6 +36,7 @@
  * 28/03/2022    JA			 v1.1		 Added bullets
  * 18/04/2022	 JA			 v1.2		 Melee takedown features
  * 02/05/2022    JA          v2.0        Created a better CharacterManager - Features need to be reimplemented
+ * 30/05/2022    JA			 v2.1		 Changed physic bullets to raycast
  **************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
@@ -189,7 +190,5 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "Projectiles" )
 		void ShootProjectile();
 
-
-
-	void TakeAttack();
+	virtual void TakeAttack();
 };

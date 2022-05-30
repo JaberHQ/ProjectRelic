@@ -39,12 +39,16 @@ class PROJECTRELIC_API ACPP_PlayerManager : public ACPP_CharacterManager
 private:
 	bool m_canTakedown;
 
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float m_takedownTraceDistance;
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = Animations )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animTakedown;
+
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float m_health;
 
 	ACPP_PlayerManager();
 	/*****************************************************************************
@@ -79,4 +83,6 @@ public:
 	void TraceForward_Implementation();
 
 	void AnimationExecuted();
+
+	virtual void TakeAttack() override;
 };

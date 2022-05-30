@@ -38,7 +38,7 @@ void ACPP_AIManager::BeginPlay()
 	Super::BeginPlay();
 
 	// If enemy 'senses' the player
-	//perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
 	boxComponent->OnComponentEndOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxEndOverlap );
 }
@@ -97,6 +97,21 @@ void ACPP_AIManager::DelayDeath()
 	Destroy();
 }
 
+void ACPP_AIManager::TakeAttack()
+{
+	// Debug
+	if( m_health > 0 )
+	{
+		m_health -= 23.3f;
+	}
+	if( m_health <= 0 )
+	{
+		Destroy();
+	}
+	FString healthDebug = FString::SanitizeFloat( m_health );
+	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug ) ;
+}
+
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	// AI Controller reference
@@ -125,6 +140,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			// Find the distance between the two
 			float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 			
+			ShootProjectile();
 		}
 	}
 }

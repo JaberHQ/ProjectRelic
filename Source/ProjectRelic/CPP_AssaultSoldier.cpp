@@ -14,3 +14,5 @@ void ACPP_AssaultSoldier::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+

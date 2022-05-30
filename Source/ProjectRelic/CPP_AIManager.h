@@ -108,4 +108,6 @@ public:
 		void Takedown();
 
 	void DelayDeath();
+
+	virtual void TakeAttack() override;
 };

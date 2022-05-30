@@ -167,34 +167,24 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
 
 	FHitResult hit( ForceInit );
-	//GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_Visibility, traceParams );
+
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_WorldDynamic, traceParams );
+
 	// Draw a line for debug
 	DrawDebugLine( GetWorld(), startTrace, endTrace, FColor::Red, false, 5.0f );
+
 	if( bHit )
 	{
 		// Box where collision has occured
 		DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
 	}
+
 	return hit;
 
 }
 
-
-
-
-//m_muzzleOffset.Set( 100.0f, 0.0f, 0.0f );
-
-	//// Transform Muzzleoffset from camera space to world space
-	//FVector muzzleLocation = cameraLocation + FTransform( cameraRotation ).TransformVector( m_muzzleOffset );
-
-	//// Skew aim to be upwards
-	//FRotator muzzleRotation = cameraRotation;
-	//muzzleRotation.Pitch += m_muzzleRotationPitch;
-
 void ACPP_CharacterManager::ShootProjectile()
 {
-	
 	FHitResult hit = RaycastShot();
 	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
 	if( hitActor && m_canBeShot )
@@ -207,5 +197,5 @@ void ACPP_CharacterManager::TakeAttack()
 {
 	// Take damage
 	// Currenthealth -= incomingDamage
-	Destroy();
+	//Destroy();
 }

@@ -12,6 +12,7 @@
 ACPP_PlayerManager::ACPP_PlayerManager()
 	:m_canTakedown( true )
 	,m_takedownTraceDistance( 250.0f )
+	,m_health( 200.0f )
 {
 }
 
@@ -126,4 +127,20 @@ void ACPP_PlayerManager::AnimationExecuted()
 
 	m_canTakedown = true;
 
+}
+
+void ACPP_PlayerManager::TakeAttack()
+{
+	if( m_health > 0.0f )
+	{
+		m_health -= 10.0f;
+
+		FString healthDebug = FString::SanitizeFloat( m_health );
+		GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug );
+	}
+	if( m_health <= 0.0f )
+	{
+		// Debug
+		GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "Dead" );
+	}
 }
