@@ -133,7 +133,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 			
 			// Shoot towards Player
-			ShootProjectile();
+			StartShooting();
 		}
 	}
 }
