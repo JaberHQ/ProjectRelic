@@ -6,7 +6,6 @@
 #include "DrawDebugHelpers.h"
 #include "CPP_AIController.h"
 #include "Animation/AnimInstance.h"
-#include "Engine/World.h"
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
@@ -33,7 +32,8 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
-	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::ShootProjectile );
+	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::StartShooting );
+	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StartShooting );
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )

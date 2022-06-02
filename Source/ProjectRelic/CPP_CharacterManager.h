@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "CPP_Projectile.h"
 #include "Components/InputComponent.h"
 
 #include "CPP_CharacterManager.generated.h"
@@ -64,8 +65,17 @@ public:
 	UPROPERTY( EditAnywhere, Category = "Projectiles" )
 		bool m_canBeShot; // If character can be shot and destroyed by projectile
 
+	UPROPERTY( EditDefaultsOnly, Category = Projectile )
+		TSubclassOf<class ACPP_Projectile> projectileClass; // Projectile class
+
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
 		FVector m_muzzleOffset; // Muzzle offset
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
+		float timeBetweenShots; // Seconds between shots
+
+	FTimerHandle m_shootTime;
+
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
@@ -224,4 +234,8 @@ public:
 	virtual void TakeAttack();
 
 	bool GetIsCrouched();
+
+	void StartShooting();
+
+	void StopShooting();
 };

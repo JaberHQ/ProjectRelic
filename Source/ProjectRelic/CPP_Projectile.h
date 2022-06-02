@@ -34,7 +34,26 @@ UCLASS()
 class PROJECTRELIC_API ACPP_Projectile : public AActor
 {
 	GENERATED_BODY()
+private:
+	bool m_isHit; // Is hit
+	float m_sphereRadius; // Radius of sphere
+	float m_initialSpeed; // Initial projectile speed
+	float m_maxSpeed; // Max projectile speed
+	float m_bounciness; // Projectile bounciness
+	float m_projectileGravityScale; // Porjectile gravity scale
+	float m_impulse; // Impulse multiplier
+public:
+	UPROPERTY( VisibleDefaultsOnly, Category = "Projectile" )
+		USphereComponent* collisionComponent; // Collision component
 
+	UPROPERTY( VisibleDefaultsOnly, Category = "Projectile" )
+		UStaticMeshComponent* projectileMeshComponent; // Projectile Mesh
+
+	UPROPERTY( VisibleAnywhere, Category = "Movement" )
+		UProjectileMovementComponent* projectileMovementComponent; // Movement
+
+	UPROPERTY( VisibleDefaultsOnly, Category = "Movement" )
+		UMaterialInstanceDynamic* projectileMaterialInstance; // Projectile Material
 public:	
 	// Sets default values for this actor's properties
 	ACPP_Projectile();
@@ -47,4 +66,27 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/******************************************************************************************************************************************************************************
+	   *   Function        : void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit )
+	   *   Purpose         : When projectile hits something
+	   *   Parameters      : UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	******************************************************************************************************************************************************************************/
+	UFUNCTION()
+		void OnHit( UPrimitiveComponent* hitComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, FVector normalImpulse, const FHitResult& hit );
+	/******************************************************************************
+	   *   Function        : void ShootInDirection( const FVector& shootDirection )
+	   *   Purpose         : Initalise the projectile's velocity
+	   *   Parameters      : const FVector& shootDirection
+	   *   Returns         : N/A
+	   *   Date altered    : 09/04/2022
+	   *   Contributors    : Jaber Ahmed
+	   *   Notes           : N/A
+	   *   See also        : N/A
+	******************************************************************************/
+	void ShootInDirection( const FVector& shootDirection );
 };

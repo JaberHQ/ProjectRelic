@@ -39,6 +39,7 @@
  * Date          Initials    Version     Comments
  * 24/04/2022    JA			 v1.0		 Created an actor for projectile shooting
  * 30/05/2022    JA			 v1.1		 Depreciated, see CPP_Projectile	
+ * 02/06/2022	 JA			 v2.0		 Raycast bullets
  *******************************************************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API AProjectileManager : public AActor

@@ -162,37 +162,41 @@ void ACPP_CharacterManager::UpdateWalkSpeed( float speed )
 
 FHitResult ACPP_CharacterManager::RaycastShot()
 {
-	FVector cameraLocation; // Camera location
-	FRotator cameraRotation; // Camera rotation
 
-	// Get cameras viewpoint
-	GetController()->GetPlayerViewPoint( cameraLocation, cameraRotation );
+	const float weaponRange = 20000.0f;
 
-	// Start and end of raycast
-	FVector startTrace = cameraLocation;
-	FVector endTrace = ( GetActorLocation() + ( GetActorForwardVector() * m_projectileRange ) );
-	//endTrace = cameraLocation + ( cameraRotation.Vector() * m_projectileRange );
+	const FVector start = cameraComp->GetComponentLocation();
+	const FVector end = ( cameraComp->GetForwardVector() * weaponRange ) + start;
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
 
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), start, end, FColor::Blue, false, 5.0f );
+	
 	// Hit result
 	FHitResult hit( ForceInit );
 
-	// Send line trace to check if it can hit something
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_WorldDynamic, traceParams );
-
-	// Draw a line for debug
-	DrawDebugLine( GetWorld(), startTrace, endTrace, FColor::Blue, false, 5.0f );
-
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
 	if( bHit )
 	{
 		// Box where collision has occured
 		DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
 	}
 
-	// Return hit collision
 	return hit;
+}
 
+void ACPP_CharacterManager::StartShooting()
+{
+	ShootProjectile();
+
+	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+
+}
+
+void ACPP_CharacterManager::StopShooting()
+{
+	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
 }
 
 void ACPP_CharacterManager::ShootProjectile()
@@ -220,3 +224,5 @@ bool ACPP_CharacterManager::GetIsCrouched()
 {
 	return m_isCrouched;
 }
+
+
