@@ -8,12 +8,15 @@
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 ACPP_AIManager::ACPP_AIManager()
-	:m_health( 100.0f )
+	:health( 100.0f )
+	,defaultHealth( 100.0f )
 	,m_sightRadius( 1000.0f )
 	,m_loseSightRadius( 1020.0f )
 	,m_peripheralVisionAngleDegrees( 35.0f )
 	,m_patrolSpeed( 300.0f )
 	,m_chaseSpeed( 600.0f )
+	,m_shotDamage( 23.3f )
+	,m_deathTimer( 25.0f )
 {
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
@@ -59,14 +62,7 @@ void ACPP_AIManager::OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AAc
 
 void ACPP_AIManager::OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex )
 {
-
 	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
-
-	// Set bool to takedown
-	/*if( playerManager->GetCanTakedown() == true )
-	{
-		playerManager->SetCanTakedown( false );
-	}*/
 }
 
 void ACPP_AIManager::Takedown()
@@ -83,12 +79,12 @@ void ACPP_AIManager::Takedown()
 	// Play animation
 	if( animTakedownAI )
 	{
-		PlayAnimMontage( animTakedownAI, 1.0f, NAME_None );
+		PlayAnimMontage( animTakedownAI );
 	}
 
 	// Delay then death
 	FTimerHandle deathDelayTimer;
-	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, 25.0f, false );
+	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, m_deathTimer, false );
 }
 
 void ACPP_AIManager::DelayDeath()
@@ -99,26 +95,13 @@ void ACPP_AIManager::DelayDeath()
 
 void ACPP_AIManager::TakeAttack()
 {
-	// If health remains
-	if( m_health > 0 )
-	{
-		// Decrease health
-		m_health -= 23.3f;
-	}
-	// If there is not health left
-	if( m_health <= 0 )
-	{
-		// -- IMPLEMENTATION NEEDED --
-		// Play death animation
-		// --		--			--
-		
-		// Destroy actor
-		Destroy();
 
-	}
+	// If health remains, decrease health else pronounce Enemy Dead
+	health >= 0.0f ? health -= m_shotDamage : Destroy(); // Change to death animation
+	
 	// Debug to show health
-	FString healthDebug = FString::SanitizeFloat( m_health );
-	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug ) ;
+	FString healthDebug = FString::SanitizeFloat( health );
+	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
 }
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )

@@ -18,6 +18,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Initialise components
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
+	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
@@ -25,6 +26,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Attatch components to mesh
 	springArmComp->SetupAttachment( GetMesh() );
 	cameraComp->SetupAttachment( springArmComp, USpringArmComponent::SocketName );
+	gunComp->SetupAttachment( GetMesh(), TEXT( "WeaponSocket" ) );
 
 	// Set class variables of the spring arm
 	springArmComp->bUsePawnControlRotation = true;
@@ -176,7 +178,7 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, startTrace, endTrace, ECC_WorldDynamic, traceParams );
 
 	// Draw a line for debug
-	DrawDebugLine( GetWorld(), startTrace, endTrace, FColor::Red, false, 5.0f );
+	DrawDebugLine( GetWorld(), startTrace, endTrace, FColor::Blue, false, 5.0f );
 
 	if( bHit )
 	{
@@ -208,4 +210,9 @@ void ACPP_CharacterManager::ShootProjectile()
 void ACPP_CharacterManager::TakeAttack()
 {
 	// -- IMPLEMENTATION NEEDED --
+}
+
+bool ACPP_CharacterManager::GetIsCrouched()
+{
+	return m_isCrouched;
 }

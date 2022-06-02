@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
+
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -53,6 +54,9 @@ public:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* cameraComp; // Player follow camera
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USkeletalMeshComponent* gunComp; // Mesh for gun
 
 	UPROPERTY( EditAnywhere, Category = "Projectiles" )
 		float m_projectileRange; // Range for projectile ray cast
@@ -218,4 +222,6 @@ public:
 	  *   See also        : CPP_PlayerManager::TakeAttack, CPP_AIManager::TakeAttack
 	 *********************************************************************************************************/
 	virtual void TakeAttack();
+
+	bool GetIsCrouched();
 };

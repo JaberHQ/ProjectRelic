@@ -146,4 +146,6 @@ public:
 	 *   See also        : CPP_CharacterManager::ShootProjectile
 	*****************************************************************************/
 	virtual void TakeAttack() override;
+
+
 };

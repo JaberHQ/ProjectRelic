@@ -52,7 +52,6 @@ class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
 {
 	GENERATED_BODY()
 private:
-	float m_health; // health variable
 	float m_detectionTimer; // detection timer
 	float m_sightRadius; // Sight radius
 	float m_loseSightRadius; // Lose sight radius
@@ -60,8 +59,10 @@ private:
 	float m_patrolSpeed; // Enemy walk (patrol) speed
 	float m_chaseSpeed; // Enemy run (chase) speed
 	float m_detectionSpeed; // Speed of detection
-	bool m_canTakedown; // If enemy can be taken down
+	bool m_canTakedown; // If AI can be taken down
 	bool m_hasBeenSeen; // Has seen the player
+	float m_shotDamage; // Damage per shot taken from Player
+	float m_deathTimer; // Timer for despawn after death 
 
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
@@ -81,6 +82,12 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animTakedownAI; // Animation Montage
+
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float health; // Player health
+
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float defaultHealth; // Player default health
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
