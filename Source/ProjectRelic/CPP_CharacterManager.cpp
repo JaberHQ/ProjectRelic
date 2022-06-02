@@ -3,14 +3,15 @@
 
 #include "CPP_CharacterManager.h"
 #include "Engine/World.h"
+#include "Engine/EngineTypes.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
 ACPP_CharacterManager::ACPP_CharacterManager()
 	:m_isCrouched( true )
 	,m_projectileRange( 1000.0f )
-	,m_canBeShot( true )
 	,m_muzzleRotationPitch( 3.0f )
+	,m_canBeShot( true )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -26,13 +27,16 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Attatch components to mesh
 	springArmComp->SetupAttachment( GetMesh() );
 	cameraComp->SetupAttachment( springArmComp, USpringArmComponent::SocketName );
-	gunComp->SetupAttachment( GetMesh(), TEXT( "WeaponSocket" ) );
+
 
 	// Set class variables of the spring arm
 	springArmComp->bUsePawnControlRotation = true;
 
 	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
 
+	FName weaponSocket = TEXT( "WeaponSocket" );
+	//gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
+ 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
