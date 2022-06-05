@@ -12,6 +12,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_projectileRange( 1000.0f )
 	,m_muzzleRotationPitch( 3.0f )
 	,m_canBeShot( true )
+	,m_weaponRange( 20000.0f )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,6 +34,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	springArmComp->bUsePawnControlRotation = true;
 
 	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
+
+	springArmComp->TargetArmLength = 200.0f;
 
 	FName weaponSocket = TEXT( "WeaponSocket" );
 	//gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
@@ -162,11 +165,12 @@ void ACPP_CharacterManager::UpdateWalkSpeed( float speed )
 
 FHitResult ACPP_CharacterManager::RaycastShot()
 {
+	FVector cameraLocation = cameraComp->GetComponentLocation();
+	FRotator cameraRotation = cameraComp->GetComponentRotation();
 
-	const float weaponRange = 20000.0f;
-
+	// Start and end of line trace
 	const FVector start = cameraComp->GetComponentLocation();
-	const FVector end = ( cameraComp->GetForwardVector() * weaponRange ) + start;
+	const FVector end = ( cameraComp->GetForwardVector() * m_weaponRange ) + start;
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
 
@@ -177,6 +181,19 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 	FHitResult hit( ForceInit );
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
+
+	// Muzzle offset
+	m_muzzleOffset.Set( 200.0f, 0.0f, 0.0f );
+
+	// Transform Muzzleoffset from camera space to world space
+	FVector muzzleLocation = cameraLocation + FTransform( cameraRotation ).TransformVector( m_muzzleOffset );
+
+	// Skew aim to be upwards
+	FRotator muzzleRotation = cameraRotation;
+	muzzleRotation.Pitch += m_muzzleRotationPitch;
+
+	
+
 	if( bHit )
 	{
 		// Box where collision has occured
@@ -199,6 +216,16 @@ void ACPP_CharacterManager::StopShooting()
 	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
 }
 
+void ACPP_CharacterManager::StartAim()
+{
+	springArmComp->TargetArmLength = 100.0f;
+}
+
+void ACPP_CharacterManager::StopAim()
+{
+	springArmComp->TargetArmLength = 200.0f;
+}
+
 void ACPP_CharacterManager::ShootProjectile()
 {
 	// Get the hit that has been returned
@@ -210,6 +237,7 @@ void ACPP_CharacterManager::ShootProjectile()
 	// If the actor can be shot and has been hit
 	if( hitActor && m_canBeShot )
 	{
+
 		// Call function that decides what happens when hit 
 		hitActor->TakeAttack(); // Function is overridable 
 	}

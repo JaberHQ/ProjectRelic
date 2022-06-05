@@ -34,6 +34,10 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
 	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::StartShooting );
 	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StartShooting );
+	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
+	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_CharacterManager::StopAim );
+
+
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
@@ -145,3 +149,5 @@ void ACPP_PlayerManager::TakeAttack()
 	FString healthDebug = FString::SanitizeFloat( health );
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug );
 }
+
+

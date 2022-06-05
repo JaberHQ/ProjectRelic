@@ -48,7 +48,7 @@ class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
 private:
 	bool m_isCrouched; // If Player is crouched
 	float m_muzzleRotationPitch; // Muzzle rotation
-
+	float m_weaponRange;
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
@@ -238,4 +238,8 @@ public:
 	void StartShooting();
 
 	void StopShooting();
+
+	void StartAim();
+
+	void StopAim();
 };
