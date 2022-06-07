@@ -75,7 +75,7 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
 		float timeBetweenShots; // Seconds between shots
 
-	FTimerHandle m_shootTime;
+
 
 public:
 	/*****************************************************************************
@@ -243,4 +243,6 @@ public:
 	void StartAim();
 
 	void StopAim();
+
+	FTimerHandle m_shootTime;
 };

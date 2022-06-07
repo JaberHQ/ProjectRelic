@@ -14,6 +14,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_canBeShot( true )
 	,m_weaponRange( 20000.0f )
 	,m_aimingIn( false )
+	,timeBetweenShots( 0.15f )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,7 +22,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Initialise components
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
-	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
+	
 
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
@@ -38,9 +39,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	springArmComp->TargetArmLength = 200.0f;
 
-	FName weaponSocket = TEXT( "WeaponSocket" );
-	//gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
- 
+	
+	// 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -173,10 +173,10 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 	const FVector start = cameraComp->GetComponentLocation();
 	const FVector end = ( cameraComp->GetForwardVector() * m_weaponRange ) + start;
 
-	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
-
 	// Draw a line for debug
 	DrawDebugLine( GetWorld(), start, end, FColor::Blue, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( Shoot ), true, GetInstigator() );
 	
 	// Hit result
 	FHitResult hit( ForceInit );
@@ -193,8 +193,6 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 	FRotator muzzleRotation = cameraRotation;
 	muzzleRotation.Pitch += m_muzzleRotationPitch;
 
-	
-
 	if( bHit )
 	{
 		// Box where collision has occured
@@ -206,10 +204,9 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 
 void ACPP_CharacterManager::StartShooting()
 {
-	
 	ShootProjectile();
-	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 
+	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 }
 
 void ACPP_CharacterManager::StopShooting()

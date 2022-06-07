@@ -17,6 +17,9 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_animPosition( 40.0f )
 	,m_animCompletion( 5.0f )
 {
+
+	gunComp->AttachTo( GetMesh(), TEXT( "GunSocket" ), EAttachLocation::SnapToTarget, true );
+
 }
 
 void ACPP_PlayerManager::BeginPlay()
