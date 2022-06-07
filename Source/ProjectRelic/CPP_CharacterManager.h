@@ -49,6 +49,7 @@ private:
 	bool m_isCrouched; // If Player is crouched
 	float m_muzzleRotationPitch; // Muzzle rotation
 	float m_weaponRange;
+	bool m_aimingIn;
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player

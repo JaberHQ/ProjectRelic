@@ -13,6 +13,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_muzzleRotationPitch( 3.0f )
 	,m_canBeShot( true )
 	,m_weaponRange( 20000.0f )
+	,m_aimingIn( false )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -205,8 +206,8 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 
 void ACPP_CharacterManager::StartShooting()
 {
+	
 	ShootProjectile();
-
 	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 
 }
