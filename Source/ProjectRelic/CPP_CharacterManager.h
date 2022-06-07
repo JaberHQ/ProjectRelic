@@ -9,7 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CPP_Projectile.h"
 #include "Components/InputComponent.h"
-
+#include "Components/StaticMeshComponent.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -59,6 +59,9 @@ public:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* gunComp; // Mesh for gun
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UStaticMeshComponent* bulletComp; // Mesh for gun
 
 	UPROPERTY( EditAnywhere, Category = "Projectiles" )
 		float m_projectileRange; // Range for projectile ray cast

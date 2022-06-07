@@ -22,7 +22,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Initialise components
 	springArmComp = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArmComp" ) );
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
-	
+	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
+	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
 
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
@@ -31,7 +32,6 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	springArmComp->SetupAttachment( GetMesh() );
 	cameraComp->SetupAttachment( springArmComp, USpringArmComponent::SocketName );
 
-
 	// Set class variables of the spring arm
 	springArmComp->bUsePawnControlRotation = true;
 
@@ -39,8 +39,6 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	springArmComp->TargetArmLength = 200.0f;
 
-	
-	// 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
@@ -48,13 +46,21 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
-	
+	bulletComp->SetupAttachment( gunComp );
+
+	gunComp->SetupAttachment( GetMesh());
 }
 
 // Called when the game starts or when spawned
 void ACPP_CharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if( gunComp )
+	{
+		FName weaponSocket = TEXT( "GunSocket" );
+		gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
+	}
 	
 }
 
