@@ -10,6 +10,7 @@
 #include "CPP_Projectile.h"
 #include "Components/InputComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -78,7 +79,8 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
 		float timeBetweenShots; // Seconds between shots
 
-
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UParticleSystem* animShoot; // Anim Montage for Player stealth takedown
 
 public:
 	/*****************************************************************************

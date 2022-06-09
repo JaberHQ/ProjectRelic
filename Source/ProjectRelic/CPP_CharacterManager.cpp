@@ -15,6 +15,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_weaponRange( 20000.0f )
 	,m_aimingIn( false )
 	,timeBetweenShots( 0.15f )
+	,m_shootTime()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -46,9 +47,12 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	//gunComp->SetupAttachment( GetMesh());
+	FName weaponSocket = TEXT( "GunSocket" );
+	gunComp->SetupAttachment( GetMesh(), weaponSocket );
 	bulletComp->SetupAttachment( gunComp );
 
-	gunComp->SetupAttachment( GetMesh());
+	
 }
 
 // Called when the game starts or when spawned
@@ -56,12 +60,11 @@ void ACPP_CharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FName weaponSocket = TEXT( "GunSocket" );
 	if( gunComp )
 	{
-		FName weaponSocket = TEXT( "GunSocket" );
 		gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
 	}
-	
 }
 
 // Called every frame
@@ -87,6 +90,8 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_CharacterManager::BeginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_CharacterManager::EndSprint );
+
+
 
 }
 
@@ -211,8 +216,8 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 void ACPP_CharacterManager::StartShooting()
 {
 	ShootProjectile();
-
-	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true, 2.0f );
+	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint" );
 }
 
 void ACPP_CharacterManager::StopShooting()

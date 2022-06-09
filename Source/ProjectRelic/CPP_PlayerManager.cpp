@@ -17,8 +17,6 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_animPosition( 40.0f )
 	,m_animCompletion( 5.0f )
 {
-	
-	
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -37,11 +35,9 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
 	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::StartShooting );
-	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StartShooting );
+	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StopShooting );
 	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
 	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_CharacterManager::StopAim );
-
-
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
