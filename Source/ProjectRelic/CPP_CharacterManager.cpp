@@ -25,7 +25,6 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
-
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
@@ -35,10 +34,13 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	// Set class variables of the spring arm
 	springArmComp->bUsePawnControlRotation = true;
-
 	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
-
 	springArmComp->TargetArmLength = 200.0f;
+
+
+
+	bulletComp->SetupAttachment( gunComp );
+
 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -47,11 +49,13 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
-	//gunComp->SetupAttachment( GetMesh());
-	FName weaponSocket = TEXT( "GunSocket" );
-	gunComp->SetupAttachment( GetMesh(), weaponSocket );
-	bulletComp->SetupAttachment( gunComp );
 
+	
+
+	//gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
+	//gunComp->SetupAttachment( GetMesh(), weaponSocket );
+	//gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, weaponSocket );
+	//gunComp->SetRelativeLocationAndRotation( FVector( -20.5f, -1.0f, -13.4f ), FRotator( -17.0f, 9.4, -65.0f ) );
 	
 }
 
@@ -60,11 +64,13 @@ void ACPP_CharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FName weaponSocket = TEXT( "GunSocket" );
-	if( gunComp )
+	/*if( gunComp )
 	{
+		FName weaponSocket = TEXT( "GunSocket" );
 		gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
-	}
+	}*/
+	
+
 }
 
 // Called every frame
@@ -217,7 +223,7 @@ void ACPP_CharacterManager::StartShooting()
 {
 	ShootProjectile();
 	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true, 2.0f );
-	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint" );
+	
 }
 
 void ACPP_CharacterManager::StopShooting()
@@ -237,6 +243,8 @@ void ACPP_CharacterManager::StopAim()
 
 void ACPP_CharacterManager::ShootProjectile()
 {
+	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), bulletComp->GetRelativeRotation(), FVector( 0.1f, 0.1f, 0.1f ) );
+
 	// Get the hit that has been returned
 	FHitResult hit = RaycastShot();
 

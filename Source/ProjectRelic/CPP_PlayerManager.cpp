@@ -26,7 +26,8 @@ void ACPP_PlayerManager::BeginPlay()
 	// Start player off as crouching
 	Crouch();
 
-	
+	FName weaponSocket = TEXT( "GunSocket" );
+	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 }
 
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
