@@ -51,6 +51,8 @@ private:
 	float m_muzzleRotationPitch; // Muzzle rotation
 	float m_weaponRange;
 	bool m_aimingIn;
+	bool m_isInCover;
+
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
@@ -250,4 +252,11 @@ public:
 	void StopAim();
 
 	FTimerHandle m_shootTime;
+
+	void StartCover();
+	void StopCover();
+
+	bool WallTrace();
+
+	void TakeCover();
 };

@@ -16,6 +16,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_aimingIn( false )
 	,timeBetweenShots( 0.15f )
 	,m_shootTime()
+	,m_isInCover()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -241,6 +242,7 @@ void ACPP_CharacterManager::StopAim()
 	springArmComp->TargetArmLength = 200.0f;
 }
 
+
 void ACPP_CharacterManager::ShootProjectile()
 {
 	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), bulletComp->GetRelativeRotation(), FVector( 0.1f, 0.1f, 0.1f ) );
@@ -271,3 +273,57 @@ bool ACPP_CharacterManager::GetIsCrouched()
 }
 
 
+void ACPP_CharacterManager::StartCover()
+{
+	if( m_isInCover )
+	{
+		StopCover();
+	}
+	else
+	{
+		TakeCover();
+	}
+}
+
+void ACPP_CharacterManager::StopCover()
+{
+	GetCharacterMovement()->SetPlaneConstraintEnabled( false );
+	bUseControllerRotationYaw = true;
+	m_isInCover = false;
+}
+
+bool ACPP_CharacterManager::WallTrace()
+{
+	FVector cameraLocation = cameraComp->GetComponentLocation();
+	FRotator cameraRotation = cameraComp->GetComponentRotation();
+
+	// Start and end of line trace
+	const FVector start = GetActorLocation();
+	const FVector end = ( GetActorForwardVector() * 100.0f ) + GetActorLocation();
+
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), start, end, FColor::Yellow, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+	if( bHit )
+	{
+		GetCharacterMovement()->SetPlaneConstraintEnabled( true );
+		GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+		bUseControllerRotationYaw = false;
+		m_isInCover = true;
+
+	}
+	return bHit;
+}
+
+void ACPP_CharacterManager::TakeCover()
+{
+	bool hit = WallTrace();
+	
+	
+
+}

@@ -39,6 +39,7 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StopShooting );
 	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
 	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_CharacterManager::StopAim );
+	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::StartCover );
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
