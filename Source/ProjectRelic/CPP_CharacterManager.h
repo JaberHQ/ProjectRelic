@@ -52,7 +52,6 @@ private:
 	float m_weaponRange;
 	bool m_aimingIn;
 	bool m_isInCover;
-
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
@@ -83,6 +82,7 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UParticleSystem* animShoot; // Anim Montage for Player stealth takedown
+	FName weaponSocket;
 
 public:
 	/*****************************************************************************

@@ -18,6 +18,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,timeBetweenShots( 0.15f )
 	,m_shootTime()
 	,m_isInCover()
+	,weaponSocket( TEXT( "GunSocket" ) )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -40,7 +41,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	springArmComp->TargetArmLength = 200.0f;
 
 
-
+	gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
 	bulletComp->SetupAttachment( gunComp );
 
 
@@ -54,7 +55,6 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	
 
-	//gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
 	//gunComp->SetupAttachment( GetMesh(), weaponSocket );
 	//gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, weaponSocket );
 	//gunComp->SetRelativeLocationAndRotation( FVector( -20.5f, -1.0f, -13.4f ), FRotator( -17.0f, 9.4, -65.0f ) );
@@ -66,11 +66,11 @@ void ACPP_CharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	/*if( gunComp )
+	if( gunComp )
 	{
-		FName weaponSocket = TEXT( "GunSocket" );
+		
 		gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
-	}*/
+	}
 	
 
 }
@@ -250,7 +250,7 @@ void ACPP_CharacterManager::StopAim()
 
 void ACPP_CharacterManager::ShootProjectile()
 {
-	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), bulletComp->GetRelativeRotation(), FVector( 0.1f, 0.1f, 0.1f ) );
+	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 0.0f, 90.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
 
 	// Get the hit that has been returned
 	FHitResult hit = RaycastShot();
@@ -356,7 +356,7 @@ bool ACPP_CharacterManager::CoverTrace()
 		}
 		return bHit;
 	}
-	
+	return false;
 }
 
 bool ACPP_CharacterManager::RightCoverTrace()
