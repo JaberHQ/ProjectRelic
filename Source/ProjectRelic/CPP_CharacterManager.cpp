@@ -4,6 +4,7 @@
 #include "CPP_CharacterManager.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -121,7 +122,7 @@ void ACPP_CharacterManager::MoveForward( float inputAxis )
 
 void ACPP_CharacterManager::MoveRight( float inputAxis )
 {
-	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
+	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == false ) )
 	{
 		// Rotation
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -132,6 +133,10 @@ void ACPP_CharacterManager::MoveRight( float inputAxis )
 
 		// Add movement in that direction
 		AddMovementInput( Direction, inputAxis );
+	}
+	else if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == true ) )
+	{
+		CoverTrace();
 	}
 }
 
@@ -323,7 +328,76 @@ bool ACPP_CharacterManager::WallTrace()
 void ACPP_CharacterManager::TakeCover()
 {
 	bool hit = WallTrace();
-	
-	
+}
 
+bool ACPP_CharacterManager::CoverTrace()
+{
+	bool rightHit = RightCoverTrace();
+	bool leftHit = LeftCoverTrace();
+	
+	if( rightHit && leftHit )
+	{
+		// Start and end of line trace
+		const FVector start = GetActorLocation();
+		const FVector end = GetActorLocation() + ( GetCharacterMovement()->GetPlaneConstraintNormal() * 200.0f );
+
+		// Draw a line for debug
+		DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+
+		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+		// Hit result
+		FHitResult hit( ForceInit );
+		bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+
+		if( bHit )
+		{
+			GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+		}
+		return bHit;
+	}
+	
+}
+
+bool ACPP_CharacterManager::RightCoverTrace()
+{
+	// Start and end of line trace
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f );
+	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * 200.0f ) + start;
+
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool rightHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+	return rightHit;
+}
+
+bool ACPP_CharacterManager::LeftCoverTrace()
+{
+	// Left 
+	FVector cameraLocation = cameraComp->GetComponentLocation();
+	FRotator cameraRotation = cameraComp->GetComponentRotation();
+
+	// Start and end of line trace
+
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() );
+	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * 200.0f ) + start;
+
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+	return leftHit;
 }

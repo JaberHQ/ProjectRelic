@@ -259,4 +259,8 @@ public:
 	bool WallTrace();
 
 	void TakeCover();
+
+	bool CoverTrace();
+	bool RightCoverTrace();
+	bool LeftCoverTrace();
 };
