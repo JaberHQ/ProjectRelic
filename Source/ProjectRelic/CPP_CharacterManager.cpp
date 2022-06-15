@@ -309,7 +309,7 @@ void ACPP_CharacterManager::StopCover()
 	m_isInCover = false;
 }
 
-bool ACPP_CharacterManager::WallTrace()
+void ACPP_CharacterManager::WallTrace()
 {
 	FVector cameraLocation = cameraComp->GetComponentLocation();
 	FRotator cameraRotation = cameraComp->GetComponentRotation();
@@ -321,7 +321,7 @@ bool ACPP_CharacterManager::WallTrace()
 	// Draw a line for debug
 	DrawDebugLine( GetWorld(), start, end, FColor::Yellow, false, 5.0f );
 
-	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTracer ), true, GetInstigator() );
 
 	// Hit result
 	FHitResult hit( ForceInit );
@@ -336,12 +336,10 @@ bool ACPP_CharacterManager::WallTrace()
 	{
 		StopCover();
 	}
-	return bHit;
 }
 
 void ACPP_CharacterManager::TakeCover()
 {
-	bool hit = WallTrace();
 }
 
 bool ACPP_CharacterManager::CoverTrace( float inputAxis )
@@ -401,8 +399,10 @@ bool ACPP_CharacterManager::CoverTrace( float inputAxis )
 			// Add movement in that direction
 			AddMovementInput( Direction, inputAxis );
 		}
+
+		return false;
 	}
-	return false;
+	//return false;
 }
 
 bool ACPP_CharacterManager::RightCoverTrace()

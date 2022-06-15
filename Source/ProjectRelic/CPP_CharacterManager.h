@@ -265,7 +265,7 @@ public:
 	
 	void StopCover();
 
-	bool WallTrace();
+	void WallTrace();
 
 	void TakeCover();
 
