@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#define COLLISION_COVER ECC_GameTraceChannel2
 
 #include "CPP_CharacterManager.h"
 #include "Engine/World.h"
@@ -19,6 +19,9 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_shootTime()
 	,m_isInCover()
 	,weaponSocket( TEXT( "GunSocket" ) )
+	,m_ammoCount( 30.0f )
+	,m_reloadTime()
+	,m_reloadAnimTime( 3.0f )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -41,9 +44,11 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	springArmComp->TargetArmLength = 200.0f;
 
 
-	gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
+	//gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, false );
+	gunComp->SetupAttachment( GetMesh(), weaponSocket );
 	bulletComp->SetupAttachment( gunComp );
-
+	//bulletComp->AttachTo( gunComp, weaponSocket, EAttachLocation::SnapToTarget, true );
+	//bulletComp->SetRelativeLocation( ( gunComp->GetRelativeLocation() ) );
 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -53,26 +58,12 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
-	
-
-	//gunComp->SetupAttachment( GetMesh(), weaponSocket );
-	//gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, weaponSocket );
-	//gunComp->SetRelativeLocationAndRotation( FVector( -20.5f, -1.0f, -13.4f ), FRotator( -17.0f, 9.4, -65.0f ) );
-	
 }
 
 // Called when the game starts or when spawned
 void ACPP_CharacterManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if( gunComp )
-	{
-		
-		gunComp->AttachTo( GetMesh(), weaponSocket, EAttachLocation::SnapToTargetIncludingScale, true );
-	}
-	
-
 }
 
 // Called every frame
@@ -136,7 +127,7 @@ void ACPP_CharacterManager::MoveRight( float inputAxis )
 	}
 	else if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == true ) )
 	{
-		CoverTrace();
+		CoverTrace( inputAxis );
 	}
 }
 
@@ -227,9 +218,20 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 
 void ACPP_CharacterManager::StartShooting()
 {
-	ShootProjectile();
-	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true, 2.0f );
-	
+	if( m_aimingIn )
+	{
+		if( m_ammoCount > 0 )
+		{
+			ShootProjectile();
+			GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+		}
+
+		if( m_ammoCount <= 0 )
+		{
+			GetWorld()->GetTimerManager().SetTimer( m_reloadTime, this, &ACPP_CharacterManager::Reloaded, m_reloadAnimTime, true );
+		}
+
+	}
 }
 
 void ACPP_CharacterManager::StopShooting()
@@ -239,37 +241,45 @@ void ACPP_CharacterManager::StopShooting()
 
 void ACPP_CharacterManager::StartAim()
 {
+	m_aimingIn = true;
 	springArmComp->TargetArmLength = 100.0f;
 }
 
 void ACPP_CharacterManager::StopAim()
 {
+	m_aimingIn = false;
 	springArmComp->TargetArmLength = 200.0f;
 }
 
-
 void ACPP_CharacterManager::ShootProjectile()
 {
-	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 0.0f, 90.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
-
-	// Get the hit that has been returned
-	FHitResult hit = RaycastShot();
-
-	// Get the actor that has been hit
-	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
-
-	// If the actor can be shot and has been hit
-	if( hitActor && m_canBeShot )
+	if( m_ammoCount > 0 )
 	{
+		// Spawn muzzle flash
+		UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 90.0f, 0.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
 
-		// Call function that decides what happens when hit 
-		hitActor->TakeAttack(); // Function is overridable 
+		// Get the hit that has been returned
+		FHitResult hit = RaycastShot();
+
+		// Decrement ammo count
+		m_ammoCount -= 1.0f;
+		
+		// Get the actor that has been hit
+		ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
+
+		// If the actor can be shot and has been hit
+		if( hitActor && m_canBeShot )
+		{
+
+			// Call function that decides what happens when hit 
+			hitActor->TakeAttack(); // Function is overridable 
+		}
 	}
 }
 
 void ACPP_CharacterManager::TakeAttack()
 {
-	// -- IMPLEMENTATION NEEDED --
+	// -- IMPLEMENTATION REQUIRED --
 }
 
 bool ACPP_CharacterManager::GetIsCrouched()
@@ -277,17 +287,19 @@ bool ACPP_CharacterManager::GetIsCrouched()
 	return m_isCrouched;
 }
 
-
-void ACPP_CharacterManager::StartCover()
+void ACPP_CharacterManager::Reloaded()
 {
-	if( m_isInCover )
-	{
-		StopCover();
-	}
-	else
-	{
-		TakeCover();
-	}
+	GetWorld()->GetTimerManager().ClearTimer( m_reloadTime );
+	m_ammoCount = 30.0f;
+}
+
+void ACPP_CharacterManager::StartCover( FHitResult hit )
+{
+	GetCharacterMovement()->SetPlaneConstraintEnabled( true );
+	GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+	bUseControllerRotationYaw = false;
+	m_isInCover = true;
+
 }
 
 void ACPP_CharacterManager::StopCover()
@@ -313,14 +325,16 @@ bool ACPP_CharacterManager::WallTrace()
 
 	// Hit result
 	FHitResult hit( ForceInit );
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+	
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+
 	if( bHit )
 	{
-		GetCharacterMovement()->SetPlaneConstraintEnabled( true );
-		GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
-		bUseControllerRotationYaw = false;
-		m_isInCover = true;
-
+		StartCover( hit );
+	}
+	else
+	{
+		StopCover();
 	}
 	return bHit;
 }
@@ -330,7 +344,7 @@ void ACPP_CharacterManager::TakeCover()
 	bool hit = WallTrace();
 }
 
-bool ACPP_CharacterManager::CoverTrace()
+bool ACPP_CharacterManager::CoverTrace( float inputAxis )
 {
 	bool rightHit = RightCoverTrace();
 	bool leftHit = LeftCoverTrace();
@@ -348,13 +362,45 @@ bool ACPP_CharacterManager::CoverTrace()
 
 		// Hit result
 		FHitResult hit( ForceInit );
-		bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+		bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
 
 		if( bHit )
 		{
 			GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+
+			// Rotation
+			const FRotator rotation = Controller->GetControlRotation();
+			const FRotator yawRotation ( 0.0f, rotation.Yaw, 0.0f );
+
+			// Get forward vector
+			const FVector direction = FRotationMatrix( yawRotation ).GetUnitAxis( EAxis::Y );
+				
+			// Add movement in that direction
+			AddMovementInput( direction, inputAxis );
+
 		}
-		return bHit;
+		return bHit;			
+	}
+
+	else
+	{
+		// Rotation
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
+
+		// Get forward vector
+		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
+
+		if( inputAxis == 1.0f && rightHit )
+		{
+			// Add movement in that direction
+			AddMovementInput( Direction, inputAxis );
+		}
+		else if( inputAxis == -1.0f && leftHit )
+		{
+			// Add movement in that direction
+			AddMovementInput( Direction, inputAxis );
+		}
 	}
 	return false;
 }
@@ -374,7 +420,7 @@ bool ACPP_CharacterManager::RightCoverTrace()
 
 	// Hit result
 	FHitResult hit( ForceInit );
-	bool rightHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+	bool rightHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
 	return rightHit;
 }
 
@@ -398,6 +444,6 @@ bool ACPP_CharacterManager::LeftCoverTrace()
 
 	// Hit result
 	FHitResult hit( ForceInit );
-	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams ); // Trace channel cover --
+	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
 	return leftHit;
 }

@@ -50,8 +50,14 @@ private:
 	bool m_isCrouched; // If Player is crouched
 	float m_muzzleRotationPitch; // Muzzle rotation
 	float m_weaponRange;
-	bool m_aimingIn;
 	bool m_isInCover;
+	float m_ammoCount;
+	FTimerHandle m_reloadTime;
+	float m_reloadAnimTime;
+
+protected:
+	bool m_aimingIn;
+
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
@@ -253,14 +259,19 @@ public:
 
 	FTimerHandle m_shootTime;
 
-	void StartCover();
+	void Reloaded();
+
+	void StartCover( FHitResult hit );
+	
 	void StopCover();
 
 	bool WallTrace();
 
 	void TakeCover();
 
-	bool CoverTrace();
+	bool CoverTrace( float inputAxis );
+	
 	bool RightCoverTrace();
+	
 	bool LeftCoverTrace();
 };

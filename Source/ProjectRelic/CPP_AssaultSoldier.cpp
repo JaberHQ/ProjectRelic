@@ -8,11 +8,15 @@ ACPP_AssaultSoldier::ACPP_AssaultSoldier()
 {
 	// Set default walk speed
 	UpdateWalkSpeed( m_defaultWalkSpeed );
+
 }
 
 void ACPP_AssaultSoldier::BeginPlay()
 {
 	Super::BeginPlay();
+
+	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
+
 }
 
 
