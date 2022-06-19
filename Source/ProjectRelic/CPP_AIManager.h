@@ -47,6 +47,10 @@
  * 30/05/2022	 JA			 v2.3		 Added features for stealth takedown
  * 30/05/2022	 JA			 v2.4	     Added projectile features
  ***********************************************************************************************/
+
+ // Declare delegate
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FSightDetectionD, float, detectionSpeed );
+
 UCLASS()
 class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
 {
@@ -215,4 +219,10 @@ public:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
 		UCurveFloat* myCurve;
+
+	UFUNCTION( BlueprintCallable )
+		void SightDetectionDelegate();
+
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
+		FSightDetectionD sightDetectionD;
 };

@@ -122,6 +122,8 @@ void ACPP_AIManager::TakeAttack()
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
 }
 
+
+
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	// AI Controller reference
@@ -178,4 +180,9 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			
 		}
 	}
+}
+
+void ACPP_AIManager::SightDetectionDelegate()
+{
+	sightDetectionD.Broadcast( m_sightValuePercent );
 }
