@@ -52,6 +52,9 @@ void ACPP_AIManager::Tick( float DeltaTime )
 	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasBeenSeen ), 
 							FApp::GetDeltaTime(), m_detectionCount );
 	// set m_sightValuePercent = ProgressBarPercent;
+
+	SightDetectionDelegate();
+
 }
 
 void ACPP_AIManager::BeginPlay()
@@ -151,12 +154,14 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 			m_hasBeenSeen = true;
 
+
 			if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
 			{
 				//-------- IMPLEMENTATION NEEDED --------
 				//Lost Player
 			}
-			else if ( m_sightValuePercent == 1.0f )
+			
+			else
 			{
 
 				// Debug message
@@ -175,9 +180,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				//StartShooting();
 
 				// Get float value (curve) && Set detection speed = float value
-				//m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+				m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
 			}
-			
 		}
 	}
 }
