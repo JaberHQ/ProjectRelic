@@ -141,7 +141,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
 			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
 			float distance = FVector::Distance( playerLocation, enemyLocation );
-			m_detectionCount = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
+			m_detectionCount = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
 
 			// Debug
 			FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
@@ -154,7 +154,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				//-------- IMPLEMENTATION NEEDED --------
 				//Lost Player
 			}
-			else if ( m_sightValuePercent == 1.0f )
+			else
 			{
 
 				// Debug message

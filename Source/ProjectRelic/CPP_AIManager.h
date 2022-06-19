@@ -64,6 +64,10 @@ private:
 	float m_shotDamage; // Damage per shot taken from Player
 	float m_deathTimer; // Timer for despawn after death 
 
+	float m_sightValuePercent;
+	float m_detectionCount; // Counter for Stealth Detection UI 
+
+
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -124,6 +128,17 @@ public:
 	 *   See also        : N/A
    *****************************************************************************/
 	ACPP_AIManager();
+	/*****************************************************************************
+		 *   Function        : virtual void Tick( float DeltaTime ) override
+		 *   Purpose         : Event Tick
+		 *   Parameters      : float DeltaTime
+		 *   Returns         : N/A
+		 *   Date altered    : 02/05/2022
+		 *   Contributors    : Jaber Ahmed
+		 *   Notes           : N/A
+		 *   See also        : N/A
+		*****************************************************************************/
+	virtual void Tick( float DeltaTime ) override;
 
 public:
 	/*****************************************************************************
@@ -197,4 +212,7 @@ public:
 	 *   See also        : CPP_CharacterManager::ShootProjectile
    *****************************************************************************/
 	virtual void TakeAttack() override;
+
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
+		UCurveFloat* myCurve;
 };
