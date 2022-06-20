@@ -64,13 +64,14 @@ private:
 	float m_chaseSpeed; // Enemy run (chase) speed
 	float m_detectionSpeed; // Speed of detection
 	bool m_canTakedown; // If AI can be taken down
-	bool m_hasBeenSeen; // Has seen the player
 	float m_shotDamage; // Damage per shot taken from Player
 	float m_deathTimer; // Timer for despawn after death 
 
 	float m_sightValuePercent;
 	float m_detectionCount; // Counter for Stealth Detection UI 
 
+	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
+	bool m_hasBeenCaught; // For when the player has been caught by AI
 
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
@@ -225,4 +226,8 @@ public:
 
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FSightDetectionD sightDetectionD;
+
+	void IncreaseSightDetectionIcon();
+
+	void GiveUp();
 };

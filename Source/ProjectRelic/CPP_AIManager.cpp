@@ -21,6 +21,7 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_deathTimer( 25.0f )
 	,m_detectionCount( 0.0f )
 	,m_hasBeenSeen( false )
+	,m_hasBeenCaught()
 	,m_sightValuePercent( 0.0f )
 {
 	// Initialise components
@@ -54,7 +55,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 	// set m_sightValuePercent = ProgressBarPercent;
 
 	SightDetectionDelegate();
-
+	IncreaseSightDetectionIcon();
 }
 
 void ACPP_AIManager::BeginPlay()
@@ -161,26 +162,36 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				//Lost Player
 			}
 			
-			else
+			if( m_sightValuePercent > 0.0f && m_hasBeenSeen )
 			{
+				if( m_sightValuePercent >= 1.0f )
+				{
+					// Debug message
+					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
 
-				// Debug message
-				GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
-
-				// Set actor (Player) as caught
-				controllerAI->SetPlayerCaught( caughtActors );
+					// Set actor (Player) as caught
+					controllerAI->SetPlayerCaught( caughtActors );
 
 
-				// Find the distance between the two
-				float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
+					// Find the distance between the two
+					float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 
-				m_aimingIn = true;
+					m_aimingIn = true;
 
-				// Shoot towards Player
-				//StartShooting();
+					// Shoot towards Player
+					//StartShooting();
 
-				// Get float value (curve) && Set detection speed = float value
-				m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+					// Get float value (curve) && Set detection speed = float value
+					m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+				}
+
+				if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
+				{
+					// Investigate --
+					// Debug message
+					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Investigate" ) ) );
+				}
+				
 			}
 		}
 	}
@@ -189,4 +200,22 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 void ACPP_AIManager::SightDetectionDelegate()
 {
 	sightDetectionD.Broadcast( m_sightValuePercent );
+}
+
+void ACPP_AIManager::IncreaseSightDetectionIcon()
+{
+	if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
+	{
+		GiveUp();
+		// LostPlayer(); // Tell enemy to go back to position
+	}
+	if( m_sightValuePercent >= 1.0f )
+	{
+		// Reference enemy controller
+		// SeenPlayer();
+	}
+}
+
+void ACPP_AIManager::GiveUp()
+{
 }
