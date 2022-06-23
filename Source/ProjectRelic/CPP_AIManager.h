@@ -15,6 +15,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include <UObject/ObjectMacros.h>
 #include <Perception/AISenseConfig_Sight.h>
+#include <Perception/AISenseConfig_Hearing.h>
 #include "Components/BoxComponent.h"
 #include "Animation/AnimMontage.h"
 #include "TimerManager.h"
@@ -85,6 +86,9 @@ public:
 
 	UPROPERTY( VisibleAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
+
+	/*UPROPERTY( VisibleAnywhere, Category = "AI" )
+		class UAISenseConfig_Hearing* hearingConfig;*/
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UBoxComponent* boxComponent; // Box Component
@@ -230,4 +234,5 @@ public:
 	void IncreaseSightDetectionIcon();
 
 	void GiveUp();
+
 };

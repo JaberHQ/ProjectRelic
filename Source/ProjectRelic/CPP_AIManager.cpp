@@ -27,6 +27,7 @@ ACPP_AIManager::ACPP_AIManager()
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
 	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "SightConfig" ) );
+	//hearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>( TEXT( "HearingConfig" ) );
 	boxComponent = CreateDefaultSubobject<UBoxComponent>( TEXT( "TakedownBox" ) );
 
 	// Perception config
@@ -39,9 +40,14 @@ ACPP_AIManager::ACPP_AIManager()
 	sightConfig->PeripheralVisionAngleDegrees = m_peripheralVisionAngleDegrees;
 	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	sightConfig->DetectionByAffiliation.bDetectFriendlies = false;
+	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 
-	
+	//// Hearing config
+	//hearingConfig->HearingRange = 500.0f;
+	//hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
+	//hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	//hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+
 }
 
 void ACPP_AIManager::Tick( float DeltaTime )
@@ -124,6 +130,8 @@ void ACPP_AIManager::TakeAttack()
 	// Debug to show health
 	FString healthDebug = FString::SanitizeFloat( health );
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
+
+
 }
 
 
@@ -166,6 +174,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			{
 				if( m_sightValuePercent >= 1.0f )
 				{
+					m_hasBeenCaught = true;
+
 					// Debug message
 					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
 
@@ -187,7 +197,11 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 				if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
 				{
-					// Investigate --
+					// Investigate 
+					controllerAI->SetLastKnownLocation( playerManager->GetActorLocation() );
+					
+					controllerAI->SetInvestigate( m_hasBeenSeen );
+
 					// Debug message
 					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Investigate" ) ) );
 				}
@@ -219,3 +233,5 @@ void ACPP_AIManager::IncreaseSightDetectionIcon()
 void ACPP_AIManager::GiveUp()
 {
 }
+
+

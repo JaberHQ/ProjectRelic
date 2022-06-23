@@ -39,19 +39,25 @@ private:
 
 	// BB keys
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName patrolLocation; // Patrol location
+		FName m_patrolLocation; // Patrol location
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName enemyActor; // Target
+		FName m_enemyActor; // Target
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName hasLineOfSight; // Has line of sight bool
+		FName m_hasLineOfSight; // Has line of sight bool
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName patrolPathVector; // Patrol path vector
+		FName m_patrolPathVector; // Patrol path vector
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName patrolPathIndex; // Patrol path index
+		FName m_patrolPathIndex; // Patrol path index
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName m_lastKnownLocation; // Patrol path index
+	
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName m_invesigate; // Patrol path index
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -121,4 +127,8 @@ public:
 		*   See also        : N/A
 	*****************************************************************************/
 	bool GetHasLineOfSight();
+
+	void SetLastKnownLocation( FVector vector );
+
+	void SetInvestigate( bool boolean );
 };
