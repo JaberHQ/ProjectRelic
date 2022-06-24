@@ -57,6 +57,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 
 	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasBeenSeen ), 
 							FApp::GetDeltaTime(), m_detectionCount );
+
 	m_detectionCount = myCurve->GetFloatValue( m_curveFloat );
 	SightDetectionDelegate();
 	IncreaseSightDetectionIcon();
