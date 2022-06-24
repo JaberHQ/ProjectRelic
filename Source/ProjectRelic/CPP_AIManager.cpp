@@ -54,11 +54,8 @@ void ACPP_AIManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	//----- IMPLEMENTATION NEEDED -----
-	//LINK THE PROGRESS BAR TO THIS CODE FOR DETECTION SYSTEM
 	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasBeenSeen ), 
 							FApp::GetDeltaTime(), m_detectionCount );
-	// set m_sightValuePercent = ProgressBarPercent;
 
 	SightDetectionDelegate();
 	IncreaseSightDetectionIcon();
@@ -130,8 +127,6 @@ void ACPP_AIManager::TakeAttack()
 	// Debug to show health
 	FString healthDebug = FString::SanitizeFloat( health );
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
-
-
 }
 
 
@@ -181,7 +176,6 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 					// Set actor (Player) as caught
 					controllerAI->SetPlayerCaught( caughtActors );
-
 
 					// Find the distance between the two
 					float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );

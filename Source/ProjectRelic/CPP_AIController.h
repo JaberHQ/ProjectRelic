@@ -131,4 +131,6 @@ public:
 	void SetLastKnownLocation( FVector vector );
 
 	void SetInvestigate( bool boolean );
+
+	FVector GetLastKnownLocation();
 };

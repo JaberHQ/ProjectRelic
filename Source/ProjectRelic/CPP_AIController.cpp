@@ -76,3 +76,8 @@ void ACPP_AIController::SetInvestigate( bool boolean )
 	// Set bool
 	blackboardComp->SetValueAsBool( m_invesigate, boolean );
 }
+
+FVector ACPP_AIController::GetLastKnownLocation()
+{
+	return blackboardComp->GetValueAsVector( m_lastKnownLocation );
+}
