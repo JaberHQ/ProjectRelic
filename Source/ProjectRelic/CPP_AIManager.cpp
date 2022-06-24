@@ -23,6 +23,7 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_hasBeenSeen( false )
 	,m_hasBeenCaught()
 	,m_sightValuePercent( 0.0f )
+	,m_curveFloat(0.0f)
 {
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
@@ -56,7 +57,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 
 	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasBeenSeen ), 
 							FApp::GetDeltaTime(), m_detectionCount );
-
+	m_detectionCount = myCurve->GetFloatValue( m_curveFloat );
 	SightDetectionDelegate();
 	IncreaseSightDetectionIcon();
 }
@@ -127,6 +128,16 @@ void ACPP_AIManager::TakeAttack()
 	// Debug to show health
 	FString healthDebug = FString::SanitizeFloat( health );
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
+
+	// AI Controller reference
+	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+	// Player reference
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	m_hasBeenShot = true;
+
+
 }
 
 
@@ -158,6 +169,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 
 			m_hasBeenSeen = true;
 
+			m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
+			
 
 			if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
 			{
@@ -186,7 +199,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 					//StartShooting();
 
 					// Get float value (curve) && Set detection speed = float value
-					m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+					//m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
 				}
 
 				if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
@@ -214,17 +227,24 @@ void ACPP_AIManager::IncreaseSightDetectionIcon()
 {
 	if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
 	{
-		GiveUp();
-		// LostPlayer(); // Tell enemy to go back to position
+		GiveUp(); 
+		LostPlayer(); // Tell enemy to go back to position
 	}
 	if( m_sightValuePercent >= 1.0f )
 	{
-		// Reference enemy controller
-		// SeenPlayer();
+		SeenPlayer();
 	}
 }
 
 void ACPP_AIManager::GiveUp()
+{
+}
+
+void ACPP_AIManager::SeenPlayer()
+{
+}
+
+void ACPP_AIManager::LostPlayer()
 {
 }
 

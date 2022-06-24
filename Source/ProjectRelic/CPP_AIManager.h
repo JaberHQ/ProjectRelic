@@ -74,6 +74,9 @@ private:
 	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
 	bool m_hasBeenCaught; // For when the player has been caught by AI
 
+	bool m_hasBeenShot;
+
+	float m_curveFloat;
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -235,4 +238,7 @@ public:
 
 	void GiveUp();
 
+	void SeenPlayer();
+
+	void LostPlayer();
 };
