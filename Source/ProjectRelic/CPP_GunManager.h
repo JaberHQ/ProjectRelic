@@ -15,6 +15,7 @@ class PROJECTRELIC_API ACPP_GunManager : public ACPP_WeaponManager
 	GENERATED_BODY()
 private:
 	int m_ammoCount;
+
 public:
 	ACPP_GunManager();
 	void SetAmmoCount( int ammoCount );
