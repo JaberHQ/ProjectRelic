@@ -19,11 +19,12 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_chaseSpeed( 600.0f )
 	,m_shotDamage( 23.3f )
 	,m_deathTimer( 25.0f )
-	,m_detectionCount( 0.0f )
 	,m_hasBeenSeen( false )
-	,m_hasBeenCaught()
+	,m_hasBeenCaught( false )
 	,m_sightValuePercent( 0.0f )
-	,m_curveFloat(0.0f)
+	,m_curveFloat( 0.0f )
+	,m_hasSeenSomething( false )
+	,m_detectionSpeed( 0.0f )
 {
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
@@ -55,12 +56,16 @@ void ACPP_AIManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasBeenSeen ), 
-							FApp::GetDeltaTime(), m_detectionCount );
+	//m_detectionSpeed = DetectionSpeedCalculation();
+	m_detectionSpeed = myCurve->GetFloatValue( m_curveFloat );
 
-	m_detectionCount = myCurve->GetFloatValue( m_curveFloat );
+	
+	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasSeenSomething ), 
+						FApp::GetDeltaTime(), m_detectionSpeed );
+	
+
+	//EvaluateSightDetection(); 
 	SightDetectionDelegate();
-	IncreaseSightDetectionIcon();
 }
 
 void ACPP_AIManager::BeginPlay()
@@ -141,10 +146,33 @@ void ACPP_AIManager::TakeAttack()
 
 }
 
+float ACPP_AIManager::DetectionSpeedCalculation()
+{
+	// AI Controller reference
+	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
 
+	// Player reference
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	/*if( controllerAI )
+	{
+		if( playerManager )
+		{
+			FVector playerLocation = playerManager->GetActorLocation();
+			FVector enemyLocation = controllerAI->GetPawn()->GetActorLocation();
+			float distance = FVector::Distance( playerLocation, enemyLocation );
+			float speed = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
+			float detectionSpeed = myCurve->GetFloatValue( speed );
+			return detectionSpeed;
+		}
+	}*/
+	return 0.0f;
+}
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
+	m_hasSeenSomething = true;
+
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
 
@@ -155,86 +183,139 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 	{
 		if( playerManager )
 		{
+
+			// Debug
+			FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
+			GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
+
 			// Sight config
 			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
 
 			// Get location
 			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
 			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+			// Distance between Player and Enemy
 			float distance = FVector::Distance( playerLocation, enemyLocation );
-			m_detectionCount = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
 
-			// Debug
-			FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
-			GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
-
-			m_hasBeenSeen = true;
-
+			// Curve float value for detection icon
 			m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
-			
 
-			if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
+			// Actor perception
+			FActorPerceptionBlueprintInfo info;
+			perceptionComp->GetActorsPerception( playerManager, info );
+
+			if( info.LastSensedStimuli.Num() > 0 )
 			{
-				//-------- IMPLEMENTATION NEEDED --------
-				//Lost Player
+				FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
+				if( stimulus.WasSuccessfullySensed() )
+				{
+					GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
+					m_hasSeenSomething = true;
+
+					if( m_sightValuePercent < 1.0f )
+					{
+
+					}
+					if( m_sightValuePercent >= 1.0f )
+					{
+						m_hasBeenCaught = true;
+
+					}
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerOutOfSight" );
+					if( m_hasBeenCaught == false )
+					{
+						m_hasSeenSomething = false;
+					}
+				}
+			}
+
+			if( m_hasBeenCaught )
+			{
+				// Set actor (Player) as caught
+				controllerAI->SetPlayerCaught( caughtActors );
+
+				GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Green, ( TEXT( "Caught" ) ) );
 			}
 			
-			if( m_sightValuePercent > 0.0f && m_hasBeenSeen )
-			{
-				if( m_sightValuePercent >= 1.0f )
-				{
-					m_hasBeenCaught = true;
 
-					// Debug message
-					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
+			////m_detectionCount = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
 
-					// Set actor (Player) as caught
-					controllerAI->SetPlayerCaught( caughtActors );
+			//// Debug
+			//FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
+			//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
 
-					// Find the distance between the two
-					float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
+			//m_hasBeenSeen = true;
 
-					m_aimingIn = true;
+			//if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
+			//{
+			//	//-------- IMPLEMENTATION NEEDED --------
+			//	//Lost Player
+			//	LostPlayer();
+			//}
+			//
+			//if( m_sightValuePercent > 0.0f && m_hasBeenSeen )
+			//{
+			//	if( m_sightValuePercent >= 1.0f )
+			//	{
 
-					// Shoot towards Player
-					//StartShooting();
+			//		// Debug message
+			//		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Caught" ) ) );
 
-					// Get float value (curve) && Set detection speed = float value
-					//m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
-				}
+			//		// Set actor (Player) as caught
+			//		controllerAI->SetPlayerCaught( caughtActors );
 
-				if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
-				{
-					// Investigate 
-					controllerAI->SetLastKnownLocation( playerManager->GetActorLocation() );
-					
-					controllerAI->SetInvestigate( m_hasBeenSeen );
+			//		// Find the distance between the two
+			//		float distanceToPlayer = FVector::Distance( playerLocation, enemyLocation );
 
-					// Debug message
-					GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Investigate" ) ) );
-				}
-				
-			}
+			//		m_aimingIn = true;
+
+			//		// Shoot towards Player
+			//		//StartShooting();
+
+			//		// Get float value (curve) && Set detection speed = float value
+			//		//m_detectionSpeed = myCurve->GetFloatValue( distanceToPlayer );
+			//	}
+
+			//	if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
+			//	{
+			//		// Investigate 
+			//		controllerAI->SetLastKnownLocation( playerManager->GetActorLocation() );
+			//		
+			//		controllerAI->SetInvestigate( m_hasBeenSeen );
+
+			//		// Debug message
+			//		GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, ( TEXT( "Investigate" ) ) );
+			//	}
+			//	
+			//}
 		}
 	}
 }
 
 void ACPP_AIManager::SightDetectionDelegate()
 {
-	sightDetectionD.Broadcast( m_sightValuePercent );
+	sightDetectionD.Broadcast( m_sightValuePercent, m_hasSeenSomething );
 }
 
-void ACPP_AIManager::IncreaseSightDetectionIcon()
+void ACPP_AIManager::EvaluateSightDetection()
 {
-	if( m_sightValuePercent <= 0.0f && !m_hasBeenSeen )
+	if( m_sightValuePercent <= 0.0f && !m_hasSeenSomething )
 	{
-		GiveUp(); 
-		LostPlayer(); // Tell enemy to go back to position
+		GiveUp();
+		LostPlayer();
 	}
-	if( m_sightValuePercent >= 1.0f )
+	else
 	{
-		SeenPlayer();
+		if( m_sightValuePercent >= 1.0f )
+		{
+			SeenPlayer();
+		}
 	}
+	
 }
 
 void ACPP_AIManager::GiveUp()
@@ -248,5 +329,7 @@ void ACPP_AIManager::SeenPlayer()
 void ACPP_AIManager::LostPlayer()
 {
 }
+
+
 
 

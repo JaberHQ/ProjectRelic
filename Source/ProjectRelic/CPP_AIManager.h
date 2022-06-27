@@ -50,7 +50,7 @@
  ***********************************************************************************************/
 
  // Declare delegate
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FSightDetectionD, float, detectionSpeed );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightDetectionD, float, detectionSpeed, bool, hasSeenSomething );
 
 UCLASS()
 class PROJECTRELIC_API ACPP_AIManager : public ACPP_CharacterManager
@@ -69,7 +69,7 @@ private:
 	float m_deathTimer; // Timer for despawn after death 
 
 	float m_sightValuePercent;
-	float m_detectionCount; // Counter for Stealth Detection UI 
+	//float m_detectionCount; // Counter for Stealth Detection UI 
 
 	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
 	bool m_hasBeenCaught; // For when the player has been caught by AI
@@ -77,6 +77,8 @@ private:
 	bool m_hasBeenShot;
 
 	float m_curveFloat;
+
+	bool m_hasSeenSomething;
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -234,11 +236,14 @@ public:
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FSightDetectionD sightDetectionD;
 
-	void IncreaseSightDetectionIcon();
+	void EvaluateSightDetection();
 
-	void GiveUp();
+	UFUNCTION( BlueprintCallable )
+		void GiveUp();
 
 	void SeenPlayer();
 
 	void LostPlayer();
+
+	float DetectionSpeedCalculation();
 };
