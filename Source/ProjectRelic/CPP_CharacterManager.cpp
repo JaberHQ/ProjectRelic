@@ -58,6 +58,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
+	
 }
 
 // Called when the game starts or when spawned

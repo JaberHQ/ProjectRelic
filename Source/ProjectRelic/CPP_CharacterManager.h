@@ -11,6 +11,7 @@
 #include "Components/InputComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/ChildActorComponent.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class

@@ -23,4 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	TArray< ACPP_WeaponManager*> weapon;
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USkeletalMeshComponent* meshComp; // Mesh for gun
 };

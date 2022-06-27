@@ -5,15 +5,27 @@
 
 ACPP_GunManager::ACPP_GunManager()
 	:m_ammoCount( 30 )
+	,m_ammoRemaining( 30 )
 {
+	
 }
 
-void ACPP_GunManager::SetAmmoCount( int ammoCount )
+void ACPP_GunManager::SetTotalAmmoCount( int ammoCount )
 {
 	m_ammoCount = ammoCount;
 }
 
-int ACPP_GunManager::GetAmmoCount()
+int ACPP_GunManager::GetTotalAmmoCount()
 {
 	return m_ammoCount;
+}
+
+void ACPP_GunManager::SetAmmoRemaining( int ammoRemaining )
+{
+	m_ammoRemaining = ammoRemaining;
+}
+
+int ACPP_GunManager::GetAmmoRemaining()
+{
+	return m_ammoRemaining;
 }

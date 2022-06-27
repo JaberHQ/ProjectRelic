@@ -15,10 +15,13 @@ class PROJECTRELIC_API ACPP_GunManager : public ACPP_WeaponManager
 	GENERATED_BODY()
 private:
 	int m_ammoCount;
-
+	int m_ammoRemaining;
 public:
 	ACPP_GunManager();
-	void SetAmmoCount( int ammoCount );
-	int GetAmmoCount();
+	void SetTotalAmmoCount( int ammoCount );
+	int GetTotalAmmoCount();
+
+	void SetAmmoRemaining( int ammoRemaining );
+	int GetAmmoRemaining();
 
 };

@@ -13,5 +13,7 @@ UCLASS()
 class PROJECTRELIC_API ACPP_AssaultRifle : public ACPP_GunManager
 {
 	GENERATED_BODY()
-	
+private:
+public:
+	ACPP_AssaultRifle();
 };
