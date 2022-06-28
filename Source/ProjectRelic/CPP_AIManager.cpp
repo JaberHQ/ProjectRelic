@@ -191,6 +191,10 @@ float ACPP_AIManager::DetectionSpeedCalculation()
 	return 0.0f;
 }
 
+void ACPP_AIManager::DelayInvestigate()
+{
+}
+
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	m_hasSeenSomething = true;

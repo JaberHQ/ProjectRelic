@@ -247,5 +247,7 @@ public:
 
 	float DetectionSpeedCalculation();
 
-	bool HasBeenCaught();
+
+
+	void DelayInvestigate();
 };
