@@ -3,27 +3,30 @@
 
 #include "CPP_InvestigateTask.h"
 #include "CPP_AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "CPP_AIManager.h"
+
 EBTNodeResult::Type UCPP_InvestigateTask::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
 	// Get AI controller
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( ownerComp.GetAIOwner() );
+
 	if( controllerAI )
 	{
 		// Get BB
 		UBlackboardComponent* blackboardComp = controllerAI->GetBlackboardComp();
 
-		// Get index
-		bool investigate = controllerAI->GetBlackboardComp()->GetValueAsBool( "Investigate" );
-
-		if( investigate )
+		// Use index to get patrol path
+		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
+		if( managerAI )
 		{
-			controllerAI->MoveTo( controllerAI->GetLastKnownLocation() );
+			FVector point = controllerAI->GetLastKnownLocation();
+			controllerAI->GetBlackboardComp()->SetValueAsVector( "LastKnownLocation", point );
+
 			// Success
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 			return EBTNodeResult::Succeeded;
 		}
 	}
-
-
 	return EBTNodeResult::Failed;
 }

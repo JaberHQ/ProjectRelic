@@ -246,4 +246,6 @@ public:
 	void LostPlayer();
 
 	float DetectionSpeedCalculation();
+
+	bool HasBeenCaught();
 };

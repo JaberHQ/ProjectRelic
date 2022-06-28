@@ -56,28 +56,43 @@ void ACPP_AIController::SetPlayerCaught( const TArray<AActor*>& caughtActors )
 
 void ACPP_AIController::SetHasLineOfSight( bool boolean )
 {
-	// Set bool
-	blackboardComp->SetValueAsBool( m_hasLineOfSight, boolean );
+	if( blackboardComp )
+	{
+		// Set bool
+		blackboardComp->SetValueAsBool( m_hasLineOfSight, boolean );
+	}
 }
 
 bool ACPP_AIController::GetHasLineOfSight()
 {
+	
 	// Return bool
 	return blackboardComp->GetValueAsBool( m_hasLineOfSight );
+			
+	
 }
 
 void ACPP_AIController::SetLastKnownLocation( FVector vector )
 {
-	blackboardComp->SetValueAsVector( m_lastKnownLocation, vector );
+	if( blackboardComp )
+	{
+		blackboardComp->SetValueAsVector( m_lastKnownLocation, vector );
+	}
 }
 
 void ACPP_AIController::SetInvestigate( bool boolean )
 {
-	// Set bool
-	blackboardComp->SetValueAsBool( m_invesigate, boolean );
+	if( blackboardComp )
+	{
+		// Set bool
+		blackboardComp->SetValueAsBool( m_invesigate, boolean );
+
+	}
 }
 
 FVector ACPP_AIController::GetLastKnownLocation()
 {
+	
 	return blackboardComp->GetValueAsVector( m_lastKnownLocation );
+
 }

@@ -13,7 +13,7 @@ ACPP_AIManager::ACPP_AIManager()
 	:health( 100.0f )
 	,defaultHealth( 100.0f )
 	,m_sightRadius( 1000.0f )
-	,m_loseSightRadius( 1020.0f )
+	,m_loseSightRadius( 1500.0f )
 	,m_peripheralVisionAngleDegrees( 35.0f )
 	,m_patrolSpeed( 300.0f )
 	,m_chaseSpeed( 600.0f )
@@ -62,7 +62,29 @@ void ACPP_AIManager::Tick( float DeltaTime )
 	
 	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasSeenSomething ), 
 						FApp::GetDeltaTime(), m_detectionSpeed );
-	
+
+	if( m_sightValuePercent >= 1.0f )
+	{
+		m_hasBeenCaught = true;
+		// AI Controller reference
+		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+		// Player reference
+		ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+		if( controllerAI )
+		{
+			if( playerManager )
+			{
+				FVector playerLocation = playerManager->GetActorLocation();
+				FVector enemyLocation = controllerAI->GetPawn()->GetActorLocation();
+
+				float distance = FVector::Distance( playerLocation, enemyLocation );
+				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
+			}
+		}
+		
+
+	}
 
 	//EvaluateSightDetection(); 
 	SightDetectionDelegate();
@@ -198,12 +220,17 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			// Distance between Player and Enemy
 			float distance = FVector::Distance( playerLocation, enemyLocation );
 
+			controllerAI->SetLastKnownLocation( playerLocation );
+			//Investigate
+			controllerAI->SetInvestigate( true );
 			// Curve float value for detection icon
-			m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
+			//m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
 
 			// Actor perception
 			FActorPerceptionBlueprintInfo info;
 			perceptionComp->GetActorsPerception( playerManager, info );
+
+
 
 			if( info.LastSensedStimuli.Num() > 0 )
 			{
@@ -213,14 +240,10 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 					GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
 					m_hasSeenSomething = true;
 
-					if( m_sightValuePercent < 1.0f )
+					if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
 					{
-
-					}
-					if( m_sightValuePercent >= 1.0f )
-					{
-						m_hasBeenCaught = true;
-
+						
+						
 					}
 				}
 				else
