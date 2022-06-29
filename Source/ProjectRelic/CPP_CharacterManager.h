@@ -67,8 +67,10 @@ public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* cameraComp; // Player follow camera
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* gunComp; // Mesh for gun
+
+
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UStaticMeshComponent* bulletComp; // Mesh for gun
