@@ -25,6 +25,4 @@ public:
 
 	TArray< ACPP_WeaponManager*> weapon;
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USkeletalMeshComponent* meshComp; // Mesh for gun
 };

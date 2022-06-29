@@ -24,4 +24,5 @@ public:
 	void SetAmmoRemaining( int ammoRemaining );
 	int GetAmmoRemaining();
 
+
 };

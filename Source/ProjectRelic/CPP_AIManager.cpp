@@ -163,7 +163,16 @@ void ACPP_AIManager::TakeAttack()
 	// Player reference
 	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
 
+	if( controllerAI )
+	{
+		if( playerManager )
+		{
+			controllerAI->PlayerHasShot();
+		}
+	}
+
 	m_hasBeenShot = true;
+
 
 
 }

@@ -12,6 +12,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/ChildActorComponent.h"
+#include "CPP_AssaultRifle.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -66,7 +67,7 @@ public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UCameraComponent* cameraComp; // Player follow camera
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* gunComp; // Mesh for gun
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )

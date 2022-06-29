@@ -133,4 +133,6 @@ public:
 	void SetInvestigate( bool boolean );
 
 	FVector GetLastKnownLocation();
+
+	void PlayerHasShot();
 };

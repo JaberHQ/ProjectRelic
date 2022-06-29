@@ -3,6 +3,7 @@
 
 #include "CPP_AIController.h"
 #include "CPP_AIManager.h"
+#include "CPP_PlayerManager.h"
 
 ACPP_AIController::ACPP_AIController()
 {
@@ -95,4 +96,20 @@ FVector ACPP_AIController::GetLastKnownLocation()
 	
 	return blackboardComp->GetValueAsVector( m_lastKnownLocation );
 
+}
+
+void ACPP_AIController::PlayerHasShot()
+{
+	if( blackboardComp )
+	{
+		ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+		if( playerManager )
+		{
+			// Set bool to true and set target to be the Player
+			blackboardComp->SetValueAsBool( m_hasLineOfSight, true );
+			blackboardComp->SetValueAsObject( m_enemyActor, playerManager );
+
+			//SFX
+		}
+	}
 }
