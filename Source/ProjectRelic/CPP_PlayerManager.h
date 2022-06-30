@@ -33,6 +33,8 @@
  * 30/05/2022	 JA			 v2.1		 Stealth Takedown
  * 30/05/2022	 JA			 v2.2		 Projectiles and Health
 **************************************************************************************************************/
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FPlayerUI, float, healthBar, float, invisibilityBar );
+
 UCLASS()
 class PROJECTRELIC_API ACPP_PlayerManager : public ACPP_CharacterManager
 {
@@ -42,6 +44,8 @@ private:
 	float m_shotDamage; // Damage per shot taken from AI
 	float m_animPosition; // Set position of Player to be behind the AI
 	float m_animCompletion; // How long it takes to compelete the animation montage
+
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
@@ -55,7 +59,8 @@ public:
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float defaultHealth; // Player default health
 
-
+	UPROPERTY( EditAnywhere, Category = "Invisibility" )
+		float invisibility;
 public:
 	ACPP_PlayerManager();
 	/*****************************************************************************
@@ -90,6 +95,19 @@ public:
 	 *   Notes           : N/A
 	 *   See also        : N/A
 	*****************************************************************************/
+	/*****************************************************************************
+		 *   Function        : virtual void Tick( float DeltaTime ) override
+		 *   Purpose         : Event Tick
+		 *   Parameters      : float DeltaTime
+		 *   Returns         : N/A
+		 *   Date altered    : 02/05/2022
+		 *   Contributors    : Jaber Ahmed
+		 *   Notes           : N/A
+		 *   See also        : N/A
+		*****************************************************************************/
+	virtual void Tick( float DeltaTime ) override;
+
+
 	void SetCanTakedown( bool canTakedown );
 	/*****************************************************************************
 	 *   Function        : bool GetCanTakedown()
@@ -147,5 +165,10 @@ public:
 	*****************************************************************************/
 	virtual void TakeAttack() override;
 
+	UFUNCTION( BlueprintCallable )
+		void userInterfaceDelegate();
+
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
+		FPlayerUI userInterfaceD;
 	
 };

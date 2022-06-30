@@ -11,12 +11,15 @@
 ACPP_PlayerManager::ACPP_PlayerManager()
 	:m_canTakedown( true )
 	,takedownTraceDistance( 250.0f )
-	,health( 200.0f )
 	,defaultHealth( 200.0f )
+	,health( 200.0f )
+	,invisibility( 100.0f )
 	,m_shotDamage( 10.0f )
 	,m_animPosition( 40.0f )
 	,m_animCompletion( 5.0f )
 {
+
+	health = defaultHealth;
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -41,6 +44,13 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::WallTrace );
 
 	//PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::StartCover );
+}
+
+void ACPP_PlayerManager::Tick( float DeltaTime )
+{
+	Super::Tick( DeltaTime );
+
+	userInterfaceDelegate();
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
@@ -151,6 +161,13 @@ void ACPP_PlayerManager::TakeAttack()
 	// Debug
 	FString healthDebug = FString::SanitizeFloat( health );
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug );
+	
+	//userInterfaceDelegate();
+}
+
+void ACPP_PlayerManager::userInterfaceDelegate()
+{
+	userInterfaceD.Broadcast( health, invisibility );
 }
 
 

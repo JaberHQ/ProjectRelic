@@ -82,6 +82,13 @@ void ACPP_AIManager::Tick( float DeltaTime )
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
 			}
 		}
+
+		if( m_hasBeenCaught )
+		{
+			m_aimingIn = true;
+			ShootProjectile();
+			StartShooting();
+		}
 		
 
 	}
@@ -275,6 +282,11 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				controllerAI->SetPlayerCaught( caughtActors );
 
 				GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Green, ( TEXT( "Caught" ) ) );
+
+				ShootProjectile();
+				StartShooting();
+
+
 			}
 			
 
