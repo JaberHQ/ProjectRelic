@@ -53,7 +53,7 @@ private:
 	float m_muzzleRotationPitch; // Muzzle rotation
 	float m_weaponRange;
 	bool m_isInCover;
-	float m_ammoCount;
+	int m_ammoCount;
 	FTimerHandle m_reloadTime;
 	float m_reloadAnimTime;
 
@@ -250,32 +250,149 @@ public:
 	  *   See also        : CPP_PlayerManager::TakeAttack, CPP_AIManager::TakeAttack
 	 *********************************************************************************************************/
 	virtual void TakeAttack();
-
+	/*****************************************************************************
+	  *   Function        : void 
+	  *   Purpose         : 
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	bool GetIsCrouched();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void StartShooting();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void StopShooting();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void StartAim();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void StopAim();
 
 	FTimerHandle m_shootTime;
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void Reloaded();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void StartCover( FHitResult hit );
-	
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void StopCover();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void WallTrace();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void TakeCover();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	bool CoverTrace( float inputAxis );
-	
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	bool RightCoverTrace();
-	
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	bool LeftCoverTrace();
 };

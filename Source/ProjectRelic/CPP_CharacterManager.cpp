@@ -19,7 +19,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_shootTime()
 	,m_isInCover()
 	,weaponSocket( TEXT( "GunSocket" ) )
-	,m_ammoCount( 30.0f )
+	,m_ammoCount( 30 )
 	,m_reloadTime()
 	,m_reloadAnimTime( 3.0f )
 {
@@ -220,10 +220,10 @@ void ACPP_CharacterManager::StartShooting()
 {
 	if( m_aimingIn )
 	{
+		ShootProjectile();
+		GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 		if( m_ammoCount > 0 )
 		{
-			ShootProjectile();
-			GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 		}
 
 		if( m_ammoCount <= 0 )
@@ -263,7 +263,11 @@ void ACPP_CharacterManager::ShootProjectile()
 
 		// Decrement ammo count
 		m_ammoCount -= 1.0f;
-		
+		FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
+
+		// Debug
+		GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Green, ammoDebug );
+
 		// Get the actor that has been hit
 		ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
 

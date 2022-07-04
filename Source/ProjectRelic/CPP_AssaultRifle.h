@@ -15,5 +15,15 @@ class PROJECTRELIC_API ACPP_AssaultRifle : public ACPP_GunManager
 	GENERATED_BODY()
 private:
 public:
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	ACPP_AssaultRifle();
 };

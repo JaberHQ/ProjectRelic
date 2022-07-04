@@ -164,7 +164,16 @@ public:
 	 *   See also        : CPP_CharacterManager::ShootProjectile
 	*****************************************************************************/
 	virtual void TakeAttack() override;
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void userInterfaceDelegate();
 

@@ -17,11 +17,60 @@ private:
 	int m_ammoCount;
 	int m_ammoRemaining;
 public:
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	ACPP_GunManager();
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void SetTotalAmmoCount( int ammoCount );
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	int GetTotalAmmoCount();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void SetAmmoRemaining( int ammoRemaining );
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	int GetAmmoRemaining();
 
 

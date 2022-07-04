@@ -229,7 +229,16 @@ public:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
 		UCurveFloat* myCurve;
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void SightDetectionDelegate();
 
@@ -237,17 +246,60 @@ public:
 		FSightDetectionD sightDetectionD;
 
 	void EvaluateSightDetection();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void GiveUp();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void SeenPlayer();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void LostPlayer();
-
+	/*****************************************************************************
+	  *   Function        : void
+	  *   Purpose         :
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	float DetectionSpeedCalculation();
-
-
-
+	  /*****************************************************************************
+	*   Function        : void 
+	*   Purpose         : 
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void DelayInvestigate();
 };

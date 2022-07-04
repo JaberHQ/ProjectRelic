@@ -49,7 +49,7 @@ public:
 		*   Purpose         : Execute task to find patrol points
 		*   Parameters      : UBehaviorTreeComponent& ownerComp, uint8* nodeMemory
 		*   Returns         : EBTNodeResult::Succeeded, EBTNodeResult::Failed
-		*   Date altered    : 03/05/2022
+		*   Date altered    : 01/07/2022
 		*   Contributors    : Jaber Ahmed
 		*   Notes           : N/A
 		*   See also        : N/A
