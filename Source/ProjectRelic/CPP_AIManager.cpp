@@ -208,7 +208,6 @@ void ACPP_AIManager::DelayInvestigate()
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
-	m_hasSeenSomething = true;
 
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
@@ -220,56 +219,61 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 	{
 		if( playerManager )
 		{
-
-			// Debug
-			FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
-			GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
-
-			// Sight config
-			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
-
-			// Get location
-			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
-			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
-
-			// Distance between Player and Enemy
-			float distance = FVector::Distance( playerLocation, enemyLocation );
-
-			controllerAI->SetLastKnownLocation( playerLocation );
-			//Investigate
-			controllerAI->SetInvestigate( true );
-			// Curve float value for detection icon
-			//m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
-
-			// Actor perception
-			FActorPerceptionBlueprintInfo info;
-			perceptionComp->GetActorsPerception( playerManager, info );
-
-
-
-			if( info.LastSensedStimuli.Num() > 0 )
+			if( playerManager->GetInvisibilityStatus() == false )
 			{
-				FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
-				if( stimulus.WasSuccessfullySensed() )
-				{
-					//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
-					m_hasSeenSomething = true;
+				m_hasSeenSomething = true;
 
-					if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
-					{
-						
-						
-					}
-				}
-				else
+				// Debug
+				FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
+				GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
+
+				// Sight config
+				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
+				// Get location
+				FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+				FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+				// Distance between Player and Enemy
+				float distance = FVector::Distance( playerLocation, enemyLocation );
+
+				controllerAI->SetLastKnownLocation( playerLocation );
+				//Investigate
+				controllerAI->SetInvestigate( true );
+				// Curve float value for detection icon
+				//m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
+
+				// Actor perception
+				FActorPerceptionBlueprintInfo info;
+				perceptionComp->GetActorsPerception( playerManager, info );
+
+
+
+				if( info.LastSensedStimuli.Num() > 0 )
 				{
-					//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerOutOfSight" );
-					if( m_hasBeenCaught == false )
+					FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
+					if( stimulus.WasSuccessfullySensed() )
 					{
-						m_hasSeenSomething = false;
+						//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
+						m_hasSeenSomething = true;
+
+						if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
+						{
+
+
+						}
+					}
+					else
+					{
+						//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerOutOfSight" );
+						if( m_hasBeenCaught == false )
+						{
+							m_hasSeenSomething = false;
+						}
 					}
 				}
 			}
+			
 
 			if( m_hasBeenCaught )
 			{
