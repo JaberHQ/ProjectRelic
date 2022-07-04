@@ -44,14 +44,18 @@ private:
 	float m_shotDamage; // Damage per shot taken from AI
 	float m_animPosition; // Set position of Player to be behind the AI
 	float m_animCompletion; // How long it takes to compelete the animation montage
-
-	
+	bool m_invisibility; // Whether the player is invisibile or not
+	float m_invisibilityPercent; // The amount of invisibility powerup left
+	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animTakedown; // Anim Montage for Player stealth takedown
+	
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
 
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float health; // Player health
@@ -59,8 +63,7 @@ public:
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float defaultHealth; // Player default health
 
-	UPROPERTY( EditAnywhere, Category = "Invisibility" )
-		float invisibility;
+	
 public:
 	ACPP_PlayerManager();
 	/*****************************************************************************
@@ -180,4 +183,11 @@ public:
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FPlayerUI userInterfaceD;
 	
+	void Invisibility();
+
+	bool GetInvisibilityStatus();
+
+	void InvisibilityFinished();
+
+	void Respawn();
 };

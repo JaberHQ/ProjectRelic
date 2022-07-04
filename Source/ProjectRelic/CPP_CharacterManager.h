@@ -395,4 +395,6 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	bool LeftCoverTrace();
+
+	void EnemyShoot();
 };

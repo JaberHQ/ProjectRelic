@@ -83,11 +83,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 			}
 		}
 
-		if( m_hasBeenCaught )
-		{
-			m_aimingIn = true;
-			
-		}
+		
 		
 
 	}
@@ -161,7 +157,7 @@ void ACPP_AIManager::TakeAttack()
 	
 	// Debug to show health
 	FString healthDebug = FString::SanitizeFloat( health );
-	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
+	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
 
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
@@ -256,7 +252,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
 				if( stimulus.WasSuccessfullySensed() )
 				{
-					GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
+					//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
 					m_hasSeenSomething = true;
 
 					if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
@@ -267,7 +263,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				}
 				else
 				{
-					GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerOutOfSight" );
+					//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerOutOfSight" );
 					if( m_hasBeenCaught == false )
 					{
 						m_hasSeenSomething = false;
@@ -280,7 +276,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				// Set actor (Player) as caught
 				controllerAI->SetPlayerCaught( caughtActors );
 
-				GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Green, ( TEXT( "Caught" ) ) );
+				//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Green, ( TEXT( "Caught" ) ) );
+				EnemyShoot();
 				StartShooting();
 			}
 			

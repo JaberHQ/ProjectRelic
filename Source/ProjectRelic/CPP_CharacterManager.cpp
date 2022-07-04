@@ -220,10 +220,11 @@ void ACPP_CharacterManager::StartShooting()
 {
 	if( m_aimingIn )
 	{
-		ShootProjectile();
-		GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+		
 		if( m_ammoCount > 0 )
 		{
+			ShootProjectile();
+			GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 		}
 
 		if( m_ammoCount <= 0 )
@@ -450,4 +451,9 @@ bool ACPP_CharacterManager::LeftCoverTrace()
 	FHitResult hit( ForceInit );
 	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
 	return leftHit;
+}
+
+void ACPP_CharacterManager::EnemyShoot()
+{
+	ShootProjectile();
 }

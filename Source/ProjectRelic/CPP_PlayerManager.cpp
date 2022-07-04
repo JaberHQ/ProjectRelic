@@ -11,15 +11,18 @@
 ACPP_PlayerManager::ACPP_PlayerManager()
 	:m_canTakedown( true )
 	,takedownTraceDistance( 250.0f )
-	,defaultHealth( 200.0f )
-	,health( 200.0f )
-	,invisibility( 100.0f )
-	,m_shotDamage( 10.0f )
+	,defaultHealth( 100.0f )
+	,health( 100.0f )
+	,m_shotDamage( 15.0f )
 	,m_animPosition( 40.0f )
 	,m_animCompletion( 5.0f )
+	,m_invisibility( false )
+	,m_invisibilityPercent( 100.0f )
+	,m_invisiblityTimer()
 {
 
 	health = defaultHealth;
+
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -37,6 +40,7 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
+	PlayerInputComponent->BindAction( "PowerUp", IE_Pressed, this, &ACPP_PlayerManager::Invisibility );
 	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::StartShooting );
 	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StopShooting );
 	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
@@ -50,7 +54,27 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+
+	if( m_invisibilityPercent > 0.0f && m_invisibility == true )
+	{
+		GetWorld()->GetTimerManager().SetTimer( m_invisiblityTimer, this, &ACPP_PlayerManager::InvisibilityFinished, 1.0f, true );
+		m_invisibilityPercent -= ( DeltaTime * 25.0f );
+
+	}
+
+
+
+	if( m_invisibilityPercent < 100.0f && m_invisibility == false || m_invisibilityPercent == 0 )
+	{
+		m_invisibilityPercent += ( DeltaTime * 10.0f );
+	}
+
+	if( m_invisibilityPercent == 0 )
+	{
+		m_invisibilityPercent += ( DeltaTime * 10.0f );
+	}
 	userInterfaceDelegate();
+
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
@@ -65,10 +89,42 @@ bool ACPP_PlayerManager::GetCanTakedown()
 
 void ACPP_PlayerManager::Takedown()
 {
+	TakeAttack(); // DELETE THIS ----------------------------------------------------
+
+
 	if( m_canTakedown )
 	{
 		TraceForward_Implementation();
 	}
+}
+
+void ACPP_PlayerManager::Invisibility()
+{
+	// If invisiblity bar is above 0
+	if( m_invisibilityPercent > 0.0f )
+	{
+		m_invisibility = !m_invisibility;
+	}
+}
+
+bool ACPP_PlayerManager::GetInvisibilityStatus()
+{
+	return m_invisibility;
+}
+
+void ACPP_PlayerManager::InvisibilityFinished()
+{
+	m_invisibility = false;
+}
+
+void ACPP_PlayerManager::Respawn()
+{
+	PlayAnimMontage( deadAnim );
+
+	health = defaultHealth;
+	//( X = 1552.347534, Y = 258.646729, Z = 1772.000000 )
+	SetActorLocation( FVector( 1552.347534, 258.646729, 1772.000000 ) );
+
 }
 
 void ACPP_PlayerManager::TraceForward_Implementation()
@@ -88,7 +144,7 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
 
 	// Draw a line for debug
-	DrawDebugLine( GetWorld(), start, end, FColor::Red, false, 5.0f );
+	//DrawDebugLine( GetWorld(), start, end, FColor::Red, false, 5.0f );
 
 	// If line has hit
 	if( bHit )
@@ -101,7 +157,7 @@ void ACPP_PlayerManager::TraceForward_Implementation()
 		if( managerAI )
 		{
 			// Debug
-			GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, hit.GetActor()->GetName() );
+			//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, hit.GetActor()->GetName() );
 			
 			// --- Spring arm stuff ---
 
@@ -156,18 +212,18 @@ void ACPP_PlayerManager::AnimationExecuted()
 void ACPP_PlayerManager::TakeAttack()
 {
 	// If health remains, decrease health else pronounce Player as dead
-	health > 0.0f ? health -= m_shotDamage : GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "Dead" );
+	health > 0.0f ? health -= m_shotDamage : Respawn();
 
 	// Debug
 	FString healthDebug = FString::SanitizeFloat( health );
-	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, healthDebug );
+	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug );
 	
 	//userInterfaceDelegate();
 }
 
 void ACPP_PlayerManager::userInterfaceDelegate()
 {
-	userInterfaceD.Broadcast( health, invisibility );
+	userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f );
 }
 
 
