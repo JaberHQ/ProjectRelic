@@ -457,3 +457,8 @@ void ACPP_CharacterManager::EnemyShoot()
 {
 	ShootProjectile();
 }
+
+bool ACPP_CharacterManager::GetIsAimedIn()
+{
+	return m_aimingIn;
+}

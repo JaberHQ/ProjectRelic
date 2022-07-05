@@ -57,10 +57,11 @@ private:
 	float m_reloadAnimTime;
 
 protected:
-	bool m_aimingIn;
 	int m_ammoCount;
 
 public:
+	bool m_aimingIn;
+
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
 
@@ -69,8 +70,6 @@ public:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USkeletalMeshComponent* gunComp; // Mesh for gun
-
-
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UStaticMeshComponent* bulletComp; // Mesh for gun
@@ -397,4 +396,7 @@ public:
 	bool LeftCoverTrace();
 
 	void EnemyShoot();
+
+	UFUNCTION( BlueprintCallable )
+	bool GetIsAimedIn();
 };

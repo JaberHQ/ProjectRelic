@@ -192,4 +192,6 @@ public:
 	void Respawn();
 
 	void IncreaseAmmoCount( int ammo );
+
+	
 };
