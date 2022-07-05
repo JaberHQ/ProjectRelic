@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "CPP_AIController.h"
 #include "Animation/AnimInstance.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
@@ -19,8 +20,14 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisibility( false )
 	,m_invisibilityPercent( 100.0f )
 	,m_invisiblityTimer()
+	,m_currentlyEquipped( 0 )
+	,m_weaponInventory(  )
 {
 	health = defaultHealth;
+
+	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
+	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
+
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -31,11 +38,19 @@ void ACPP_PlayerManager::BeginPlay()
 	Crouch();
 
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
+
+	
+	m_weaponInventory.Add( primaryGun );
+	m_weaponInventory.Add( pistol );
+
+	EquipGun( m_weaponInventory );
 }
 
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
+
+	PlayerInputComponent->BindAxis( "ChangeWeapons", this, &ACPP_PlayerManager::ChangeWeapons );
 
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
 	PlayerInputComponent->BindAction( "PowerUp", IE_Pressed, this, &ACPP_PlayerManager::Invisibility );
@@ -44,6 +59,7 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
 	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_CharacterManager::StopAim );
 	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::WallTrace );
+
 
 	//PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::StartCover );
 }
@@ -126,6 +142,45 @@ void ACPP_PlayerManager::IncreaseAmmoCount( int ammo )
 
 	
 	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Purple, FString::SanitizeFloat( m_ammoCount ) );
+}
+
+void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory )
+{
+	for( int i = 0; i < WeaponInventory.Num(); i++ )
+	{
+		// Set Visibility to false
+		WeaponInventory[ i ]->SetVisibility( false );
+	}
+
+	WeaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
+	WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "GunSocket" );
+	
+
+}
+
+void ACPP_PlayerManager::ChangeWeapons( float inputAxis )
+{
+	int value = UKismetMathLibrary::FTrunc( inputAxis );
+	int changeWeaponValue = value + m_currentlyEquipped;
+
+	if( m_weaponInventory.IsValidIndex( changeWeaponValue ) )
+	{
+		m_currentlyEquipped = changeWeaponValue;
+	}
+	else 
+	{
+		if( changeWeaponValue < 0 )
+		{
+			m_currentlyEquipped = m_weaponInventory.Num() - 1;
+		}
+		else
+		{
+			m_currentlyEquipped = 0;
+		}
+	}
+
+	EquipGun( m_weaponInventory );
+
 }
 
 void ACPP_PlayerManager::TraceForwardImplementation()
