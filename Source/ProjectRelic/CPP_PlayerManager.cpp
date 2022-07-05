@@ -20,9 +20,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisibilityPercent( 100.0f )
 	,m_invisiblityTimer()
 {
-
 	health = defaultHealth;
-
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -59,10 +57,7 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	{
 		GetWorld()->GetTimerManager().SetTimer( m_invisiblityTimer, this, &ACPP_PlayerManager::InvisibilityFinished, 1.0f, true );
 		m_invisibilityPercent -= ( DeltaTime * 25.0f );
-
 	}
-
-
 
 	if( m_invisibilityPercent < 100.0f && m_invisibility == false || m_invisibilityPercent == 0 )
 	{
@@ -89,12 +84,11 @@ bool ACPP_PlayerManager::GetCanTakedown()
 
 void ACPP_PlayerManager::Takedown()
 {
-	TakeAttack(); // DELETE THIS ----------------------------------------------------
-
+	//TakeAttack(); // DELETE THIS ----------------------------------------------------
 
 	if( m_canTakedown )
 	{
-		TraceForward_Implementation();
+		TraceForwardImplementation();
 	}
 }
 
@@ -127,7 +121,7 @@ void ACPP_PlayerManager::Respawn()
 
 }
 
-void ACPP_PlayerManager::TraceForward_Implementation()
+void ACPP_PlayerManager::TraceForwardImplementation()
 {
 	FVector location; // Location
 	FRotator rotation; // Rotation

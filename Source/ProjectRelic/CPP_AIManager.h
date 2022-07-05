@@ -47,6 +47,9 @@
  * 18/05/2022	 JA			 v2.2		 Multiple enemies can now follow different patrol points
  * 30/05/2022	 JA			 v2.3		 Added features for stealth takedown
  * 30/05/2022	 JA			 v2.4	     Added projectile features
+ * 13/06/2022	 JA			 v2.5		 Detection Meter
+ * 20/06/2022	 JA			 v2.6		 Further AI tweaking
+ * 04/07/2022	 JA			 v2.7		 Invisibility
  ***********************************************************************************************/
 
  // Declare delegate
@@ -229,9 +232,24 @@ public:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
 		UCurveFloat* myCurve;
+	/****************************************************************************************
+	  *   Function        : void SightDetectionDelegate();
+	  *   Purpose         : Delegate macro to send variables to BP for sight detection meter
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : Uses macro that sends two params 
+	  *   See also        : N/A
+	  **************************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void SightDetectionDelegate();
+
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
+		FSightDetectionD sightDetectionD;
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void EvaluateSightDetection();
+	  *   Purpose         : Whether sight detection meter goes up or down
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -239,16 +257,10 @@ public:
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void SightDetectionDelegate();
-
-	UPROPERTY( BlueprintCallable, BlueprintAssignable )
-		FSightDetectionD sightDetectionD;
-
 	void EvaluateSightDetection();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void GiveUp()
+	  *   Purpose         : When AI loses the player
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -259,7 +271,7 @@ public:
 	UFUNCTION( BlueprintCallable )
 		void GiveUp();
 	/*****************************************************************************
-	  *   Function        : void
+	  *   Function        : void SeenPlayer()
 	  *   Purpose         :
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
@@ -270,7 +282,7 @@ public:
 	  *****************************************************************************/
 	void SeenPlayer();
 	/*****************************************************************************
-	  *   Function        : void
+	  *   Function        : void LostPlayer()
 	  *   Purpose         :
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
@@ -281,7 +293,7 @@ public:
 	  *****************************************************************************/
 	void LostPlayer();
 	/*****************************************************************************
-	  *   Function        : void
+	  *   Function        : float DetectionSpeedCalculation()
 	  *   Purpose         :
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
@@ -292,7 +304,7 @@ public:
 	  *****************************************************************************/
 	float DetectionSpeedCalculation();
 	  /*****************************************************************************
-	*   Function        : void 
+	*   Function        : void DelayInvestigate()
 	*   Purpose         : 
 	*   Parameters      : N/A
 	*   Returns         : N/A

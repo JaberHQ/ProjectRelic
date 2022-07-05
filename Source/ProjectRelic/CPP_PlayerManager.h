@@ -144,7 +144,7 @@ public:
 	 *   Notes           : N/A
 	 *   See also        : N/A
 	*****************************************************************************/
-	void TraceForward_Implementation();
+	void TraceForwardImplementation();
 	/*****************************************************************************
 	 *   Function        : void AnimationExecuted()
 	 *   Purpose         : Actions after anim montage has been played
