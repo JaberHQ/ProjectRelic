@@ -116,9 +116,16 @@ void ACPP_PlayerManager::Respawn()
 	PlayAnimMontage( deadAnim );
 
 	health = defaultHealth;
-	//( X = 1552.347534, Y = 258.646729, Z = 1772.000000 )
 	SetActorLocation( FVector( 1552.347534, 258.646729, 1772.000000 ) );
 
+}
+
+void ACPP_PlayerManager::IncreaseAmmoCount( int ammo )
+{
+	m_ammoCount += ammo;
+
+	
+	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Purple, FString::SanitizeFloat( m_ammoCount ) );
 }
 
 void ACPP_PlayerManager::TraceForwardImplementation()

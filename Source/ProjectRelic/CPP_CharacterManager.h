@@ -53,12 +53,12 @@ private:
 	float m_muzzleRotationPitch; // Muzzle rotation
 	float m_weaponRange;
 	bool m_isInCover;
-	int m_ammoCount;
 	FTimerHandle m_reloadTime;
 	float m_reloadAnimTime;
 
 protected:
 	bool m_aimingIn;
+	int m_ammoCount;
 
 public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )

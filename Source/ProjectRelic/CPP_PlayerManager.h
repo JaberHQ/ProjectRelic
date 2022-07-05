@@ -190,4 +190,6 @@ public:
 	void InvisibilityFinished();
 
 	void Respawn();
+
+	void IncreaseAmmoCount( int ammo );
 };
