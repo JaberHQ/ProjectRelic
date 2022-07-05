@@ -91,8 +91,9 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UParticleSystem* animShoot; // Anim Montage for Player stealth takedown
-	FName weaponSocket;
 
+	FName weaponSocket;
+	FName muzzleSocket;
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()

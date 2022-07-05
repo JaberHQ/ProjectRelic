@@ -28,6 +28,12 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
 	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
 
+	m_weaponInventory.Add( primaryGun );
+	m_weaponInventory.Add( pistol );
+
+	primaryGun->SetupAttachment( GetMesh(), weaponSocket );
+	bulletComp->SetupAttachment( primaryGun, muzzleSocket );
+	EquipGun( m_weaponInventory );
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -35,15 +41,12 @@ void ACPP_PlayerManager::BeginPlay()
 	Super::BeginPlay();
 
 	// Start player off as crouching
-	Crouch();
+	//Crouch();
 
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 
 	
-	m_weaponInventory.Add( primaryGun );
-	m_weaponInventory.Add( pistol );
-
-	EquipGun( m_weaponInventory );
+	
 }
 
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
@@ -86,6 +89,15 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	}
 	userInterfaceDelegate();
 
+
+	if( m_aimingIn == true )
+	{
+		m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
+	}
+	else
+	{
+		m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
+	}
 }
 
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
@@ -151,7 +163,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		// Set Visibility to false
 		WeaponInventory[ i ]->SetVisibility( false );
 	}
-
+	
 	WeaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
 	WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "GunSocket" );
 	
