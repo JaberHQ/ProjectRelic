@@ -112,7 +112,7 @@ bool ACPP_PlayerManager::GetCanTakedown()
 
 void ACPP_PlayerManager::Takedown()
 {
-	//TakeAttack(); // DELETE THIS ----------------------------------------------------
+	TakeAttack(); // DELETE THIS ----------------------------------------------------
 
 	if( m_canTakedown )
 	{

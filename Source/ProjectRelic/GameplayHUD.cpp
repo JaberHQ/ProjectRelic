@@ -18,6 +18,6 @@ void AGameplayHUD::DrawHUD()
 		// Draw crosshair
 		FCanvasTileItem TileItem( CrossHairDrawPosition, CrosshairTexture->Resource, FLinearColor::White );
 		TileItem.BlendMode = SE_BLEND_Translucent;
-		Canvas->DrawItem( TileItem );
+		//Canvas->DrawItem( TileItem );
 	}
 }

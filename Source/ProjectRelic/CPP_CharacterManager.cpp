@@ -270,7 +270,7 @@ void ACPP_CharacterManager::ShootProjectile()
 		FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
 
 		// Debug
-		GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Green, ammoDebug );
+		//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Green, ammoDebug );
 
 		// Get the actor that has been hit
 		ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
