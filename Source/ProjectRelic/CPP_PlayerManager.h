@@ -199,7 +199,8 @@ public:
 
 	void Respawn();
 
-	void IncreaseAmmoCount( int ammo );
+	UFUNCTION( BlueprintCallable )
+		void IncreaseAmmoCount( int ammo );
 
 	void EquipGun( TArray<UChildActorComponent*> WeaponInventory );
 

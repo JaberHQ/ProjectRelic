@@ -23,9 +23,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	class UBoxComponent* boxComp;
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UBoxComponent* boxComp;
 
-	class UStaticMeshComponent* cubeComp;
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UStaticMeshComponent* cubeComp;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
