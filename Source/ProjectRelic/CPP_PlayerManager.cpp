@@ -33,7 +33,6 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 
 	primaryGun->SetupAttachment( GetMesh(), weaponSocket );
 	bulletComp->SetupAttachment( primaryGun, muzzleSocket );
-	EquipGun( m_weaponInventory );
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -45,7 +44,8 @@ void ACPP_PlayerManager::BeginPlay()
 
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 
-	
+	EquipGun( m_weaponInventory );
+
 	
 }
 
@@ -165,7 +165,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 	}
 	
 	WeaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
-	WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "GunSocket" );
+	WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 	
 
 }
@@ -291,7 +291,7 @@ void ACPP_PlayerManager::TakeAttack()
 
 void ACPP_PlayerManager::userInterfaceDelegate()
 {
-	userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f );
+	userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoCount );
 }
 
 

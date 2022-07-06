@@ -14,7 +14,7 @@ ACPP_Pickup::ACPP_Pickup()
 	cubeComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "Cube" ) );
 	UStaticMesh* cubeMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>( TEXT( "StaticMesh'/Engine/BasicShapes/Cube.Cube'" ) ).Object;
 	cubeComp->SetStaticMesh( cubeMesh );
-	cubeComp->SetCollisionResponseToAllChannels( ECollisionResponse::ECR_Overlap );
+	//cubeComp->SetCollisionResponseToChannel( ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap );
 	RootComponent = cubeComp;
 }
 

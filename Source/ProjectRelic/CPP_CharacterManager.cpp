@@ -10,6 +10,7 @@
 // Sets default values
 ACPP_CharacterManager::ACPP_CharacterManager()
 	:m_isCrouched( true )
+	,bulletComp()
 	,m_projectileRange( 1000.0f )
 	,m_muzzleRotationPitch( 3.0f )
 	,m_canBeShot( true )
@@ -23,6 +24,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_ammoCount( 30 )
 	,m_reloadTime()
 	,m_reloadAnimTime( 3.0f )
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
