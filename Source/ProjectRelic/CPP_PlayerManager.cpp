@@ -158,16 +158,33 @@ void ACPP_PlayerManager::IncreaseAmmoCount( int ammo )
 
 void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory )
 {
+	// Turn all elements invisible
 	for( int i = 0; i < WeaponInventory.Num(); i++ )
 	{
 		// Set Visibility to false
 		WeaponInventory[ i ]->SetVisibility( false );
 	}
 	
+	// Set the current weapon to be visibile
 	WeaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
+
+	// Attach to gun socket
 	WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 	
-
+	// If AR is chosen
+	if( m_currentlyEquipped == 0 )
+	{
+		// Set bools
+		m_assaultRifle = true;
+		m_pistol = false;
+	}
+	// If pistol is chosen
+	if( m_currentlyEquipped == 1 )
+	{
+		// Set bools
+		m_assaultRifle = false;
+		m_pistol = true;
+	}
 }
 
 void ACPP_PlayerManager::ChangeWeapons( float inputAxis )
@@ -291,7 +308,7 @@ void ACPP_PlayerManager::TakeAttack()
 
 void ACPP_PlayerManager::userInterfaceDelegate()
 {
-	userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoCount );
+	userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoCount, m_reserveAmmo );
 }
 
 

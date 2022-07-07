@@ -14,9 +14,7 @@ ACPP_Pickup::ACPP_Pickup()
 	cubeComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "Cube" ) );
 	UStaticMesh* cubeMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>( TEXT( "StaticMesh'/Engine/BasicShapes/Cube.Cube'" ) ).Object;
 	cubeComp->SetStaticMesh( cubeMesh );
-	boxComp->AttachToComponent( cubeComp, FAttachmentTransformRules::SnapToTargetIncludingScale );
 	//cubeComp->SetCollisionResponseToChannel( ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap );
-	RootComponent = cubeComp;
 }
 
 void ACPP_Pickup::OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult )
@@ -30,7 +28,11 @@ void ACPP_Pickup::BeginPlay()
 	Super::BeginPlay();
 	
 
+	boxComp->AttachToComponent( cubeComp, FAttachmentTransformRules::SnapToTargetIncludingScale );
 	boxComp->OnComponentBeginOverlap.AddDynamic( this, &ACPP_Pickup::OnBoxBeginOverlap );
+
+	RootComponent = cubeComp;
+
 }
 
 // Called every frame

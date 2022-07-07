@@ -51,14 +51,19 @@ class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
 private:
 	bool m_isCrouched; // If Player is crouched
 	float m_muzzleRotationPitch; // Muzzle rotation
-	float m_weaponRange;
-	bool m_isInCover;
-	FTimerHandle m_reloadTime;
-	float m_reloadAnimTime;
+	float m_weaponRange; // The weapon range
+	bool m_isInCover; // If character is in cover
+	FTimerHandle m_reloadTime; // Time handle for reloading
+	float m_reloadAnimTime; // Animation time for reloading
+	int m_fullMag; // Amount the magazine can hold
+
+	
 
 protected:
-	int m_ammoCount;
-
+	int m_ammoCount; // The amount of ammunition in the main tank
+	int m_reserveAmmo; // Amount of ammunition in the reserve tank
+	bool m_assaultRifle; // If AR is active
+	bool m_pistol; // If pistol is active
 public:
 	bool m_aimingIn;
 

@@ -24,6 +24,10 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_ammoCount( 30 )
 	,m_reloadTime()
 	,m_reloadAnimTime( 3.0f )
+	,m_reserveAmmo( 0 )
+	,m_fullMag( 30 )
+	,m_assaultRifle ( true )
+	,m_pistol( false )
 
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -74,6 +78,30 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	// Handle reserve ammunition
+	if( m_ammoCount > m_fullMag )
+	{
+		m_reserveAmmo = m_ammoCount - m_fullMag;
+		m_ammoCount = m_fullMag;
+	}
+
+	// When reloading
+	if( m_ammoCount == 0 )
+	{
+		// If theres not enough  reserve for a full mag
+		if( m_reserveAmmo > 0 && m_reserveAmmo < m_fullMag )
+		{
+			m_ammoCount = m_reserveAmmo;
+			m_reserveAmmo = m_fullMag;
+		}
+
+		// If there is enough for a full mag
+		if( m_reserveAmmo >= m_fullMag )
+		{
+			m_ammoCount = m_fullMag;
+			m_reserveAmmo -= m_fullMag;
+		}
+	}
 }
 
 // Called to bind functionality to input

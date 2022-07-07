@@ -35,7 +35,7 @@
  * 30/05/2022	 JA			 v2.1		 Stealth Takedown
  * 30/05/2022	 JA			 v2.2		 Projectiles and Health
 **************************************************************************************************************/
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams( FPlayerUI, float, healthBar, float, invisibilityBar, int, ammoCount );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams( FPlayerUI, float, healthBar, float, invisibilityBar, int, ammoCount, int, reserveCount );
 
 UCLASS()
 class PROJECTRELIC_API ACPP_PlayerManager : public ACPP_CharacterManager
