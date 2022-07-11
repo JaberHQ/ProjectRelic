@@ -24,12 +24,12 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisiblityTimer()
 	,m_currentlyEquipped( 0 )
 	,m_weaponInventory()
+	,playerMaterial()
 {
 	health = defaultHealth;
 
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
 	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
-
 	m_weaponInventory.Add( primaryGun );
 	m_weaponInventory.Add( pistol );
 
@@ -66,10 +66,11 @@ void ACPP_PlayerManager::BeginPlay()
 
 	// Create dynamic material
 	m_material = GetMesh()->GetMaterial( 0 );
-	dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
-	GetMesh()->SetMaterial( 0, dynamicMaterial );
-	dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
-	dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
+	m_material2 = GetMesh()->GetMaterial( 1 );
+	m_dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
+	GetMesh()->SetMaterial( 0, m_dynamicMaterial );
+	m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+	m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
 }
 
@@ -128,14 +129,23 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY ON" ) ) );
 
 		// Change texture
-		dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 50 );
+		//m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 50 );
+
+		GetMesh()->SetMaterial( 0, playerMaterial );
+		GetMesh()->SetMaterial( 1, playerMaterial );
+
 	}
 	if( !m_invisibility )
 	{
 		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY OFF" ) ) );
 
 		// Back to original texture
-		dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+		m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+
+		GetMesh()->SetMaterial( 0, m_material );
+		GetMesh()->SetMaterial( 1, m_material2 );
+
+
 
 	}
 }

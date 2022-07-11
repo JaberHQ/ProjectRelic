@@ -54,7 +54,9 @@ private:
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 
 	UMaterialInterface* m_material; // Material 
-	UMaterialInstanceDynamic* dynamicMaterial; // Dynamic materialPlay
+	UMaterialInterface* m_material2; // Material 
+
+	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
@@ -66,8 +68,8 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
 
-	/*UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
-		UMaterial* playerMaterial;*/
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
+		UMaterial* playerMaterial;
 
 	//UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
 		//URuntimeMeshComponent* playerMesh;
