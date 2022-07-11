@@ -14,7 +14,7 @@ void ACPP_AmmoPickup::OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AA
 	if( playerManager )
 	{
 		playerManager->IncreaseAmmoCount( 30 );
-		cubeComp->DestroyComponent();
+		//cubeComp->DestroyComponent();
 	}
 
 	

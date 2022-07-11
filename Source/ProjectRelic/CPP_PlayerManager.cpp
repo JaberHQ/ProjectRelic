@@ -8,6 +8,7 @@
 #include "Animation/AnimInstance.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
@@ -45,7 +46,8 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	//	playerMaterial = ( UMaterial* ) material.Object;
 	//}
 	//m_playerMaterial = UMaterialInstanceDynamic::Create( TheMaterial, this );
-
+	// 
+	
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -61,6 +63,13 @@ void ACPP_PlayerManager::BeginPlay()
 
 	// Set texture of the player
 	m_invisibility = false;
+
+	// Create dynamic material
+	m_material = GetMesh()->GetMaterial( 0 );
+	dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
+	GetMesh()->SetMaterial( 0, dynamicMaterial );
+	dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+	dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
 }
 
@@ -86,6 +95,7 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	userInterfaceDelegate();
 
 	if( m_invisibilityPercent > 0.0f && m_invisibility == true )
 	{
@@ -102,7 +112,6 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	{
 		m_invisibilityPercent += ( DeltaTime * 10.0f );
 	}
-	userInterfaceDelegate();
 
 
 	if( m_aimingIn == true )
@@ -116,11 +125,18 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	if( m_invisibility )
 	{
+		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY ON" ) ) );
+
 		// Change texture
+		dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 50 );
 	}
 	if( !m_invisibility )
 	{
+		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY OFF" ) ) );
+
 		// Back to original texture
+		dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+
 	}
 }
 
@@ -177,7 +193,7 @@ void ACPP_PlayerManager::IncreaseAmmoCount( int ammo )
 	m_ammoCount += ammo;
 
 	
-	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Purple, FString::SanitizeFloat( m_ammoCount ) );
+	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Purple, FString::SanitizeFloat( m_ammoCount ) );
 }
 
 void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory )

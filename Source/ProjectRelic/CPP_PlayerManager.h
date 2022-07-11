@@ -53,6 +53,9 @@ private:
 	int m_currentlyEquipped; // Currently equipped weapon
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 
+	UMaterialInterface* m_material; // Material 
+	UMaterialInstanceDynamic* dynamicMaterial; // Dynamic materialPlay
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
