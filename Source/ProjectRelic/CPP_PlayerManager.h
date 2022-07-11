@@ -8,6 +8,7 @@
 #include "TimerManager.h"
 #include "Components/ChildActorComponent.h"
 #include "CPP_WeaponManager.h"
+
 #include "CPP_PlayerManager.generated.h"
 
 /**************************************************************************************************************
@@ -50,7 +51,8 @@ private:
 	float m_invisibilityPercent; // The amount of invisibility powerup left
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
 	int m_currentlyEquipped; // Currently equipped weapon
-	TArray< UChildActorComponent*> m_weaponInventory;
+	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
@@ -60,6 +62,12 @@ public:
 	
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
+
+	/*UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
+		UMaterial* playerMaterial;*/
+
+	//UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
+		//URuntimeMeshComponent* playerMesh;
 
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float health; // Player health
@@ -72,6 +80,8 @@ public:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* pistol;
+
+	
 public:
 	ACPP_PlayerManager();
 	/*****************************************************************************

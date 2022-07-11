@@ -7,6 +7,7 @@
 #include "CPP_AIController.h"
 #include "Animation/AnimInstance.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UObject/ConstructorHelpers.h"
 #include "CPP_AIManager.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
@@ -21,7 +22,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisibilityPercent( 100.0f )
 	,m_invisiblityTimer()
 	,m_currentlyEquipped( 0 )
-	,m_weaponInventory(  )
+	,m_weaponInventory()
 {
 	health = defaultHealth;
 
@@ -31,8 +32,20 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	m_weaponInventory.Add( primaryGun );
 	m_weaponInventory.Add( pistol );
 
+
 	primaryGun->SetupAttachment( GetMesh(), weaponSocket );
 	bulletComp->SetupAttachment( primaryGun, muzzleSocket );
+
+	//static ConstructorHelpers::FObjectFinder<UMaterial>
+	//	material( TEXT( "Material'/Game/ProjectRelic/StaticMeshes/Player/AlienSoldier/Ch44_Body.Ch44_Body'" ) );
+
+
+	//if( material.Object != NULL )
+	//{
+	//	playerMaterial = ( UMaterial* ) material.Object;
+	//}
+	//m_playerMaterial = UMaterialInstanceDynamic::Create( TheMaterial, this );
+
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -46,6 +59,8 @@ void ACPP_PlayerManager::BeginPlay()
 
 	EquipGun( m_weaponInventory );
 
+	// Set texture of the player
+	m_invisibility = false;
 	
 }
 
@@ -97,6 +112,15 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	else
 	{
 		m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
+	}
+
+	if( m_invisibility )
+	{
+		// Change texture
+	}
+	if( !m_invisibility )
+	{
+		// Back to original texture
 	}
 }
 
