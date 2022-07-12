@@ -151,12 +151,24 @@ void ACPP_AIManager::DelayDeath()
 
 void ACPP_AIManager::TakeAttack()
 {
+	// Temporary damage variable
+	float damage = m_shotDamage;
+
+	// If enemy has been shot in the head
+	if( m_shotInHead )
+	{
+		// Increase damage value
+		damage = m_shotDamage * 2.0f;
+	}
+	
+	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, FString::SanitizeFloat( damage ) );
+
 
 	// If health remains, decrease health else pronounce Enemy Dead
-	health >= 0.0f ? health -= m_shotDamage : Destroy(); // Change to death animation
+	health >= 0.0f ? health -= damage : Destroy(); // Change to death animation
 	
 	// Debug to show health
-	FString healthDebug = FString::SanitizeFloat( health );
+	//FString healthDebug = FString::SanitizeFloat( health );
 	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
 
 	// AI Controller reference
@@ -169,14 +181,13 @@ void ACPP_AIManager::TakeAttack()
 	{
 		if( playerManager )
 		{
+			// Go to the player shooting
 			controllerAI->PlayerHasShot();
 		}
 	}
 
 	m_hasBeenShot = true;
-
-
-
+	m_shotInHead = false;
 }
 
 float ACPP_AIManager::DetectionSpeedCalculation()
@@ -205,6 +216,10 @@ float ACPP_AIManager::DetectionSpeedCalculation()
 void ACPP_AIManager::DelayInvestigate()
 {
 }
+
+
+	
+
 
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {

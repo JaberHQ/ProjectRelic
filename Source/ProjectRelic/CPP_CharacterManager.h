@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/ChildActorComponent.h"
 #include "CPP_AssaultRifle.h"
+#include "Camera/CameraShakeBase.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -49,7 +50,7 @@ class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
 	GENERATED_BODY()
 
 private:
-	bool m_isCrouched; // If Player is crouched
+	bool m_isCrouched; // If character is crouched
 	float m_muzzleRotationPitch; // Muzzle rotation
 	float m_weaponRange; // The weapon range
 	bool m_isInCover; // If character is in cover
@@ -57,13 +58,15 @@ private:
 	float m_reloadAnimTime; // Animation time for reloading
 	int m_fullMag; // Amount the magazine can hold
 
-	
+	bool m_isShooting; // If character is shooting
 
 protected:
 	int m_ammoCount; // The amount of ammunition in the main tank
 	int m_reserveAmmo; // Amount of ammunition in the reserve tank
 	bool m_assaultRifle; // If AR is active
 	bool m_pistol; // If pistol is active
+	bool m_shotInHead; // If enemy has been shot in the head
+	
 public:
 	bool m_aimingIn;
 
@@ -79,8 +82,14 @@ public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UStaticMeshComponent* bulletComp; // Mesh for gun
 
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USphereComponent* headCollision;
+
 	UPROPERTY( EditAnywhere, Category = "Projectiles" )
 		float m_projectileRange; // Range for projectile ray cast
+
+	UPROPERTY( EditAnywhere, Category = "Projectiles" )
+		float recoil; // Recoil value
 
 	UPROPERTY( EditAnywhere, Category = "Projectiles" )
 		bool m_canBeShot; // If character can be shot and destroyed by projectile
@@ -94,11 +103,18 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
 		float timeBetweenShots; // Seconds between shots
 
+	/*UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
+		UCameraShakeBase* cameraShake;*/
+
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UParticleSystem* animShoot; // Anim Montage for Player stealth takedown
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animReload; // Anim Montage for Player stealth takedown
+
 	FName weaponSocket;
 	FName muzzleSocket;
+	FName headSocket;
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
@@ -405,4 +421,7 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 	bool GetIsAimedIn();
+
+	void HasBeenShotInTheHead( bool boolean );
+	
 };

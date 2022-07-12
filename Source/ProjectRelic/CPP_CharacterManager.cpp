@@ -21,6 +21,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_isInCover()
 	,weaponSocket( TEXT( "GunSocket" ) )
 	,muzzleSocket( TEXT( "MuzzleSocket" ) )
+	,headSocket( TEXT( "Head" ) )
 	,m_ammoCount( 30 )
 	,m_reloadTime()
 	,m_reloadAnimTime( 3.0f )
@@ -28,7 +29,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_fullMag( 30 )
 	,m_assaultRifle ( true )
 	,m_pistol( false )
-
+	,recoil( -0.1f )
+	,m_shotInHead( false )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,6 +40,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
+	headCollision = CreateDefaultSubobject<USphereComponent>( TEXT( "HeadCollision" ) );
+
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
@@ -56,6 +60,9 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	bulletComp->SetupAttachment( gunComp );
 	//bulletComp->AttachTo( gunComp, weaponSocket, EAttachLocation::SnapToTarget, true );
 	//bulletComp->SetRelativeLocation( ( gunComp->GetRelativeLocation() ) );
+
+
+	headCollision->SetupAttachment( GetMesh(), headSocket );
 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -88,6 +95,13 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 	// When reloading
 	if( m_ammoCount == 0 )
 	{
+		m_isShooting = false;
+
+		if( animReload )
+		{
+			PlayAnimMontage( animReload );
+		}
+
 		// If theres not enough  reserve for a full mag
 		if( m_reserveAmmo > 0 && m_reserveAmmo < m_fullMag )
 		{
@@ -101,6 +115,16 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 			m_ammoCount = m_fullMag;
 			m_reserveAmmo -= m_fullMag;
 		}
+	}
+
+	
+
+	if( m_isShooting )
+	{
+		// Recoil
+		AddControllerPitchInput( recoil );
+
+		
 	}
 }
 
@@ -243,7 +267,7 @@ FHitResult ACPP_CharacterManager::RaycastShot()
 		// Box where collision has occured
 		DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
 	}
-
+	
 	return hit;
 }
 
@@ -254,8 +278,16 @@ void ACPP_CharacterManager::StartShooting()
 		
 		if( m_ammoCount > 0 )
 		{
+			m_isShooting = true;
+
+			// Call shoot function
 			ShootProjectile();
+
+			// Set timer for automatic shooting
 			GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+
+			// Recoil
+			//AddControllerPitchInput( recoil );
 		}
 
 		if( m_ammoCount <= 0 )
@@ -268,6 +300,7 @@ void ACPP_CharacterManager::StartShooting()
 
 void ACPP_CharacterManager::StopShooting()
 {
+	m_isShooting = false;
 	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
 }
 
@@ -306,10 +339,18 @@ void ACPP_CharacterManager::ShootProjectile()
 		// If the actor can be shot and has been hit
 		if( hitActor && m_canBeShot )
 		{
+		
+			if( hit.BoneName == headSocket )
+			{
+				{
+					hitActor->HasBeenShotInTheHead( true );
+				}
+			}
 
 			// Call function that decides what happens when hit 
 			hitActor->TakeAttack(); // Function is overridable 
 		}
+	
 	}
 }
 
@@ -492,4 +533,9 @@ void ACPP_CharacterManager::EnemyShoot()
 bool ACPP_CharacterManager::GetIsAimedIn()
 {
 	return m_aimingIn;
+}
+
+void ACPP_CharacterManager::HasBeenShotInTheHead( bool boolean )
+{
+	m_shotInHead = boolean;
 }

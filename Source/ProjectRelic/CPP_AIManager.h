@@ -82,6 +82,7 @@ private:
 	float m_curveFloat;
 
 	bool m_hasSeenSomething;
+
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -314,4 +315,5 @@ public:
 	*   See also        : N/A
 	*****************************************************************************/
 	void DelayInvestigate();
+
 };

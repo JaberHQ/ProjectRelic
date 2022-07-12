@@ -64,7 +64,7 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animTakedown; // Anim Montage for Player stealth takedown
-	
+
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
 
