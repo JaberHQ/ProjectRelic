@@ -31,6 +31,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_pistol( false )
 	,recoil( -0.1f )
 	,m_shotInHead( false )
+	,shootSFX()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -71,6 +72,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 
 	// Set nav agent property for crouching to true
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
 
 }
 
@@ -123,8 +125,8 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 	{
 		// Recoil
 		AddControllerPitchInput( recoil );
-
 		
+		//shootSFX->Play( 0.0f );
 	}
 }
 

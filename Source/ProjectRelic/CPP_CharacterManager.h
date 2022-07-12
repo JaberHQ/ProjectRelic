@@ -14,6 +14,7 @@
 #include "Components/ChildActorComponent.h"
 #include "CPP_AssaultRifle.h"
 #include "Camera/CameraShakeBase.h"
+#include "Components/AudioComponent.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -111,6 +112,8 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animReload; // Anim Montage for Player stealth takedown
+
+	
 
 	FName weaponSocket;
 	FName muzzleSocket;

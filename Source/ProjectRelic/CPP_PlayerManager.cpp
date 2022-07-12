@@ -144,9 +144,6 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 		GetMesh()->SetMaterial( 0, m_material );
 		GetMesh()->SetMaterial( 1, m_material2 );
-
-
-
 	}
 }
 
