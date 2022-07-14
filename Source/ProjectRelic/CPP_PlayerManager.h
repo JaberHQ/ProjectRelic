@@ -58,6 +58,9 @@ private:
 
 	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
 
+
+	
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
@@ -220,4 +223,7 @@ public:
 	void EquipGun( TArray<UChildActorComponent*> WeaponInventory );
 
 	void ChangeWeapons( float inputAxis );
+
+	UFUNCTION( BlueprintCallable )
+		bool GetHitmarkerActive();
 };

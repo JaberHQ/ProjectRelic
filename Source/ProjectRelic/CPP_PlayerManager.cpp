@@ -25,6 +25,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_currentlyEquipped( 0 )
 	,m_weaponInventory()
 	,playerMaterial()
+	
 {
 	health = defaultHealth;
 
@@ -257,6 +258,11 @@ void ACPP_PlayerManager::ChangeWeapons( float inputAxis )
 
 	EquipGun( m_weaponInventory );
 
+}
+
+bool ACPP_PlayerManager::GetHitmarkerActive()
+{
+	return m_hitmarker;
 }
 
 void ACPP_PlayerManager::TraceForwardImplementation()

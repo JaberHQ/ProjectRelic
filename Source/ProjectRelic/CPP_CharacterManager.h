@@ -61,6 +61,7 @@ private:
 
 	bool m_isShooting; // If character is shooting
 
+	FTimerHandle m_hitmarkerTimer;
 protected:
 	int m_ammoCount; // The amount of ammunition in the main tank
 	int m_reserveAmmo; // Amount of ammunition in the reserve tank
@@ -68,6 +69,7 @@ protected:
 	bool m_pistol; // If pistol is active
 	bool m_shotInHead; // If enemy has been shot in the head
 	
+	bool m_hitmarker;
 public:
 	bool m_aimingIn;
 
@@ -426,5 +428,5 @@ public:
 	bool GetIsAimedIn();
 
 	void HasBeenShotInTheHead( bool boolean );
-	
+	void HitmarkerFinish();
 };

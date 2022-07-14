@@ -31,7 +31,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_pistol( false )
 	,recoil( -0.1f )
 	,m_shotInHead( false )
-	//,shootSFX()
+	,m_hitmarker( false )
+	,m_hitmarkerTimer()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -341,7 +342,7 @@ void ACPP_CharacterManager::ShootProjectile()
 		// If the actor can be shot and has been hit
 		if( hitActor && m_canBeShot )
 		{
-		
+
 			if( hit.BoneName == headSocket )
 			{
 				{
@@ -351,6 +352,10 @@ void ACPP_CharacterManager::ShootProjectile()
 
 			// Call function that decides what happens when hit 
 			hitActor->TakeAttack(); // Function is overridable 
+			
+			// Hitmarker
+			m_hitmarker = true;
+			GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_CharacterManager::HitmarkerFinish, 1.0f, true );
 		}
 	
 	}
@@ -540,4 +545,9 @@ bool ACPP_CharacterManager::GetIsAimedIn()
 void ACPP_CharacterManager::HasBeenShotInTheHead( bool boolean )
 {
 	m_shotInHead = boolean;
+}
+
+void ACPP_CharacterManager::HitmarkerFinish()
+{
+	m_hitmarker = false;
 }
