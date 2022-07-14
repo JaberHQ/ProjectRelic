@@ -31,7 +31,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_pistol( false )
 	,recoil( -0.1f )
 	,m_shotInHead( false )
-	,shootSFX()
+	//,shootSFX()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
