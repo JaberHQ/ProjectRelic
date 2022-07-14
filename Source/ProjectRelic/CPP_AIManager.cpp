@@ -217,6 +217,11 @@ void ACPP_AIManager::DelayInvestigate()
 {
 }
 
+bool ACPP_AIManager::HasCaughtPlayer()
+{
+	return m_hasBeenCaught;
+}
+
 
 	
 
@@ -296,8 +301,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				controllerAI->SetPlayerCaught( caughtActors );
 
 				//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Green, ( TEXT( "Caught" ) ) );
-				EnemyShoot();
-				StartShooting();
+				//EnemyShoot();
+				//StartShooting();
 			}
 			
 

@@ -425,7 +425,7 @@ public:
 	void EnemyShoot();
 
 	UFUNCTION( BlueprintCallable )
-	bool GetIsAimedIn();
+		bool GetIsAimedIn();
 
 	void HasBeenShotInTheHead( bool boolean );
 	void HitmarkerFinish();

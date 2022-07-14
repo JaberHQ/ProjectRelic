@@ -316,4 +316,6 @@ public:
 	*****************************************************************************/
 	void DelayInvestigate();
 
+	UFUNCTION( BlueprintCallable )
+		bool HasCaughtPlayer();
 };
