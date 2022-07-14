@@ -244,8 +244,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				m_hasSeenSomething = true;
 
 				// Debug
-				FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
-				GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
+				//FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
+				//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
 
 				// Sight config
 				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
@@ -298,7 +298,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			if( m_hasBeenCaught )
 			{
 				// Set actor (Player) as caught
-				controllerAI->SetPlayerCaught( caughtActors );
+				controllerAI->PlayerHasShot();
 
 				//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Green, ( TEXT( "Caught" ) ) );
 				//EnemyShoot();
