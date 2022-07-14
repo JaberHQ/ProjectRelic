@@ -283,6 +283,8 @@ void ACPP_CharacterManager::StartShooting()
 		{
 			m_isShooting = true;
 
+			// Decrement ammo count
+			m_ammoCount -= 1.0f;
 			// Call shoot function
 			ShootProjectile();
 
@@ -321,43 +323,37 @@ void ACPP_CharacterManager::StopAim()
 
 void ACPP_CharacterManager::ShootProjectile()
 {
-	if( m_ammoCount > 0 )
+	// Spawn muzzle flash
+	UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 90.0f, 0.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
+
+	// Get the hit that has been returned
+	FHitResult hit = RaycastShot();
+
+	FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
+
+	// Debug
+	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Green, ammoDebug );
+
+	// Get the actor that has been hit
+	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
+
+	// If the actor can be shot and has been hit
+	if( hitActor && m_canBeShot )
 	{
-		// Spawn muzzle flash
-		UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 90.0f, 0.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
 
-		// Get the hit that has been returned
-		FHitResult hit = RaycastShot();
-
-		// Decrement ammo count
-		m_ammoCount -= 1.0f;
-		FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
-
-		// Debug
-		//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Green, ammoDebug );
-
-		// Get the actor that has been hit
-		ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
-
-		// If the actor can be shot and has been hit
-		if( hitActor && m_canBeShot )
+		if( hit.BoneName == headSocket )
 		{
-
-			if( hit.BoneName == headSocket )
 			{
-				{
-					hitActor->HasBeenShotInTheHead( true );
-				}
+				hitActor->HasBeenShotInTheHead( true );
 			}
-
-			// Call function that decides what happens when hit 
-			hitActor->TakeAttack(); // Function is overridable 
-			
-			// Hitmarker
-			m_hitmarker = true;
-			GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_CharacterManager::HitmarkerFinish, 1.0f, true );
 		}
-	
+
+		// Call function that decides what happens when hit 
+		hitActor->TakeAttack(); // Function is overridable 
+			
+		// Hitmarker
+		m_hitmarker = true;
+		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_CharacterManager::HitmarkerFinish, 1.0f, true );
 	}
 }
 

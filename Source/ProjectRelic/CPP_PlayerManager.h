@@ -49,6 +49,7 @@ private:
 	float m_animCompletion; // How long it takes to compelete the animation montage
 	bool m_invisibility; // Whether the player is invisibile or not
 	float m_invisibilityPercent; // The amount of invisibility powerup left
+	float m_chanceOfHit; // Chance to take damage
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
 	int m_currentlyEquipped; // Currently equipped weapon
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons

@@ -25,6 +25,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_currentlyEquipped( 0 )
 	,m_weaponInventory()
 	,playerMaterial()
+	,m_chanceOfHit( 0.2f )
 	
 {
 	health = defaultHealth;
@@ -192,7 +193,7 @@ void ACPP_PlayerManager::Respawn()
 	PlayAnimMontage( deadAnim );
 
 	health = defaultHealth;
-	SetActorLocation( FVector( 1552.347534, 258.646729, 1772.000000 ) );
+	//SetActorLocation( FVector( 1552.347534, 258.646729, 1772.000000 ) );
 
 }
 
@@ -349,14 +350,19 @@ void ACPP_PlayerManager::AnimationExecuted()
 
 void ACPP_PlayerManager::TakeAttack()
 {
-	// If health remains, decrease health else pronounce Player as dead
-	health > 0.0f ? health -= m_shotDamage : Respawn();
+	// Random hit
+	float randomHit = UKismetMathLibrary::RandomFloat();
+
+	if( randomHit < m_chanceOfHit )
+	{
+		// If health remains, decrease health else pronounce Player as dead
+		health > 0.0f ? health -= m_shotDamage : Respawn();
+	}
 
 	// Debug
-	FString healthDebug = FString::SanitizeFloat( health );
-	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug );
+	//FString healthDebug = FString::SanitizeFloat( health );
+	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, FString::SanitizeFloat( chanceOfHit ) );
 	
-	//userInterfaceDelegate();
 }
 
 void ACPP_PlayerManager::userInterfaceDelegate()
