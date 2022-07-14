@@ -32,7 +32,20 @@
  *
  * Functions: ACPP_AIManager()
  *
- * References: N/A
+ * References: https://www.youtube.com/watch?v=3IDflM4GuCY&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=9
+ *				https://www.youtube.com/watch?v=nshHCycft4A&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=9
+ *				https://www.youtube.com/watch?v=owZz-ffUzsc&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=11
+ *				https://www.youtube.com/watch?v=iQ1QsqcWFMI&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=12
+ *				https://www.youtube.com/watch?v=0XbM0O-gwxU&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=13
+ *				https://www.youtube.com/watch?v=0gU5StGSq_o&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=15
+ *				https://www.youtube.com/watch?v=nn057V9KQDs&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=19
+ *				https://www.youtube.com/watch?v=O5o_usc2pWo&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=22
+ *				https://www.youtube.com/watch?v=0ZvAnUTodfI&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=25
+ *				https://www.youtube.com/watch?v=WDzIk7dP4d4&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=30
+ *				https://www.youtube.com/watch?v=99NT6lQ6SJ0&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=31
+ *				https://www.youtube.com/watch?v=GdLvZacVmkA&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=39
+ *				https://www.youtube.com/watch?v=aACvp7BBeCk&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=42
+ *				
  *
  * See Also: EnemyCharacter.h
  *
@@ -70,7 +83,7 @@ private:
 	bool m_canTakedown; // If AI can be taken down
 	float m_shotDamage; // Damage per shot taken from Player
 	float m_deathTimer; // Timer for despawn after death 
-
+	float m_headShotDamage; // Damage multiplier for headshots
 	float m_sightValuePercent;
 	//float m_detectionCount; // Counter for Stealth Detection UI 
 

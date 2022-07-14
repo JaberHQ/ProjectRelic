@@ -20,13 +20,18 @@
  *
  * Functions: ACPP_AIController(), UBlackboardComponent* GetBlackboardComp() const
  *
- * References: N/A
+ * References: Unreal Engine, [Online] https://www.youtube.com/watch?v=iY1jnFvHgbE&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=3 [Accessed 02/05/2022],
+ *			   Reubs, [Online] https://www.youtube.com/watch?v=3Z1A825gTA8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=4 [Accessed 02/05/2022],
+ *			   	
  *
- * See Also: N/A
+ * See Also: CPP_AIManager.h
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 02/05/2022   JA           v2.0        Create a better EnemyController
+ * 02/05/2022    JA          v2.0        Create a better EnemyController
+ * 13/06/2022    JA		     v2.1		 Investigating
+ * 13/06/2022	 JA		     v2.2		 Detection meter
+ * 15/07/2022	 JA			 v2.3		 Improving AI functionality
  **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIController : public AAIController
@@ -116,23 +121,59 @@ public:
 		*   See also        : N/A
 	*****************************************************************************/
 	void SetHasLineOfSight( bool boolean );
-	/*****************************************************************************
+	/****************************************************************************************
 		*   Function        : bool GetHasLineOfSight()
 		*   Purpose         : Get BB key hasLineOfSight
 		*   Parameters      : N/A
-		*   Returns         : hasLineOfSight
+		*   Returns         : bool return blackboardComp->GetValueAsBool( m_hasLineOfSight )
 		*   Date altered    : 09/04/2022
 		*   Contributors    : Jaber Ahmed
 		*   Notes           : N/A
 		*   See also        : N/A
-	*****************************************************************************/
+	****************************************************************************************/
 	bool GetHasLineOfSight();
-
+	/***********************************************************************************
+	*   Function        : void SetLastKnownLocation( FVector vector )
+	*   Purpose         : Set last known location of the Player
+	*   Parameters      : FVector vector
+	*   Returns         : N/A 
+	*   Date altered    : 15/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A           
+	***********************************************************************************/
 	void SetLastKnownLocation( FVector vector );
-
+	 /*****************************************************************************
+	 *   Function        : void SetInvestigate( bool boolean )
+	 *   Purpose         : Set enemy to start or stop investigating 
+	 *   Parameters      : bool boolean 
+	 *   Returns         : N/A
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *****************************************************************************/
 	void SetInvestigate( bool boolean );
-
+	/*************************************************************************************
+	 *   Function        : FVector GetLastKnownLocation()
+	 *   Purpose         : Get last known location of Player
+	 *   Parameters      : N/A
+	 *   Returns         : return blackboardComp->GetValueAsVector( m_lastKnownLocation )
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *************************************************************************************/
 	FVector GetLastKnownLocation();
-
+	/*****************************************************************************
+	 *   Function        : void PlayerHasShot()
+	 *   Purpose         : Set player to be caught 
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *****************************************************************************/
 	void PlayerHasShot();
 };

@@ -25,8 +25,9 @@ void ACPP_AIController::OnPossess( APawn* pawn )
 {
 	Super::OnPossess( pawn );
 
-	// Reference to AI Pawn
+	// Cast to AI
 	ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( pawn );
+
 	if( managerAI )
 	{
 		if( managerAI->behaviourTree->BlackboardAsset )
@@ -34,6 +35,7 @@ void ACPP_AIController::OnPossess( APawn* pawn )
 			// Initalise BB
 			blackboardComp->InitializeBlackboard( *( managerAI->behaviourTree->BlackboardAsset ) );
 		}
+
 		// Initalise BT
 		behaviourComp->StartTree( *managerAI->behaviourTree );
 	}
@@ -41,6 +43,7 @@ void ACPP_AIController::OnPossess( APawn* pawn )
 
 UBlackboardComponent* ACPP_AIController::GetBlackboardComp() const
 {
+	// Get BB
 	return blackboardComp;
 }
 
@@ -66,17 +69,15 @@ void ACPP_AIController::SetHasLineOfSight( bool boolean )
 
 bool ACPP_AIController::GetHasLineOfSight()
 {
-	
-	// Return bool
-	return blackboardComp->GetValueAsBool( m_hasLineOfSight );
-			
-	
+	// Get bool
+	return blackboardComp->GetValueAsBool( m_hasLineOfSight );	
 }
 
 void ACPP_AIController::SetLastKnownLocation( FVector vector )
 {
 	if( blackboardComp )
 	{
+		// Set vector
 		blackboardComp->SetValueAsVector( m_lastKnownLocation, vector );
 	}
 }
@@ -87,15 +88,12 @@ void ACPP_AIController::SetInvestigate( bool boolean )
 	{
 		// Set bool
 		blackboardComp->SetValueAsBool( m_invesigate, boolean );
-
 	}
 }
 
 FVector ACPP_AIController::GetLastKnownLocation()
 {
-	
 	return blackboardComp->GetValueAsVector( m_lastKnownLocation );
-
 }
 
 void ACPP_AIController::PlayerHasShot()
@@ -108,8 +106,6 @@ void ACPP_AIController::PlayerHasShot()
 			// Set bool to true and set target to be the Player
 			blackboardComp->SetValueAsBool( m_hasLineOfSight, true );
 			blackboardComp->SetValueAsObject( m_enemyActor, playerManager );
-
-			//SFX
 		}
 	}
 }

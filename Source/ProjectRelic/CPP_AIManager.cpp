@@ -25,6 +25,7 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_curveFloat( 0.0f )
 	,m_hasSeenSomething( false )
 	,m_detectionSpeed( 0.0f )
+	,m_headShotDamage( 2.0f )
 {
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
@@ -63,32 +64,37 @@ void ACPP_AIManager::Tick( float DeltaTime )
 	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasSeenSomething ), 
 						FApp::GetDeltaTime(), m_detectionSpeed );
 
+
+	// If sight value is full
 	if( m_sightValuePercent >= 1.0f )
 	{
+		// Set player has been caught
 		m_hasBeenCaught = true;
-		// AI Controller reference
+
+		// Cast to AI controller
 		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
 
-		// Player reference
-		ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
 		if( controllerAI )
 		{
+			// Cast to player
+			ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
 			if( playerManager )
 			{
+				// Set Player and AI location
 				FVector playerLocation = playerManager->GetActorLocation();
 				FVector enemyLocation = controllerAI->GetPawn()->GetActorLocation();
 
+				// Find the distance between the two
 				float distance = FVector::Distance( playerLocation, enemyLocation );
+
+				// Set curve float
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
 			}
 		}
-
-		
-		
-
 	}
 
-	//EvaluateSightDetection(); 
+	// Broadcast delegate for sight detection widget
 	SightDetectionDelegate();
 }
 
@@ -98,6 +104,8 @@ void ACPP_AIManager::BeginPlay()
 
 	// If enemy 'senses' the player
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+
+	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
 	boxComponent->OnComponentEndOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxEndOverlap );
 }
@@ -118,7 +126,7 @@ void ACPP_AIManager::OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AAc
 
 void ACPP_AIManager::OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex )
 {
-	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+	// -- IMPLEMENTATION NEEDED --
 }
 
 void ACPP_AIManager::Takedown()
@@ -158,19 +166,12 @@ void ACPP_AIManager::TakeAttack()
 	if( m_shotInHead )
 	{
 		// Increase damage value
-		damage = m_shotDamage * 2.0f;
+		damage = m_shotDamage * m_headShotDamage;
 	}
 	
-	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, FString::SanitizeFloat( damage ) );
-
-
 	// If health remains, decrease health else pronounce Enemy Dead
 	health >= 0.0f ? health -= damage : Destroy(); // Change to death animation
 	
-	// Debug to show health
-	//FString healthDebug = FString::SanitizeFloat( health );
-	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Blue, healthDebug ) ;
-
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
 
@@ -179,14 +180,14 @@ void ACPP_AIManager::TakeAttack()
 
 	if( controllerAI )
 	{
-		if( playerManager )
-		{
-			// Go to the player shooting
-			controllerAI->PlayerHasShot();
-		}
+		// Set player caught
+		controllerAI->PlayerHasShot();
 	}
 
+	// Enemy has been shot
 	m_hasBeenShot = true;
+
+	// Reset shot to the head bool
 	m_shotInHead = false;
 }
 
@@ -223,12 +224,8 @@ bool ACPP_AIManager::HasCaughtPlayer()
 }
 
 
-	
-
-
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
-
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
 
@@ -241,11 +238,8 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 		{
 			if( playerManager->GetInvisibilityStatus() == false )
 			{
+				// Set bool to investigate
 				m_hasSeenSomething = true;
-
-				// Debug
-				//FString distanceDebug = FString::SanitizeFloat( m_sightValuePercent );
-				//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, distanceDebug );
 
 				// Sight config
 				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
@@ -257,35 +251,28 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				// Distance between Player and Enemy
 				float distance = FVector::Distance( playerLocation, enemyLocation );
 
+				// Set last known location of the Player
 				controllerAI->SetLastKnownLocation( playerLocation );
+
 				//Investigate
 				controllerAI->SetInvestigate( true );
-				// Curve float value for detection icon
-				//m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 500.0f );
 
 				// Actor perception
 				FActorPerceptionBlueprintInfo info;
 				perceptionComp->GetActorsPerception( playerManager, info );
 
-
-
+				// If sensed
 				if( info.LastSensedStimuli.Num() > 0 )
 				{
 					FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
 					if( stimulus.WasSuccessfullySensed() )
 					{
-						//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerInSight" );
+						// Set bool to investigate
 						m_hasSeenSomething = true;
-
-						if( m_sightValuePercent < 1.0f && m_sightValuePercent > 0.0f )
-						{
-
-
-						}
 					}
 					else
 					{
-						//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "PlayerOutOfSight" );
+						// Go back to regular pathing
 						if( m_hasBeenCaught == false )
 						{
 							m_hasSeenSomething = false;
@@ -294,26 +281,28 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				}
 			}
 			
-
+			// If player has been caught
 			if( m_hasBeenCaught )
 			{
 				// Set actor (Player) as caught
 				controllerAI->PlayerHasShot();
-			}
-			
+			}	
 		}
 	}
 }
 
 void ACPP_AIManager::SightDetectionDelegate()
 {
+	// Broadcast delegate
 	sightDetectionD.Broadcast( m_sightValuePercent, m_hasSeenSomething );
 }
 
 void ACPP_AIManager::EvaluateSightDetection()
 {
+	// If detection meter is empty
 	if( m_sightValuePercent <= 0.0f && !m_hasSeenSomething )
 	{
+		// Lose player and go back to regular pathing
 		GiveUp();
 		LostPlayer();
 	}
@@ -321,6 +310,7 @@ void ACPP_AIManager::EvaluateSightDetection()
 	{
 		if( m_sightValuePercent >= 1.0f )
 		{
+			// Attack player
 			SeenPlayer();
 		}
 	}
