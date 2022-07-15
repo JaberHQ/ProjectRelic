@@ -65,8 +65,8 @@ protected:
 	bool m_isShooting; // If character is shooting
 	int m_ammoCount; // The amount of ammunition in the main tank
 	int m_reserveAmmo; // Amount of ammunition in the reserve tank
-	bool m_assaultRifle; // If AR is active
-	bool m_pistol; // If pistol is active
+
+
 	bool m_shotInHead; // If enemy has been shot in the head
 	
 	bool m_hitmarker;
@@ -80,6 +80,12 @@ protected:
 	int m_fullMagPistol; // Full magazine for pistol
 public:
 	bool m_aimingIn;
+
+	UPROPERTY( EditAnywhere, Category = "Weapon" )
+		bool m_assaultRifle; // If AR is active
+
+	UPROPERTY( EditAnywhere, Category = "Weapon" )
+		bool m_pistol; // If pistol is active
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player

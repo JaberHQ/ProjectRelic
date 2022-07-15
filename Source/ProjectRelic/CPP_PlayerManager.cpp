@@ -439,11 +439,11 @@ void ACPP_PlayerManager::userInterfaceDelegate()
 {
 	if( m_assaultRifle )
 	{
-		userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoAR, m_reserveAR );
+		userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoAR, m_reserveAR, m_assaultRifle, m_pistol );
 	}
 	if( m_pistol )
 	{
-		userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoPistol, m_reservePistol );
+		userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoPistol, m_reservePistol, m_assaultRifle, m_pistol );
 
 	}
 }
