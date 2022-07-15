@@ -22,10 +22,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,weaponSocket( TEXT( "GunSocket" ) )
 	,muzzleSocket( TEXT( "MuzzleSocket" ) )
 	,headSocket( TEXT( "Head" ) )
-	,m_ammoCount( 30 )
 	,m_reloadTime()
 	,m_reloadAnimTime( 3.0f )
-	,m_reserveAmmo( 0 )
 	,m_fullMag( 30 )
 	,m_assaultRifle ( true )
 	,m_pistol( false )
@@ -376,7 +374,7 @@ void ACPP_CharacterManager::ShootProjectile()
 	// Get the hit that has been returned
 	FHitResult hit = RaycastShot();
 
-	FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
+	//FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
 
 	// Get the actor that has been hit
 	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
@@ -414,7 +412,6 @@ bool ACPP_CharacterManager::GetIsCrouched()
 void ACPP_CharacterManager::Reloaded()
 {
 	GetWorld()->GetTimerManager().ClearTimer( m_reloadTime );
-	m_ammoCount = 30.0f;
 }
 
 void ACPP_CharacterManager::StartCover( FHitResult hit )

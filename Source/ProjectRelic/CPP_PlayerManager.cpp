@@ -11,6 +11,8 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "CPP_AIManager.h"
 
+
+
 ACPP_PlayerManager::ACPP_PlayerManager()
 	:m_canTakedown( true )
 	,takedownTraceDistance( 250.0f )
@@ -24,10 +26,11 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisiblityTimer()
 	,m_currentlyEquipped( 0 )
 	,m_weaponInventory()
-	,playerMaterial()
+	,invisibleMaterial()
 	,m_chanceOfHit( 0.2f )
 	,m_pistolSocket(TEXT( "PistolSocket" ) )
-	, m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
+	,m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
+
 {
 	health = defaultHealth;
 
@@ -36,30 +39,13 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	m_weaponInventory.Add( primaryGun );
 	m_weaponInventory.Add( pistol );
 
-
-	//primaryGun->SetupAttachment( GetMesh(), weaponSocket );
-	
-
 	pistol->SetupAttachment( GetMesh(), m_pistolSocket );
-	//static ConstructorHelpers::FObjectFinder<UMaterial>
-	//	material( TEXT( "Material'/Game/ProjectRelic/StaticMeshes/Player/AlienSoldier/Ch44_Body.Ch44_Body'" ) );
-
-
-	//if( material.Object != NULL )
-	//{
-	//	playerMaterial = ( UMaterial* ) material.Object;
-	//}
-	//m_playerMaterial = UMaterialInstanceDynamic::Create( TheMaterial, this );
-	// 
 	
 }
 
 void ACPP_PlayerManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Start player off as crouching
-	//Crouch();
 
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 	primaryGun->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
@@ -104,6 +90,24 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	userInterfaceDelegate();
 
+	InvisibilityTick( DeltaTime );
+
+	// If player is aiming in, show weapon
+	m_aimingIn ? m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true ) : m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
+
+	
+
+	AmmoTick();
+}
+
+void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
+{
+	InvisibilityEvaluation( DeltaTime );
+
+	InvisibilityMaterial();
+}
+void ACPP_PlayerManager::InvisibilityEvaluation( float DeltaTime )
+{
 	if( m_invisibilityPercent > 0.0f && m_invisibility == true )
 	{
 		GetWorld()->GetTimerManager().SetTimer( m_invisiblityTimer, this, &ACPP_PlayerManager::InvisibilityFinished, 1.0f, true );
@@ -119,39 +123,27 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	{
 		m_invisibilityPercent += ( DeltaTime * 10.0f );
 	}
+}
 
-
-	if( m_aimingIn == true )
+void ACPP_PlayerManager::InvisibilityMaterial()
+{
+	// If player is invisible
+	if( m_invisibility )
 	{
-		m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
+		GetMesh()->SetMaterial( 0, invisibleMaterial );
+		GetMesh()->SetMaterial( 1, invisibleMaterial );
 	}
 	else
 	{
-		m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
-	}
-
-	if( m_invisibility )
-	{
-		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY ON" ) ) );
-
-		// Change texture
-		//m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 50 );
-
-		GetMesh()->SetMaterial( 0, playerMaterial );
-		GetMesh()->SetMaterial( 1, playerMaterial );
-
-	}
-	if( !m_invisibility )
-	{
-		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Blue, ( TEXT( "INVISIBILITY OFF" ) ) );
-
 		// Back to original texture
 		m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
 
 		GetMesh()->SetMaterial( 0, m_material );
 		GetMesh()->SetMaterial( 1, m_material2 );
 	}
-
+}
+void ACPP_PlayerManager::AmmoTick()
+{
 	if( m_assaultRifle )
 	{
 		// If there is reserve ammo available
@@ -163,7 +155,6 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 		if( m_isShooting )
 		{
-			//m_ammoAR -= 1;
 		}
 
 		// If there is no ammo in the main tank left
@@ -200,7 +191,6 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 		if( m_isShooting )
 		{
-			//m_ammoPistol -= 1;
 		}
 
 		// If there is no ammo in the main tank left
@@ -226,7 +216,38 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 		}
 	}
 }
+void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fullMag )
+{
+	// If there is reserve ammo available
+	if( ammoCount > fullMag )
+	{
+		reserveCount = ammoCount - fullMag;
+		ammoCount = fullMag;
+	}
 
+
+	// If there is no ammo in the main tank left
+	if( ammoCount == 0 )
+	{
+		m_isShooting = false;
+
+		// If there is enough reserve for a full reload
+		if( reserveCount >= fullMag )
+		{
+			ammoCount = fullMag;
+
+			reserveCount -= fullMag;
+		}
+
+		// If there is not enough reserve for a full reload but enough for a partial reload
+		if( reserveCount < fullMag && reserveCount > 0 )
+		{
+			ammoCount = reserveCount;
+
+			reserveCount = 0;
+		}
+	}
+}
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
 {	
 	m_canTakedown = canTakedown;	

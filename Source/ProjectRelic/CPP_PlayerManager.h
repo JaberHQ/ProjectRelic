@@ -62,6 +62,15 @@ private:
 	FName m_pistolSocket;
 	FName m_pistolMuzzleSocket;
 
+	void InvisibilityTick( float DeltaTime );
+	
+	void InvisibilityEvaluation( float DeltaTime );
+	
+	void InvisibilityMaterial();
+
+	void AmmoTick();
+	void AmmoEvaluation( int ammoCount, int reserveCount, int fullMag );
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
@@ -73,7 +82,7 @@ public:
 		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
-		UMaterial* playerMaterial;
+		UMaterial* invisibleMaterial;
 
 	//UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
 		//URuntimeMeshComponent* playerMesh;
