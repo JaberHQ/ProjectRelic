@@ -336,6 +336,16 @@ bool ACPP_PlayerManager::GetHitmarkerActive()
 	return m_hitmarker;
 }
 
+bool ACPP_PlayerManager::GetAssaultRifle()
+{
+	return m_assaultRifle;
+}
+
+bool ACPP_PlayerManager::GetPistol()
+{
+	return m_pistol;
+}
+
 void ACPP_PlayerManager::TraceForwardImplementation()
 {
 	FVector location; // Location

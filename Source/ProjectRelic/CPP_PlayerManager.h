@@ -228,4 +228,10 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 		bool GetHitmarkerActive();
+
+	UFUNCTION( BlueprintCallable )
+		bool GetAssaultRifle();
+
+	UFUNCTION( BlueprintCallable )
+		bool GetPistol();
 };
