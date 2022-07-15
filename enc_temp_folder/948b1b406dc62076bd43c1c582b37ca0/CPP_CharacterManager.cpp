@@ -288,7 +288,7 @@ void ACPP_CharacterManager::StartShooting()
 			{
 				m_isShooting = true;
 
-				//m_ammoAR -= 1;
+				m_ammoAR -= 1;
 
 				ShootProjectile();
 
@@ -302,19 +302,6 @@ void ACPP_CharacterManager::StartShooting()
 				GetWorld()->GetTimerManager().SetTimer( m_reloadTime, this, &ACPP_CharacterManager::Reloaded, m_reloadAnimTime, true );
 			}
 
-		}
-
-		if( m_pistol )
-		{
-			if( m_ammoPistol > 0 )
-			{
-				m_isShooting = true;
-
-				//m_ammoPistol -= 1;
-
-				ShootProjectile();
-			}
-			
 		}
 		
 		//if( m_ammoCount > 0 )
@@ -362,15 +349,6 @@ void ACPP_CharacterManager::ShootProjectile()
 	{
 		// Spawn muzzle flash
 		UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 90.0f, 0.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
-
-		if( m_assaultRifle )
-		{
-			m_ammoAR -= 1;
-		}
-		if( m_pistol )
-		{
-			m_ammoPistol -= 1;
-		}
 	}
 
 	// Get the hit that has been returned

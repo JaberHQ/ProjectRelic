@@ -159,7 +159,7 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 		if( m_isShooting )
 		{
-			//m_ammoAR -= 1;
+			m_ammoAR -= 1;
 		}
 
 		// If there is no ammo in the main tank left
@@ -196,7 +196,7 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 		if( m_isShooting )
 		{
-			//m_ammoPistol -= 1;
+			m_ammoPistol -= 1;
 		}
 
 		// If there is no ammo in the main tank left

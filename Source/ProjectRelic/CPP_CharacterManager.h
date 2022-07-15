@@ -59,10 +59,10 @@ private:
 	float m_reloadAnimTime; // Animation time for reloading
 	int m_fullMag; // Amount the magazine can hold
 
-	bool m_isShooting; // If character is shooting
 
 	FTimerHandle m_hitmarkerTimer;
 protected:
+	bool m_isShooting; // If character is shooting
 	int m_ammoCount; // The amount of ammunition in the main tank
 	int m_reserveAmmo; // Amount of ammunition in the reserve tank
 	bool m_assaultRifle; // If AR is active
@@ -70,6 +70,14 @@ protected:
 	bool m_shotInHead; // If enemy has been shot in the head
 	
 	bool m_hitmarker;
+
+	int m_ammoAR; // Ammo for AR
+	int m_reserveAR; // Reserve ammo for AR
+	int m_fullMagAR; // Full magazine for AR
+
+	int m_ammoPistol; // Ammo for pistol
+	int m_reservePistol; // Reserve ammo for pistol
+	int m_fullMagPistol; // Full magazine for pistol
 public:
 	bool m_aimingIn;
 
