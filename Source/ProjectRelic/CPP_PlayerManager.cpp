@@ -26,7 +26,8 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_weaponInventory()
 	,playerMaterial()
 	,m_chanceOfHit( 0.2f )
-	
+	,m_pistolSocket(TEXT( "PistolSocket" ) )
+	, m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
 {
 	health = defaultHealth;
 
@@ -36,9 +37,10 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	m_weaponInventory.Add( pistol );
 
 
-	primaryGun->SetupAttachment( GetMesh(), weaponSocket );
-	bulletComp->SetupAttachment( primaryGun, muzzleSocket );
+	//primaryGun->SetupAttachment( GetMesh(), weaponSocket );
+	
 
+	pistol->SetupAttachment( GetMesh(), m_pistolSocket );
 	//static ConstructorHelpers::FObjectFinder<UMaterial>
 	//	material( TEXT( "Material'/Game/ProjectRelic/StaticMeshes/Player/AlienSoldier/Ch44_Body.Ch44_Body'" ) );
 
@@ -60,7 +62,8 @@ void ACPP_PlayerManager::BeginPlay()
 	//Crouch();
 
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
-
+	primaryGun->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
+	bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, muzzleSocket );
 	EquipGun( m_weaponInventory );
 
 	// Set texture of the player
@@ -74,6 +77,7 @@ void ACPP_PlayerManager::BeginPlay()
 	m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
 	m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
+	//pistol->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), m_pistolSocket );
 }
 
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
@@ -287,15 +291,17 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 	// Set the current weapon to be visibile
 	WeaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
 
-	// Attach to gun socket
-	WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
-	
 	// If AR is chosen
 	if( m_currentlyEquipped == 0 )
 	{
 		// Set bools
 		m_assaultRifle = true;
 		m_pistol = false;
+
+		// Attach to gun socket
+		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
+		bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, muzzleSocket );
+
 	}
 	// If pistol is chosen
 	if( m_currentlyEquipped == 1 )
@@ -303,6 +309,10 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		// Set bools
 		m_assaultRifle = false;
 		m_pistol = true;
+
+		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolSocket );
+		bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolMuzzleSocket );
+
 	}
 }
 

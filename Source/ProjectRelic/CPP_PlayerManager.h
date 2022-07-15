@@ -59,8 +59,8 @@ private:
 
 	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
 
-
-	
+	FName m_pistolSocket;
+	FName m_pistolMuzzleSocket;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
