@@ -57,6 +57,7 @@ void ACPP_PlayerManager::BeginPlay()
 
 	// Create dynamic material
 	m_material = GetMesh()->GetMaterial( 0 );
+	m_material1 = GetMesh()->GetMaterial( 1 );
 	m_material2 = GetMesh()->GetMaterial( 2 );
 	m_material3 = GetMesh()->GetMaterial( 3 );
 	m_material4 = GetMesh()->GetMaterial( 4 );
@@ -139,7 +140,11 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 	// If player is invisible
 	if( m_invisibility )
 	{
-		GetMesh()->SetMaterial( 0, invisibleMaterial );
+		for( int i = 0; i < 10; i++ )
+		{
+			GetMesh()->SetMaterial( i, invisibleMaterial );
+		}
+		/*GetMesh()->SetMaterial( 0, invisibleMaterial );
 		GetMesh()->SetMaterial( 1, invisibleMaterial );
 		GetMesh()->SetMaterial( 2, invisibleMaterial );
 		GetMesh()->SetMaterial( 3, invisibleMaterial );
@@ -149,24 +154,29 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 		GetMesh()->SetMaterial( 7, invisibleMaterial );
 		GetMesh()->SetMaterial( 8, invisibleMaterial );
 		GetMesh()->SetMaterial( 9, invisibleMaterial );
-		GetMesh()->SetMaterial( 10, invisibleMaterial );
+		GetMesh()->SetMaterial( 10, invisibleMaterial );*/
 
 	}
 	else
 	{
 		// Back to original texture
 		m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
-
+		/*for( int i = 0; i < 10; i++ )
+		{
+			GetMesh()->SetMaterial( i, m_material );
+		}*/
 		GetMesh()->SetMaterial( 0, m_material );
-		GetMesh()->SetMaterial( 1, m_material2 );
-		GetMesh()->SetMaterial( 2, m_material3 );
-		GetMesh()->SetMaterial( 3, m_material4 );
-		GetMesh()->SetMaterial( 4, m_material5 );
-		GetMesh()->SetMaterial( 5, m_material6 );
-		GetMesh()->SetMaterial( 6, m_material7 );
-		GetMesh()->SetMaterial( 7, m_material8 );
-		GetMesh()->SetMaterial( 8, m_material9 );
-		GetMesh()->SetMaterial( 9, m_material10 );
+		GetMesh()->SetMaterial( 1, m_material1 );
+		GetMesh()->SetMaterial( 2, m_material2 );
+		GetMesh()->SetMaterial( 3, m_material3 );
+		GetMesh()->SetMaterial( 4, m_material4 );
+		GetMesh()->SetMaterial( 5, m_material5 );
+		GetMesh()->SetMaterial( 6, m_material6 );
+		GetMesh()->SetMaterial( 7, m_material7 );
+		GetMesh()->SetMaterial( 8, m_material8 );
+		GetMesh()->SetMaterial( 9, m_material9 );
+		GetMesh()->SetMaterial( 10, m_material10 );
+
 	}
 }
 void ACPP_PlayerManager::AmmoTick()

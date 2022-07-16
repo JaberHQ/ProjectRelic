@@ -55,6 +55,7 @@ private:
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 
 	UMaterialInterface* m_material; // Material 
+	UMaterialInterface* m_material1; // Material 
 	UMaterialInterface* m_material2; // Material 
 	UMaterialInterface* m_material3; // Material 
 	UMaterialInterface* m_material4; // Material 
