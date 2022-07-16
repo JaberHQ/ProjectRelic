@@ -56,6 +56,15 @@ private:
 
 	UMaterialInterface* m_material; // Material 
 	UMaterialInterface* m_material2; // Material 
+	UMaterialInterface* m_material3; // Material 
+	UMaterialInterface* m_material4; // Material 
+	UMaterialInterface* m_material5; // Material 
+	UMaterialInterface* m_material6; // Material 
+	UMaterialInterface* m_material7; // Material 
+	UMaterialInterface* m_material8; // Material 
+	UMaterialInterface* m_material9; // Material 
+	UMaterialInterface* m_material10; // Material 
+
 
 	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
 
