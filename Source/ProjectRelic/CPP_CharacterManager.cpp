@@ -27,6 +27,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_fullMag( 30 )
 	,m_assaultRifle ( true )
 	,m_pistol( false )
+	, m_throwable()
 	,recoil( -0.1f )
 	,m_shotInHead( false )
 	,m_hitmarker( false )
@@ -37,6 +38,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_ammoPistol( 15 )
 	,m_reservePistol( 0 )
 	,m_fullMagPistol( 15 )
+	,m_throwableAmount( 1 )
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -47,7 +49,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
 	headCollision = CreateDefaultSubobject<USphereComponent>( TEXT( "HeadCollision" ) );
-
+	throwable = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Throwable" ) );
+	
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
 
@@ -89,41 +92,6 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	
-
-	//// Handle reserve ammunition
-	//if( m_ammoCount > m_fullMag )
-	//{
-	//	m_reserveAmmo = m_ammoCount - m_fullMag;
-	//	m_ammoCount = m_fullMag;
-	//}
-
-	//// When reloading
-	//if( m_ammoCount == 0 )
-	//{
-	//	m_isShooting = false;
-
-	//	if( animReload )
-	//	{
-	//		PlayAnimMontage( animReload );
-	//	}
-
-	//	// If theres not enough  reserve for a full mag
-	//	if( m_reserveAmmo > 0 && m_reserveAmmo < m_fullMag )
-	//	{
-	//		m_ammoCount = m_reserveAmmo;
-	//		m_reserveAmmo = m_fullMag;
-	//	}
-
-	//	// If there is enough for a full mag
-	//	if( m_reserveAmmo >= m_fullMag )
-	//	{
-	//		m_ammoCount = m_fullMag;
-	//		m_reserveAmmo -= m_fullMag;
-	//	}
-	//}
-
-	
 
 	if( m_isShooting )
 	{
@@ -315,24 +283,29 @@ void ACPP_CharacterManager::StartShooting()
 			
 		}
 		
-		//if( m_ammoCount > 0 )
-		//{
-		//	m_isShooting = true;
+		if( m_throwable )
+		{
+			if( m_throwableAmount == 1 )
+			{
+				ThrowObject();
+			}
+		}
 
-		//	
-		//	// Call shoot function
-		//	ShootProjectile();
+	}
+}
 
-		//	// Set timer for automatic shooting
-		//	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
-
-		//}
-
-		//if( m_ammoCount <= 0 )
-		//{
-		//	GetWorld()->GetTimerManager().SetTimer( m_reloadTime, this, &ACPP_CharacterManager::Reloaded, m_reloadAnimTime, true );
-		//}
-
+void ACPP_CharacterManager::ThrowObject()
+{
+	
+	ACPP_Throwable* throwableRef = Cast<ACPP_Throwable>( throwable->GetChildActor() );
+	if( throwableRef )
+	{
+		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector(GetControlRotation()) );
+		m_throwableAmount--;
+	}
+	else
+	{
+		m_throwableAmount++;
 	}
 }
 
@@ -588,3 +561,4 @@ void ACPP_CharacterManager::HitmarkerFinish()
 {
 	m_hitmarker = false;
 }
+

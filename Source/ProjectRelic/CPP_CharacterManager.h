@@ -15,6 +15,8 @@
 #include "CPP_AssaultRifle.h"
 #include "Camera/CameraShakeBase.h"
 #include "Components/AudioComponent.h"
+#include "CPP_Throwable.h"
+#include "CPP_Pistol.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -76,14 +78,19 @@ protected:
 	int m_ammoPistol; // Ammo for pistol
 	int m_reservePistol; // Reserve ammo for pistol
 	int m_fullMagPistol; // Full magazine for pistol
+	int m_throwableAmount; // The ammount of throwables
+
 public:
 	bool m_aimingIn;
 
 	UPROPERTY( EditAnywhere, Category = "Weapon" )
-		bool m_assaultRifle; // If AR is active
+		bool m_assaultRifle; // If AR is active in hand
 
 	UPROPERTY( EditAnywhere, Category = "Weapon" )
-		bool m_pistol; // If pistol is active
+		bool m_pistol; // If pistol is active in hand
+
+	UPROPERTY( EditAnywhere, Category = "Weapon" )
+		bool m_throwable; // If throwable is active in hand
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
@@ -127,7 +134,8 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animReload; // Anim Montage for Player stealth takedown
 
-	
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UChildActorComponent* throwable;
 
 	FName weaponSocket;
 	FName muzzleSocket;
@@ -442,5 +450,7 @@ public:
 	void HasBeenShotInTheHead( bool boolean );
 
 	void HitmarkerFinish();
+
+	void ThrowObject();
 
 };

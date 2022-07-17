@@ -109,6 +109,7 @@ public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* pistol;
 
+	
 
 	
 public:

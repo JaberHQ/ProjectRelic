@@ -38,6 +38,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
 	m_weaponInventory.Add( primaryGun );
 	m_weaponInventory.Add( pistol );
+	m_weaponInventory.Add( throwable );
 
 	pistol->SetupAttachment( GetMesh(), m_pistolSocket );
 	
@@ -50,6 +51,7 @@ void ACPP_PlayerManager::BeginPlay()
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 	primaryGun->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 	bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, muzzleSocket );
+	throwable->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 	EquipGun( m_weaponInventory );
 
 	// Set texture of the player
@@ -355,6 +357,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		// Set bools
 		m_assaultRifle = true;
 		m_pistol = false;
+		m_throwable = false;
 
 		// Attach to gun socket
 		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
@@ -367,9 +370,20 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		// Set bools
 		m_assaultRifle = false;
 		m_pistol = true;
+		m_throwable = false;
 
 		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolSocket );
 		bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolMuzzleSocket );
+
+	}
+	if( m_currentlyEquipped == 2 )
+	{
+		// Set bools
+		m_assaultRifle = false;
+		m_pistol = false;
+		m_throwable = true;
+
+		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 
 	}
 }
