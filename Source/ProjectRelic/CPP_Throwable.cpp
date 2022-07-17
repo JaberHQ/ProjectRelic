@@ -20,7 +20,7 @@ void ACPP_Throwable::BeginPlay()
 }
 
 // Called every frame
-void ACPP_Throwable::Tick(float DeltaTime)
+void ACPP_Throwable::Tick( float DeltaTime )
 {
 	Super::Tick(DeltaTime);
 

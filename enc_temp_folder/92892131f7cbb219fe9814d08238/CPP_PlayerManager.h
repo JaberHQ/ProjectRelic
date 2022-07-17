@@ -254,7 +254,4 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 		bool GetPistol();
-
-	UFUNCTION( BlueprintCallable )
-		bool GetThrowable();
 };

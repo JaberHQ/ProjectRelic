@@ -428,11 +428,6 @@ bool ACPP_PlayerManager::GetPistol()
 	return m_pistol;
 }
 
-bool ACPP_PlayerManager::GetThrowable()
-{
-	return m_throwable;
-}
-
 void ACPP_PlayerManager::TraceForwardImplementation()
 {
 	FVector location; // Location
