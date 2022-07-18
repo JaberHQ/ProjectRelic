@@ -141,13 +141,13 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 		USplineComponent* m_predictionSpline;
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 		TArray<USplineMeshComponent*> m_predictionSplineMesh;
-
-	ACPP_PredictionEndPoint* m_predictionEndPoint;
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+		ACPP_PredictionEndPoint* m_predictionEndPoint;
 
 	TArray<FVector> pointLocation;
 

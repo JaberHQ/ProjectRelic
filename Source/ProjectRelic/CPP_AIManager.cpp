@@ -102,6 +102,7 @@ void ACPP_AIManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	// If enemy 'senses' the player
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
 

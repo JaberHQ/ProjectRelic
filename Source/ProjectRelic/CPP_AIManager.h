@@ -106,7 +106,7 @@ public:
 	UPROPERTY( VisibleAnywhere, Category = "AI")
 		class UAIPerceptionComponent* perceptionComp; // Perception Component
 
-	UPROPERTY( VisibleAnywhere, Category = "AI" )
+	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
 	/*UPROPERTY( VisibleAnywhere, Category = "AI" )

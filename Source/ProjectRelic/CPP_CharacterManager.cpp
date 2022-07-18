@@ -115,7 +115,7 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 	{
 		if( m_throwable )
 		{
-			DrawPredictionSpline();
+			//DrawPredictionSpline();
 		}
 	}
 	else
@@ -401,8 +401,8 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 
 		if( bHit )
 		{
-			//m_predictionEndPoint->SetActorHiddenInGame( false );
-			//m_predictionEndPoint->SetActorLocation( hit.ImpactPoint, false, &hit, ETeleportType::TeleportPhysics );
+			m_predictionEndPoint->SetActorHiddenInGame( false );
+			m_predictionEndPoint->SetActorLocation( hit.ImpactPoint, false, &hit, ETeleportType::TeleportPhysics );
 
 			
 
@@ -415,7 +415,7 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 		}
 		else
 		{
-			//m_predictionEndPoint->SetActorHiddenInGame( true );
+			m_predictionEndPoint->SetActorHiddenInGame( true );
 		}
 
 		m_predictionSpline->SetSplinePoints( pointLocation, ESplineCoordinateSpace::World );
