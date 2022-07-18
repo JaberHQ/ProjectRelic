@@ -19,6 +19,7 @@
 #include "Components/SplineMeshComponent.h"
 #include "CPP_Throwable.h"
 #include "CPP_Pistol.h"
+#include "CPP_PredictionEndPoint.h"
 #include "CPP_CharacterManager.generated.h"
 /**************************************************************************************************************
  * Type: Class
@@ -67,7 +68,7 @@ private:
 	USplineComponent* m_predictionSpline;
 	TArray<USplineMeshComponent*> m_predictionSplineMesh;
 	float m_throwSpeed;
-	FVector m_predictionEndPoint;
+	ACPP_PredictionEndPoint* m_predictionEndPoint;
 
 protected:
 	bool m_isShooting; // If character is shooting

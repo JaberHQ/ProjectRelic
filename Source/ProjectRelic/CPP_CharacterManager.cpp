@@ -40,7 +40,10 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_fullMagPistol( 15 )
 	,m_throwableAmount( 1 )
 	,animThrow()
-
+	,m_predictionSpline()
+	,m_predictionSplineMesh()
+	,m_throwSpeed()
+	,m_predictionEndPoint()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -101,6 +104,21 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 		//AddControllerPitchInput( recoil );
 		
 		//shootSFX->Play( 0.0f );
+	}
+
+	if( m_aimingIn )
+	{
+		if( m_throwable )
+		{
+			CreatePredictionSpline();
+		}
+	}
+	else
+	{
+		if( m_throwable )
+		{
+			DestroyPredictionSpline();
+		}
 	}
 }
 
@@ -322,6 +340,10 @@ void ACPP_CharacterManager::ThrowObject()
 
 void ACPP_CharacterManager::CreatePredictionSpline()
 {
+	// Add Spline Component
+	// Set m_predictionSpline
+	// Spawn Actor
+	m_predictionEndPoint->SetActorHiddenInGame(true);
 }
 
 void ACPP_CharacterManager::DestroyPredictionSpline()
