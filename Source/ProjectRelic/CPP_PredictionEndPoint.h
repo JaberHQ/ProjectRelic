@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
 #include "CPP_PredictionEndPoint.generated.h"
 
 UCLASS()
@@ -14,7 +15,8 @@ class PROJECTRELIC_API ACPP_PredictionEndPoint : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACPP_PredictionEndPoint();
-
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class USphereComponent* endPoint;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

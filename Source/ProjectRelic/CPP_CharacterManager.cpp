@@ -4,6 +4,7 @@
 #include "CPP_CharacterManager.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
 
@@ -42,8 +43,9 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,animThrow()
 	,m_predictionSpline()
 	,m_predictionSplineMesh()
-	,m_throwSpeed()
+	,m_throwSpeed( 2000.0f )
 	,m_predictionEndPoint()
+	,pointLocation()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -55,6 +57,9 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
 	headCollision = CreateDefaultSubobject<USphereComponent>( TEXT( "HeadCollision" ) );
 	throwable = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Throwable" ) );
+	m_throwSceneComp = CreateDefaultSubobject<USceneComponent>( TEXT( "Throw Transform" ) );
+	m_predictionSpline = CreateDefaultSubobject<USplineComponent>( TEXT( "Spline Comp" ) );
+
 	
 	// Set relative location and rotation of the skeletal mesh
 	GetMesh()->SetRelativeLocationAndRotation( FVector( 0.0f, 0.0f, -90.0f ), FQuat( FRotator( 0.0f, -90.0f, 0.0f ) ) );
@@ -110,14 +115,14 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 	{
 		if( m_throwable )
 		{
-			CreatePredictionSpline();
+			DrawPredictionSpline();
 		}
 	}
 	else
 	{
 		if( m_throwable )
 		{
-			DestroyPredictionSpline();
+			//DestroyPredictionSpline();
 		}
 	}
 }
@@ -341,21 +346,82 @@ void ACPP_CharacterManager::ThrowObject()
 void ACPP_CharacterManager::CreatePredictionSpline()
 {
 	// Add Spline Component
+	//m_predictionSpline->AddSplineComponent
 	// Set m_predictionSpline
 	// Spawn Actor
-	m_predictionEndPoint->SetActorHiddenInGame(true);
+	//m_predictionEndPoint->SetActorHiddenInGame(true);
 }
 
 void ACPP_CharacterManager::DestroyPredictionSpline()
 {
+	if( m_predictionSpline )
+	{
+		m_predictionSpline->DestroyComponent();
+		//Set m_prediction spline to null
+		DestroyPredictionMeshes();
+		//m_predictionEndPoint->Destroy();
+		//Set m_prediction end spline to null
+	}
 }
 
 void ACPP_CharacterManager::DestroyPredictionMeshes()
 {
+	for( int i = 0; i < m_predictionSplineMesh.Num(); i++ )
+	{
+		m_predictionSplineMesh[ i ]->DestroyComponent();
+	}
+	m_predictionSplineMesh.Empty();
 }
 
 void ACPP_CharacterManager::DrawPredictionSpline()
 {
+	if( m_predictionSpline )
+	{
+		FVector start = m_throwSceneComp->GetRelativeLocation();
+		FVector launchVelocity = m_throwSceneComp->GetForwardVector() * m_throwSpeed; // Set a throw speed
+		float projectileRadius = 1.0f;
+		FHitResult hit( ForceInit );
+
+		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( predict ), true, GetInstigator() );
+		
+		FPredictProjectilePathParams params;
+		params.StartLocation = start;
+		params.LaunchVelocity = launchVelocity;
+		params.ProjectileRadius = projectileRadius;
+		params.TraceChannel = ECC_WorldDynamic;
+		params.DrawDebugType = EDrawDebugTrace::Persistent;
+		//params.ActorsToIgnore = m_predictionSplineMesh;
+		FPredictProjectilePathResult pathResult;
+
+		bool bHit = UGameplayStatics::PredictProjectilePath( GetWorld(), params, pathResult );
+		
+		//UGameplayStatics::PredictProjectilePath( GetWorld(), hit, start, launchVelocity, true, projectileRadius, false, m_predictionSplineMesh, EDrawDebugTrace::Persistent, 0.0f, 15.0f, 2.0f, 0.0f );
+		//bool bHit = UGameplayStatics::PredictProjectilePath( UObject::GetWorld(), hit, outPathPosition, outLastTraceDestination, start, launchVelocity, true, projectileRadius, objectType, false, m_predictionSplineMesh, EDrawDebugTrace::ForOneFrame, 0.0f, 15.0f, 2.0f, 0.0f);
+		
+
+		if( bHit )
+		{
+			//m_predictionEndPoint->SetActorHiddenInGame( false );
+			//m_predictionEndPoint->SetActorLocation( hit.ImpactPoint, false, &hit, ETeleportType::TeleportPhysics );
+
+			
+
+			for( auto pathPoint : pathResult.PathData )
+			{
+				pointLocation.Add( pathPoint.Location );
+			}
+
+
+		}
+		else
+		{
+			//m_predictionEndPoint->SetActorHiddenInGame( true );
+		}
+
+		m_predictionSpline->SetSplinePoints( pointLocation, ESplineCoordinateSpace::World );
+		DestroyPredictionMeshes();
+
+	}
 }
 
 void ACPP_CharacterManager::StartAim()

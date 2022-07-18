@@ -65,10 +65,7 @@ private:
 	float m_reloadAnimTime; // Animation time for reloading
 	int m_fullMag; // Amount the magazine can hold
 
-	USplineComponent* m_predictionSpline;
-	TArray<USplineMeshComponent*> m_predictionSplineMesh;
-	float m_throwSpeed;
-	ACPP_PredictionEndPoint* m_predictionEndPoint;
+	
 
 protected:
 	bool m_isShooting; // If character is shooting
@@ -144,6 +141,20 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
 
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		USplineComponent* m_predictionSpline;
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		TArray<USplineMeshComponent*> m_predictionSplineMesh;
+
+	ACPP_PredictionEndPoint* m_predictionEndPoint;
+
+	TArray<FVector> pointLocation;
+
+	float m_throwSpeed;
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+	USceneComponent* m_throwSceneComp;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* throwable;
