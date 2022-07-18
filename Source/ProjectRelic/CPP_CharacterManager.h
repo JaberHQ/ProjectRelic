@@ -15,6 +15,8 @@
 #include "CPP_AssaultRifle.h"
 #include "Camera/CameraShakeBase.h"
 #include "Components/AudioComponent.h"
+#include "Components/SplineComponent.h"
+#include "Components/SplineMeshComponent.h"
 #include "CPP_Throwable.h"
 #include "CPP_Pistol.h"
 #include "CPP_CharacterManager.generated.h"
@@ -58,11 +60,15 @@ private:
 	float m_weaponRange; // The weapon range
 	bool m_isInCover; // If character is in cover
 	FTimerHandle m_reloadTime; // Time handle for reloading
+	FTimerHandle m_hitmarkerTimer;
 	float m_reloadAnimTime; // Animation time for reloading
 	int m_fullMag; // Amount the magazine can hold
 
+	USplineComponent* m_predictionSpline;
+	TArray<USplineMeshComponent*> m_predictionSplineMesh;
+	float m_throwSpeed;
+	FVector m_predictionEndPoint;
 
-	FTimerHandle m_hitmarkerTimer;
 protected:
 	bool m_isShooting; // If character is shooting
 
@@ -133,6 +139,10 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animReload; // Anim Montage for Player stealth takedown
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
+
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* throwable;
@@ -452,5 +462,13 @@ public:
 	void HitmarkerFinish();
 
 	void ThrowObject();
+
+	void CreatePredictionSpline();
+
+	void DestroyPredictionSpline();
+
+	void DestroyPredictionMeshes();
+
+	void DrawPredictionSpline();
 
 };

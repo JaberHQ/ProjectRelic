@@ -27,7 +27,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_fullMag( 30 )
 	,m_assaultRifle ( true )
 	,m_pistol( false )
-	, m_throwable()
+	,m_throwable()
 	,recoil( -0.1f )
 	,m_shotInHead( false )
 	,m_hitmarker( false )
@@ -39,6 +39,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_reservePistol( 0 )
 	,m_fullMagPistol( 15 )
 	,m_throwableAmount( 1 )
+	,animThrow()
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -294,6 +296,13 @@ void ACPP_CharacterManager::StartShooting()
 	}
 }
 
+
+void ACPP_CharacterManager::StopShooting()
+{
+	m_isShooting = false;
+	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
+}
+
 void ACPP_CharacterManager::ThrowObject()
 {
 	
@@ -302,17 +311,29 @@ void ACPP_CharacterManager::ThrowObject()
 	{
 		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector(GetControlRotation()) );
 		m_throwableAmount--;
+
+		if( animThrow )
+		{
+			PlayAnimMontage( animThrow );
+		}
 	}
-	else
-	{
-		m_throwableAmount++;
-	}
+	
 }
 
-void ACPP_CharacterManager::StopShooting()
+void ACPP_CharacterManager::CreatePredictionSpline()
 {
-	m_isShooting = false;
-	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
+}
+
+void ACPP_CharacterManager::DestroyPredictionSpline()
+{
+}
+
+void ACPP_CharacterManager::DestroyPredictionMeshes()
+{
+}
+
+void ACPP_CharacterManager::DrawPredictionSpline()
+{
 }
 
 void ACPP_CharacterManager::StartAim()

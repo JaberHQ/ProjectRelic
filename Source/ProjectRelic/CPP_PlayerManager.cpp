@@ -30,6 +30,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_chanceOfHit( 0.2f )
 	,m_pistolSocket(TEXT( "PistolSocket" ) )
 	,m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
+	,m_throwSocket( TEXT( "ThrowableSocket" ) )
 
 {
 	health = defaultHealth;
@@ -51,7 +52,7 @@ void ACPP_PlayerManager::BeginPlay()
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 	primaryGun->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 	bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, muzzleSocket );
-	throwable->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
+	throwable->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_throwSocket );
 	EquipGun( m_weaponInventory );
 
 	// Set texture of the player
@@ -383,7 +384,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		m_pistol = false;
 		m_throwable = true;
 
-		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
+		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_throwSocket );
 
 	}
 }
