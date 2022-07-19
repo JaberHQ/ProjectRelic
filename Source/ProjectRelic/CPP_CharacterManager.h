@@ -65,7 +65,6 @@ private:
 	float m_reloadAnimTime; // Animation time for reloading
 	int m_fullMag; // Amount the magazine can hold
 
-	
 
 protected:
 	bool m_isShooting; // If character is shooting
@@ -84,6 +83,7 @@ protected:
 	int m_fullMagPistol; // Full magazine for pistol
 	int m_throwableAmount; // The ammount of throwables
 
+	int m_splineIndex;
 public:
 	bool m_aimingIn;
 
@@ -146,8 +146,10 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 		TArray<USplineMeshComponent*> m_predictionSplineMesh;
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
 		ACPP_PredictionEndPoint* m_predictionEndPoint;
+
 
 	TArray<FVector> pointLocation;
 
@@ -483,4 +485,6 @@ public:
 
 	void DrawPredictionSpline();
 
+	UFUNCTION( BlueprintCallable )
+		int GetSplineIndex();
 };

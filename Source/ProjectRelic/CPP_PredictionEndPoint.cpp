@@ -8,7 +8,7 @@ ACPP_PredictionEndPoint::ACPP_PredictionEndPoint()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	endPoint = CreateDefaultSubobject< USphereComponent>( TEXT( "End Point" ) );
+	endPoint = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "End Point" ) );
 }
 
 // Called when the game starts or when spawned

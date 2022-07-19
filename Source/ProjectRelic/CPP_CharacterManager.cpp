@@ -46,6 +46,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_throwSpeed( 2000.0f )
 	,m_predictionEndPoint()
 	,pointLocation()
+	,m_splineIndex(0)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -57,8 +58,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
 	headCollision = CreateDefaultSubobject<USphereComponent>( TEXT( "HeadCollision" ) );
 	throwable = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Throwable" ) );
-	m_throwSceneComp = CreateDefaultSubobject<USceneComponent>( TEXT( "Throw Transform" ) );
 	m_predictionSpline = CreateDefaultSubobject<USplineComponent>( TEXT( "Spline Comp" ) );
+	m_throwSceneComp = CreateDefaultSubobject<USceneComponent>( TEXT( "Throw Transform" ) );
 
 	
 	// Set relative location and rotation of the skeletal mesh
@@ -113,17 +114,14 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 
 	if( m_aimingIn )
 	{
-		if( m_throwable )
+		if( throwable )
 		{
-			//DrawPredictionSpline();
+			DrawPredictionSpline();
 		}
 	}
 	else
 	{
-		if( m_throwable )
-		{
-			//DestroyPredictionSpline();
-		}
+		
 	}
 }
 
@@ -319,7 +317,6 @@ void ACPP_CharacterManager::StartShooting()
 	}
 }
 
-
 void ACPP_CharacterManager::StopShooting()
 {
 	m_isShooting = false;
@@ -345,11 +342,11 @@ void ACPP_CharacterManager::ThrowObject()
 
 void ACPP_CharacterManager::CreatePredictionSpline()
 {
-	// Add Spline Component
-	//m_predictionSpline->AddSplineComponent
-	// Set m_predictionSpline
-	// Spawn Actor
-	//m_predictionEndPoint->SetActorHiddenInGame(true);
+	//AddSplineComponent
+
+	//m_predictionEndPoint = GetWorld()->SpawnActor<ACPP_PredictionEndPoint>();
+
+	//m_predictionEndPoint->SetActorHiddenInGame( true );
 }
 
 void ACPP_CharacterManager::DestroyPredictionSpline()
@@ -357,10 +354,15 @@ void ACPP_CharacterManager::DestroyPredictionSpline()
 	if( m_predictionSpline )
 	{
 		m_predictionSpline->DestroyComponent();
-		//Set m_prediction spline to null
+
+		// Set prediction spline to null?
+		m_predictionSpline;
+
 		DestroyPredictionMeshes();
+
 		//m_predictionEndPoint->Destroy();
-		//Set m_prediction end spline to null
+
+		//m_predictionEndPoint;
 	}
 }
 
@@ -377,9 +379,9 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 {
 	if( m_predictionSpline )
 	{
-		FVector start = m_throwSceneComp->GetRelativeLocation();
-		FVector launchVelocity = m_throwSceneComp->GetForwardVector() * m_throwSpeed; // Set a throw speed
-		float projectileRadius = 1.0f;
+		FVector start = m_throwSceneComp->GetComponentLocation();
+		FVector launchVelocity = m_throwSceneComp->GetForwardVector() * m_throwSpeed; // Velocity
+		float projectileRadius = 25.0f;
 		FHitResult hit( ForceInit );
 
 		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( predict ), true, GetInstigator() );
@@ -387,24 +389,24 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 		FPredictProjectilePathParams params;
 		params.StartLocation = start;
 		params.LaunchVelocity = launchVelocity;
+		//params.bTracePath = true;
 		params.ProjectileRadius = projectileRadius;
 		params.TraceChannel = ECC_WorldDynamic;
-		params.DrawDebugType = EDrawDebugTrace::Persistent;
-		//params.ActorsToIgnore = m_predictionSplineMesh;
+		params.bTraceComplex = false;
+		//params.ActorsToIgnore = TArray<ACPP_CharacterManager>( GetSelf() )
+		params.DrawDebugType = EDrawDebugTrace::ForOneFrame;
+		params.DrawDebugTime = 0.0f;
+		params.SimFrequency = 15.0f;
+		params.MaxSimTime = 2.0f;
+		params.OverrideGravityZ = 0.0f;
 		FPredictProjectilePathResult pathResult;
 
 		bool bHit = UGameplayStatics::PredictProjectilePath( GetWorld(), params, pathResult );
-		
-		//UGameplayStatics::PredictProjectilePath( GetWorld(), hit, start, launchVelocity, true, projectileRadius, false, m_predictionSplineMesh, EDrawDebugTrace::Persistent, 0.0f, 15.0f, 2.0f, 0.0f );
-		//bool bHit = UGameplayStatics::PredictProjectilePath( UObject::GetWorld(), hit, outPathPosition, outLastTraceDestination, start, launchVelocity, true, projectileRadius, objectType, false, m_predictionSplineMesh, EDrawDebugTrace::ForOneFrame, 0.0f, 15.0f, 2.0f, 0.0f);
-		
 
 		if( bHit )
 		{
-			m_predictionEndPoint->SetActorHiddenInGame( false );
-			m_predictionEndPoint->SetActorLocation( hit.ImpactPoint, false, &hit, ETeleportType::TeleportPhysics );
-
-			
+			//m_predictionEndPoint->SetActorHiddenInGame( false );
+			//m_predictionEndPoint->SetActorLocation( hit.ImpactPoint, false, &hit, ETeleportType::TeleportPhysics );
 
 			for( auto pathPoint : pathResult.PathData )
 			{
@@ -415,25 +417,43 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 		}
 		else
 		{
-			m_predictionEndPoint->SetActorHiddenInGame( true );
+			//m_predictionEndPoint->SetActorHiddenInGame( true );
 		}
 
 		m_predictionSpline->SetSplinePoints( pointLocation, ESplineCoordinateSpace::World );
 		DestroyPredictionMeshes();
 
+		float splineLength = UKismetMathLibrary::FTrunc( ( m_predictionSpline->GetSplineLength() / 100.0f ) );
+		for( m_splineIndex = 0; m_splineIndex < splineLength; m_splineIndex++ )
+		{
+			//Add spline mesh component with shape cylinder and fprward axis to Z
+		}
 	}
+}
+
+int ACPP_CharacterManager::GetSplineIndex()
+{
+	return m_splineIndex;
 }
 
 void ACPP_CharacterManager::StartAim()
 {
 	m_aimingIn = true;
 	springArmComp->TargetArmLength = 100.0f;
+	if( m_throwable )
+	{
+		CreatePredictionSpline();
+	}
 }
 
 void ACPP_CharacterManager::StopAim()
 {
 	m_aimingIn = false;
 	springArmComp->TargetArmLength = 200.0f;
+	if( m_throwable )
+	{
+		DestroyPredictionSpline();
+	}
 }
 
 void ACPP_CharacterManager::ShootProjectile()
