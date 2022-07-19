@@ -30,7 +30,6 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_chanceOfHit( 0.2f )
 	,m_pistolSocket(TEXT( "PistolSocket" ) )
 	,m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
-	,m_throwSocket( TEXT( "ThrowableSocket" ) )
 
 {
 	health = defaultHealth;

@@ -450,10 +450,6 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 			FVector endTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
 
 			m_predictionSplineMesh[ i ]->SetStartAndEnd( startPos, startTangent, endPos, endTangent, true );
-			
-			//m_predictionSplineMesh[i]->SetMaterial(0, )
-			m_predictionSplineMesh[ i ]->SetStartScale( FVector2D( 50, 50 ) );
-			m_predictionSplineMesh[ i ]->SetEndScale( FVector2D( 50, 50 ) );
 
 			m_predictionSplineMesh.Add( m_predictionSplineMesh[ i ] );
 		}

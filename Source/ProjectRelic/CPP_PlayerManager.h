@@ -71,7 +71,6 @@ private:
 
 	FName m_pistolSocket;
 	FName m_pistolMuzzleSocket;
-	FName m_throwSocket;
 
 	void InvisibilityTick( float DeltaTime );
 	

@@ -150,6 +150,9 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
 		ACPP_PredictionEndPoint* m_predictionEndPoint;
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
+		UStaticMesh* cylinderPredictionMesh;
+
 
 	TArray<FVector> pointLocation;
 
@@ -164,6 +167,8 @@ public:
 	FName weaponSocket;
 	FName muzzleSocket;
 	FName headSocket;
+	FName m_throwSocket;
+
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
