@@ -78,5 +78,9 @@
 			"Name": "Synthesis",
 			"Enabled": false
 		}
+	],
+	"TargetPlatforms": [
+		"HoloLens",
+		"WindowsNoEditor"
 	]
 }
