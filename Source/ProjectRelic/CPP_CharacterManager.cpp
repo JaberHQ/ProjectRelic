@@ -424,9 +424,24 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 		DestroyPredictionMeshes();
 
 		float splineLength = UKismetMathLibrary::FTrunc( ( m_predictionSpline->GetSplineLength() / 100.0f ) );
-		for( m_splineIndex = 0; m_splineIndex < splineLength; m_splineIndex++ )
+		for( int i = 0; i < splineLength; i++ )
 		{
-			//Add spline mesh component with shape cylinder and fprward axis to Z
+			//Add spline mesh component with shape cylinder and forward axis to Z with manual attachment and spline mesh start/end scale to 0.1 
+			//m_predictionSplineMesh.Add(splineMeshComponent)
+			
+			USplineMeshComponent* splineMesh;
+			splineMesh->CreationMethod = EComponentCreationMethod::UserConstructionScript;
+			RegisterAllComponents();
+			 
+			
+			
+			//Set start and end
+			FVector startPos = m_predictionSpline->GetLocationAtDistanceAlongSpline( ( i * 100 ), ESplineCoordinateSpace::World );
+			FVector startTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( i * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
+			FVector endPos = m_predictionSpline->GetLocationAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World );
+			FVector endTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
+
+			m_predictionSplineMesh[ i ]->SetStartAndEnd( startPos, startTangent, endPos, endTangent, true );
 		}
 	}
 }
