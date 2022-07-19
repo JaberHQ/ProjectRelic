@@ -168,7 +168,7 @@ public:
 	FName muzzleSocket;
 	FName headSocket;
 	FName m_throwSocket;
-
+	
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()

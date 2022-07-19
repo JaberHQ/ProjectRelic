@@ -50,6 +50,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,cylinderPredictionMesh()
 	,m_throwSocket( TEXT( "ThrowableSocket" ) )
 
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -348,6 +349,9 @@ void ACPP_CharacterManager::CreatePredictionSpline()
 {
 	//AddSplineComponent
 
+	m_predictionSpline->CreationMethod = EComponentCreationMethod::UserConstructionScript;
+	RegisterAllComponents();
+
 	//m_predictionEndPoint = GetWorld()->SpawnActor<ACPP_PredictionEndPoint>();
 
 	//m_predictionEndPoint->SetActorHiddenInGame( true );
@@ -426,11 +430,18 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 		m_predictionSpline->SetSplinePoints( pointLocation, ESplineCoordinateSpace::World );
 		DestroyPredictionMeshes();
 
+		//float splineLength = m_predictionSpline->GetSplineLength();
 		float splineLength = UKismetMathLibrary::FTrunc( ( m_predictionSpline->GetSplineLength() / 100.0f ) );
 		for( int i = 0; i < splineLength; i++ )
 		{
 			//Add spline mesh component with shape cylinder and forward axis to Z with manual attachment and spline mesh start/end scale to 0.1 
 			//m_predictionSplineMesh.Add(splineMeshComponent)
+			
+			//Set start and end
+			FVector startPos = m_predictionSpline->GetLocationAtDistanceAlongSpline( ( i * 100 ), ESplineCoordinateSpace::World );
+			FVector startTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( i * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
+			FVector endPos = m_predictionSpline->GetLocationAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World );
+			FVector endTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
 
 			m_predictionSplineMesh[ i ]->CreationMethod = EComponentCreationMethod::UserConstructionScript;
 			 
@@ -440,18 +451,9 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 			m_predictionSplineMesh[ i ]->CanCharacterStepUpOn = ECB_No;
 			m_predictionSplineMesh[ i ]->ForwardAxis = ESplineMeshAxis::Z;
 			m_predictionSplineMesh[ i ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_throwSocket );
-			
-			
-
-			//Set start and end
-			FVector startPos = m_predictionSpline->GetLocationAtDistanceAlongSpline( ( i * 100 ), ESplineCoordinateSpace::World );
-			FVector startTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( i * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
-			FVector endPos = m_predictionSpline->GetLocationAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World );
-			FVector endTangent = UKismetMathLibrary::ClampVectorSize( m_predictionSpline->GetTangentAtDistanceAlongSpline( ( ( i + 1 ) * 100 ), ESplineCoordinateSpace::World ), 0.0f, 100.0f );
 
 			m_predictionSplineMesh[ i ]->SetStartAndEnd( startPos, startTangent, endPos, endTangent, true );
 			
-			//m_predictionSplineMesh[i]->SetMaterial(0, )
 			m_predictionSplineMesh[ i ]->SetStartScale( FVector2D( 50, 50 ) );
 			m_predictionSplineMesh[ i ]->SetEndScale( FVector2D( 50, 50 ) );
 
