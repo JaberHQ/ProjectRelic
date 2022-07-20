@@ -141,6 +141,12 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* shootSFX;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* emptyGunSFX;
+	
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 		USplineComponent* m_predictionSpline;
 

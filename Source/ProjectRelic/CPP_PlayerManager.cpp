@@ -109,7 +109,10 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	// If player is aiming in, show weapon
 	m_aimingIn ? m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true ) : m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
 
-	
+	if( m_ammoAR == 0 || m_ammoPistol == 0 )
+	{
+		m_isShooting = false;
+	}
 
 	AmmoTick();
 }

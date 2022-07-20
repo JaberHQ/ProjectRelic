@@ -26,6 +26,7 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_hasSeenSomething( false )
 	,m_detectionSpeed( 0.0f )
 	,m_headShotDamage( 2.0f )
+	,soundHuh()
 {
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
@@ -227,6 +228,7 @@ bool ACPP_AIManager::HasCaughtPlayer()
 }
 
 
+
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	// AI Controller reference
@@ -272,6 +274,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 					{
 						// Set bool to investigate
 						m_hasSeenSomething = true;
+						UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
 					}
 					else
 					{

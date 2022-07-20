@@ -99,6 +99,10 @@ private:
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
+
+	UPROPERTY( EditAnywhere, Category = "SFX" )
+		USoundBase* soundHuh;
+
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UBehaviorTree* behaviourTree; // Behaviour tree
@@ -331,4 +335,6 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 		bool HasCaughtPlayer();
+
+
 };

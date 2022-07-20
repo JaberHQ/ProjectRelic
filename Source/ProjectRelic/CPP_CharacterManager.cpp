@@ -49,6 +49,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_splineIndex(0)
 	,cylinderPredictionMesh()
 	,m_throwSocket( TEXT( "ThrowableSocket" ) )
+	,shootSFX()
+	,emptyGunSFX()
 
 
 {
@@ -498,11 +500,16 @@ void ACPP_CharacterManager::ShootProjectile()
 		if( m_assaultRifle )
 		{
 			m_ammoAR -= 1;
+			UGameplayStatics::PlaySoundAtLocation( GetWorld(), shootSFX, gunComp->GetRelativeLocation(), 0.3f );
 		}
 		if( m_pistol )
 		{
 			m_ammoPistol -= 1;
 		}
+	}
+	if( m_ammoAR == 0 || m_ammoPistol == 0 )
+	{
+		UGameplayStatics::PlaySoundAtLocation( GetWorld(), emptyGunSFX, gunComp->GetRelativeLocation(), 1.0f );
 	}
 
 	// Get the hit that has been returned
