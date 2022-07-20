@@ -109,8 +109,8 @@ public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
-	/*UPROPERTY( VisibleAnywhere, Category = "AI" )
-		class UAISenseConfig_Hearing* hearingConfig;*/
+	UPROPERTY( VisibleAnywhere, Category = "AI" )
+		class UAISenseConfig_Hearing* hearingConfig;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UBoxComponent* boxComponent; // Box Component

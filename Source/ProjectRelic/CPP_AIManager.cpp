@@ -30,11 +30,12 @@ ACPP_AIManager::ACPP_AIManager()
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
 	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "SightConfig" ) );
-	//hearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>( TEXT( "HearingConfig" ) );
+	hearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>( TEXT( "HearingConfig" ) );
 	boxComponent = CreateDefaultSubobject<UBoxComponent>( TEXT( "TakedownBox" ) );
 
 	// Perception config
 	perceptionComp->ConfigureSense( *sightConfig );
+	perceptionComp->ConfigureSense( *hearingConfig );
 	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
 
 	// Sight config
@@ -46,11 +47,12 @@ ACPP_AIManager::ACPP_AIManager()
 	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 
 	//// Hearing config
-	//hearingConfig->HearingRange = 500.0f;
-	//hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
-	//hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	//hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
-
+	hearingConfig->HearingRange = 500.0f;
+	hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
+	hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	hearingConfig->SetMaxAge( 35.0f );
+	
 }
 
 void ACPP_AIManager::Tick( float DeltaTime )
