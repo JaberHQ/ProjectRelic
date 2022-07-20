@@ -121,7 +121,7 @@ void ACPP_CharacterManager::Tick( float DeltaTime )
 	{
 		if( throwable )
 		{
-			DrawPredictionSpline();
+			//DrawPredictionSpline();
 		}
 	}
 	else
@@ -201,31 +201,31 @@ void ACPP_CharacterManager::EndSprint()
 
 void ACPP_CharacterManager::BeginCrouch()
 {
-	// Set bool to opposite value
-	m_isCrouched = !m_isCrouched;
+	//// Set bool to opposite value
+	//m_isCrouched = !m_isCrouched;
 
-	// If crouched is true, crouch
-	if( m_isCrouched == true )
-	{
-		Crouch();
+	//// If crouched is true, crouch
+	//if( m_isCrouched == true )
+	//{
+	//	Crouch();
 
-		// Move camera
-		springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 140.0f ) );
-	}
+	//	// Move camera
+	//	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 140.0f ) );
+	//}
 
-	// Else, stop crouching
-	else
-	{
-		UnCrouch();
+	//// Else, stop crouching
+	//else
+	//{
+	//	UnCrouch();
 
-		// Move camera
-		springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
-	}
+	//	// Move camera
+	//	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
+	//}
 }
 
 void ACPP_CharacterManager::EndCrouch()
 {
-	UnCrouch();
+	//UnCrouch();
 }
 
 void ACPP_CharacterManager::UpdateWalkSpeed( float speed )
@@ -460,7 +460,6 @@ void ACPP_CharacterManager::DrawPredictionSpline()
 			m_predictionSplineMesh.Add( m_predictionSplineMesh[ i ] );
 		}
 		RegisterAllComponents();
-
 	}
 }
 
@@ -475,7 +474,7 @@ void ACPP_CharacterManager::StartAim()
 	springArmComp->TargetArmLength = 100.0f;
 	if( m_throwable )
 	{
-		CreatePredictionSpline();
+		//CreatePredictionSpline();
 	}
 }
 
@@ -485,7 +484,7 @@ void ACPP_CharacterManager::StopAim()
 	springArmComp->TargetArmLength = 200.0f;
 	if( m_throwable )
 	{
-		DestroyPredictionSpline();
+		//DestroyPredictionSpline();
 	}
 }
 
