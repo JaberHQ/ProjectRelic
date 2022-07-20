@@ -13,20 +13,23 @@ EBTNodeResult::Type UCPP_InvestigateTask::ExecuteTask( UBehaviorTreeComponent& o
 
 	if( controllerAI )
 	{
-		// Get BB
-		UBlackboardComponent* blackboardComp = controllerAI->GetBlackboardComp();
+		//// Get BB
+		//UBlackboardComponent* blackboardComp = controllerAI->GetBlackboardComp();
 
-		// Use index to get patrol path
-		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
-		if( managerAI )
-		{
-			FVector point = controllerAI->GetLastKnownLocation();
-			controllerAI->GetBlackboardComp()->SetValueAsVector( "LastKnownLocation", point );
+		//// Use index to get patrol path
+		//ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
+		//if( managerAI )
+		//{
+		//	FVector point = controllerAI->GetLastKnownLocation();
+		//	controllerAI->GetBlackboardComp()->SetValueAsVector( "LastKnownLocation", point );
 
-			// Success
-			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
-			return EBTNodeResult::Succeeded;
-		}
+		//	// Success
+		//	FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
+		//	return EBTNodeResult::Succeeded;
+		//}
+
+		controllerAI->SetInvestigate( false );
+		return EBTNodeResult::Succeeded;
 	}
 	return EBTNodeResult::Failed;
 }

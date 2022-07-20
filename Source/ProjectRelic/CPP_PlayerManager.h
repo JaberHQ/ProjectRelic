@@ -109,7 +109,8 @@ public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* pistol;
 
-	
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* callEnemy;
 
 	
 public:
@@ -257,4 +258,6 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 		bool GetThrowable();
+
+	void DistractEnemy();
 };

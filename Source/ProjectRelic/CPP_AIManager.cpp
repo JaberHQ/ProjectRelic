@@ -36,7 +36,6 @@ ACPP_AIManager::ACPP_AIManager()
 
 	// Perception config
 	perceptionComp->ConfigureSense( *sightConfig );
-	perceptionComp->ConfigureSense( *hearingConfig );
 	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
 
 	// Sight config
@@ -47,12 +46,15 @@ ACPP_AIManager::ACPP_AIManager()
 	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 
-	//// Hearing config
-	hearingConfig->HearingRange = 500.0f;
+	// Hearing config
+	hearingConfig->HearingRange = 3000.0f;
 	hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 	hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 	hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	hearingConfig->SetMaxAge( 35.0f );
+
+	perceptionComp->ConfigureSense( *hearingConfig );
+
 	
 }
 
@@ -107,7 +109,7 @@ void ACPP_AIManager::BeginPlay()
 
 
 	// If enemy 'senses' the player
-	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnUpdated );
 
 	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
@@ -225,6 +227,45 @@ void ACPP_AIManager::DelayInvestigate()
 bool ACPP_AIManager::HasCaughtPlayer()
 {
 	return m_hasBeenCaught;
+}
+
+void ACPP_AIManager::OnUpdated( TArray<AActor*> const& caughtActors )
+{
+	for( int i = 0; i < caughtActors.Num(); ++i )
+	{
+
+		// AI Controller reference
+		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+		// Player reference
+		ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+		if( controllerAI )
+		{
+			if( playerManager )
+			{
+				FActorPerceptionBlueprintInfo info;
+				perceptionComp->GetActorsPerception( caughtActors[ i ], info );
+				for( int j = 0; j < info.LastSensedStimuli.Num(); ++j )
+				{
+					FAIStimulus const stim = info.LastSensedStimuli[ j ];
+					if( stim.Tag == TEXT( "Noise" ) )
+					{
+						controllerAI->SetInvestigate( stim.WasSuccessfullySensed() );
+						controllerAI->SetLastKnownLocation( stim.StimulusLocation );
+					}
+					else
+					{
+						controllerAI->SetHasLineOfSight( stim.WasSuccessfullySensed() );
+					}
+				}
+			}
+		}
+		
+	}
+}
+
+void ACPP_AIManager::SetupPerceptionSystem()
+{
 }
 
 

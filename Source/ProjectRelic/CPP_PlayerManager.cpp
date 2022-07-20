@@ -30,7 +30,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_chanceOfHit( 0.2f )
 	,m_pistolSocket(TEXT( "PistolSocket" ) )
 	,m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
-
+	,callEnemy()
 {
 	health = defaultHealth;
 
@@ -93,6 +93,8 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
 	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_CharacterManager::StopAim );
 	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::WallTrace );
+	PlayerInputComponent->BindAction( "DistractEnemy", IE_Pressed, this, &ACPP_PlayerManager::DistractEnemy );
+
 
 
 	//PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::StartCover );
@@ -436,6 +438,16 @@ bool ACPP_PlayerManager::GetPistol()
 bool ACPP_PlayerManager::GetThrowable()
 {
 	return m_throwable;
+}
+
+void ACPP_PlayerManager::DistractEnemy()
+{
+	if( callEnemy )
+	{
+		FVector const location = GetActorLocation();
+		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location, 0.4f );
+		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, TEXT( "Noise" ) );
+	}
 }
 
 void ACPP_PlayerManager::TraceForwardImplementation()

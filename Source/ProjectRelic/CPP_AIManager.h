@@ -103,6 +103,7 @@ private:
 	UPROPERTY( EditAnywhere, Category = "SFX" )
 		USoundBase* soundHuh;
 
+
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UBehaviorTree* behaviourTree; // Behaviour tree
@@ -336,5 +337,8 @@ public:
 	UFUNCTION( BlueprintCallable )
 		bool HasCaughtPlayer();
 
+	UFUNCTION( BlueprintCallable )
+		void OnUpdated( TArray<AActor*> const& caughtActors );
 
+	void SetupPerceptionSystem();
 };
