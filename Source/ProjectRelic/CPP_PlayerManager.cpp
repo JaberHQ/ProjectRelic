@@ -446,7 +446,7 @@ void ACPP_PlayerManager::DistractEnemy()
 	{
 		FVector const location = GetActorLocation();
 		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location, 0.4f );
-		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, TEXT( "Noise" ) );
+		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 	}
 }
 

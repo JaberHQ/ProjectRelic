@@ -51,7 +51,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,m_throwSocket( TEXT( "ThrowableSocket" ) )
 	,shootSFX()
 	,emptyGunSFX()
-
+	,noiseTag( TEXT( "Noise" ) )
 
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

@@ -109,7 +109,7 @@ void ACPP_AIManager::BeginPlay()
 
 
 	// If enemy 'senses' the player
-	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnUpdated );
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
 
 	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
@@ -188,6 +188,7 @@ void ACPP_AIManager::TakeAttack()
 	{
 		// Set player caught
 		controllerAI->PlayerHasShot();
+		m_sightValuePercent = 1.0f;
 	}
 
 	// Enemy has been shot
@@ -229,10 +230,12 @@ bool ACPP_AIManager::HasCaughtPlayer()
 	return m_hasBeenCaught;
 }
 
-void ACPP_AIManager::OnUpdated( TArray<AActor*> const& caughtActors )
+void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 {
-	for( int i = 0; i < caughtActors.Num(); ++i )
+	for( int i = 0; i < caughtActors.Num(); i++ )
 	{
+
+
 
 		// AI Controller reference
 		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
@@ -243,13 +246,20 @@ void ACPP_AIManager::OnUpdated( TArray<AActor*> const& caughtActors )
 		{
 			if( playerManager )
 			{
+				m_hasSeenSomething = true;
+
+
+				// Sight config
+				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
 				FActorPerceptionBlueprintInfo info;
 				perceptionComp->GetActorsPerception( caughtActors[ i ], info );
-				for( int j = 0; j < info.LastSensedStimuli.Num(); ++j )
+				for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
 				{
-					FAIStimulus const stim = info.LastSensedStimuli[ j ];
-					if( stim.Tag == TEXT( "Noise" ) )
+					const FAIStimulus stim = info.LastSensedStimuli[ j ];
+					if( stim.Tag == noiseTag )
 					{
+						m_hasBeenCaught = true;
 						controllerAI->SetInvestigate( stim.WasSuccessfullySensed() );
 						controllerAI->SetLastKnownLocation( stim.StimulusLocation );
 					}

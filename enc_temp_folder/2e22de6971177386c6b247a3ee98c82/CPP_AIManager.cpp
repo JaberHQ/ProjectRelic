@@ -109,7 +109,7 @@ void ACPP_AIManager::BeginPlay()
 
 
 	// If enemy 'senses' the player
-	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnUpdated );
 
 	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
@@ -229,7 +229,7 @@ bool ACPP_AIManager::HasCaughtPlayer()
 	return m_hasBeenCaught;
 }
 
-void ACPP_AIManager::OnUpdated( TArray<AActor*> const& caughtActors )
+void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 {
 	for( int i = 0; i < caughtActors.Num(); ++i )
 	{
@@ -243,13 +243,20 @@ void ACPP_AIManager::OnUpdated( TArray<AActor*> const& caughtActors )
 		{
 			if( playerManager )
 			{
+				m_hasSeenSomething = true;
+
+
+				// Sight config
+				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
 				FActorPerceptionBlueprintInfo info;
 				perceptionComp->GetActorsPerception( caughtActors[ i ], info );
 				for( int j = 0; j < info.LastSensedStimuli.Num(); ++j )
 				{
-					FAIStimulus const stim = info.LastSensedStimuli[ j ];
-					if( stim.Tag == TEXT( "Noise" ) )
+					const FAIStimulus stim = info.LastSensedStimuli[ j ];
+					if( stim.Tag == noiseTag )
 					{
+						m_hasBeenCaught = true;
 						controllerAI->SetInvestigate( stim.WasSuccessfullySensed() );
 						controllerAI->SetLastKnownLocation( stim.StimulusLocation );
 					}
@@ -287,8 +294,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				// Set bool to investigate
 				m_hasSeenSomething = true;
 
-				// Sight config
-				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+				
 
 				// Get location
 				FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
@@ -313,8 +319,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 					FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
 					if( stimulus.WasSuccessfullySensed() )
 					{
-						// Set bool to investigate
-						m_hasSeenSomething = true;
+						
 						UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
 					}
 					else

@@ -174,6 +174,8 @@ public:
 	FName muzzleSocket;
 	FName headSocket;
 	FName m_throwSocket;
+
+	FName noiseTag;
 	
 public:
 	/*****************************************************************************

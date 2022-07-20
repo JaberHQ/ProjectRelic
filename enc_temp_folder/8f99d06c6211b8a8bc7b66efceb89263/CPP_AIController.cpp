@@ -106,7 +106,6 @@ void ACPP_AIController::PlayerHasShot()
 			// Set bool to true and set target to be the Player
 			blackboardComp->SetValueAsBool( m_hasLineOfSight, true );
 			blackboardComp->SetValueAsObject( m_enemyActor, playerManager );
-
 		}
 	}
 }

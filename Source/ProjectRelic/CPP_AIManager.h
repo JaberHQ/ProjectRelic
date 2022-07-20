@@ -338,7 +338,7 @@ public:
 		bool HasCaughtPlayer();
 
 	UFUNCTION( BlueprintCallable )
-		void OnUpdated( TArray<AActor*> const& caughtActors );
+		void OnUpdated( const TArray<AActor*> & caughtActors );
 
 	void SetupPerceptionSystem();
 };
