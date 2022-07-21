@@ -95,7 +95,7 @@ private:
 	float m_curveFloat;
 
 	bool m_hasSeenSomething;
-
+	bool m_isInCover; // AI is in cover
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -341,4 +341,6 @@ public:
 		void OnUpdated( const TArray<AActor*> & caughtActors );
 
 	void SetupPerceptionSystem();
+
+	void EnterCover();
 };

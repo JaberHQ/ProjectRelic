@@ -63,6 +63,9 @@ private:
 	
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName m_invesigate; // Patrol path index
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName m_move;
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -176,4 +179,6 @@ public:
 	 *   See also        : N/A
 	 *****************************************************************************/
 	void PlayerHasShot();
+
+	FVector GetMove();
 };

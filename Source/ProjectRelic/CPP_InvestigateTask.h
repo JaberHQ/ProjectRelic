@@ -13,6 +13,8 @@ UCLASS()
 class PROJECTRELIC_API UCPP_InvestigateTask : public UBTTaskNode
 {
 	GENERATED_BODY()
+
+public:
 		/*****************************************************************************************************************************
 		*   Function        : virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override
 		*   Purpose         : Execute task to investigate Player
