@@ -22,7 +22,7 @@ EBTNodeResult::Type UCPP_InvestigateTask::ExecuteTask( UBehaviorTreeComponent& o
 		{
 			FVector point = controllerAI->GetLastKnownLocation();
 			controllerAI->GetBlackboardComp()->SetValueAsVector( "LastKnownLocation", point );
-
+			
 			// Success
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 			return EBTNodeResult::Succeeded;

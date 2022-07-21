@@ -95,6 +95,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 
 				// Set curve float
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
+				//controllerAI->PlayerHasShot();
 			}
 		}
 	}
@@ -189,6 +190,13 @@ void ACPP_AIManager::TakeAttack()
 		// Set player caught
 		controllerAI->PlayerHasShot();
 		m_sightValuePercent = 1.0f;
+		if( playerManager )
+		{
+			if( health <= 0 )
+			{
+				playerManager->SetHitmarkerActive( true );
+			}
+		}
 	}
 
 	// Enemy has been shot
@@ -252,21 +260,56 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 				// Sight config
 				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
 
+				// Get location
+				FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+				FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+				// Distance between Player and Enemy
+				float distance = FVector::Distance( playerLocation, enemyLocation );
+
+				// Set last known location of the Player
+				controllerAI->SetLastKnownLocation( playerLocation );
+
+				//Investigate
+				controllerAI->SetInvestigate( true );
+
 				FActorPerceptionBlueprintInfo info;
-				perceptionComp->GetActorsPerception( caughtActors[ i ], info );
+				perceptionComp->GetActorsPerception( playerManager, info );
 				for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
 				{
 					const FAIStimulus stim = info.LastSensedStimuli[ j ];
 					if( stim.Tag == noiseTag )
 					{
 						m_hasBeenCaught = true;
-						controllerAI->SetInvestigate( stim.WasSuccessfullySensed() );
-						controllerAI->SetLastKnownLocation( stim.StimulusLocation );
+						controllerAI->SetInvestigate( true );
+						controllerAI->SetLastKnownLocation( playerLocation );
 					}
 					else
 					{
-						controllerAI->SetHasLineOfSight( stim.WasSuccessfullySensed() );
+						controllerAI->SetHasLineOfSight( true );
+
+						if( stim.WasSuccessfullySensed() )
+						{
+							// Set bool to investigate
+							m_hasSeenSomething = true;
+							UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
+						}
+						else
+						{
+							// Go back to regular pathing
+							if( m_hasBeenCaught == false )
+							{
+								m_hasSeenSomething = false;
+							}
+						}
 					}
+				}
+
+				// If player has been caught
+				if( m_hasBeenCaught )
+				{
+					// Set actor (Player) as caught
+					controllerAI->PlayerHasShot();
 				}
 			}
 		}
@@ -321,6 +364,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 				if( info.LastSensedStimuli.Num() > 0 )
 				{
 					FAIStimulus stimulus = info.LastSensedStimuli[ 0 ];
+				
 					if( stimulus.WasSuccessfullySensed() )
 					{
 						// Set bool to investigate

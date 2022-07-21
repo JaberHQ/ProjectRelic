@@ -31,6 +31,8 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_pistolSocket(TEXT( "PistolSocket" ) )
 	,m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
 	,callEnemy()
+	,m_hitmarkerActive( false )
+	,m_hitmarkerTimer()
 {
 	health = defaultHealth;
 
@@ -117,6 +119,11 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	}
 
 	AmmoTick();
+
+	if( m_hitmarkerActive )
+	{
+		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_PlayerManager::HitmarkerFinished, 1.0f, true );
+	}
 }
 
 void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
@@ -294,6 +301,10 @@ void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fu
 		}
 	}
 }
+void ACPP_PlayerManager::HitmarkerFinished()
+{
+	m_hitmarkerActive = false;
+}
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
 {	
 	m_canTakedown = canTakedown;	
@@ -422,7 +433,7 @@ void ACPP_PlayerManager::ChangeWeapons( float inputAxis )
 
 bool ACPP_PlayerManager::GetHitmarkerActive()
 {
-	return m_hitmarker;
+	return m_hitmarkerActive;
 }
 
 bool ACPP_PlayerManager::GetAssaultRifle()
@@ -438,6 +449,11 @@ bool ACPP_PlayerManager::GetPistol()
 bool ACPP_PlayerManager::GetThrowable()
 {
 	return m_throwable;
+}
+
+void ACPP_PlayerManager::SetHitmarkerActive( bool hitmarkerActive )
+{
+	m_hitmarkerActive = hitmarkerActive;
 }
 
 void ACPP_PlayerManager::DistractEnemy()

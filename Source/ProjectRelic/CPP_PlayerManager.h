@@ -54,6 +54,10 @@ private:
 	int m_currentlyEquipped; // Currently equipped weapon
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 
+	bool m_hitmarkerActive;
+
+	FTimerHandle m_hitmarkerTimer;
+
 	UMaterialInterface* m_material; // Material 
 	UMaterialInterface* m_material1; // Material 
 	UMaterialInterface* m_material2; // Material 
@@ -80,6 +84,8 @@ private:
 
 	void AmmoTick();
 	void AmmoEvaluation( int ammoCount, int reserveCount, int fullMag );
+
+	void HitmarkerFinished();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
@@ -248,9 +254,6 @@ public:
 	void ChangeWeapons( float inputAxis );
 
 	UFUNCTION( BlueprintCallable )
-		bool GetHitmarkerActive();
-
-	UFUNCTION( BlueprintCallable )
 		bool GetAssaultRifle();
 
 	UFUNCTION( BlueprintCallable )
@@ -259,5 +262,11 @@ public:
 	UFUNCTION( BlueprintCallable )
 		bool GetThrowable();
 
+
+	UFUNCTION( BlueprintCallable )
+		bool GetHitmarkerActive();
+
+	
+		void SetHitmarkerActive( bool hitmarkerActive );
 	void DistractEnemy();
 };
