@@ -343,4 +343,6 @@ public:
 	void SetupPerceptionSystem();
 
 	void EnterCover();
+
+	void TimeToShoot();
 };

@@ -66,6 +66,9 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName m_move;
+
+	UPROPERTY( EditDefaultsOnly, Category = AI )
+		FName m_inCover;
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -181,4 +184,6 @@ public:
 	void PlayerHasShot();
 
 	FVector GetMove();
+
+	void SetInCover( bool boolean );
 };

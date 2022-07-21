@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "CPP_GetIntoCoverTask.generated.h"
+#include "CPP_ShootFromCover.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTRELIC_API UCPP_GetIntoCoverTask : public UBTTaskNode
+class PROJECTRELIC_API UCPP_ShootFromCover : public UBTTaskNode
 {
 	GENERATED_BODY()
 public:
@@ -25,6 +25,5 @@ public:
 	*   See also        : N/A
 	*****************************************************************************************************************************/
 	virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
-private:
-	FName m_inCoverBT;
+
 };

@@ -20,6 +20,7 @@ ACPP_AIController::ACPP_AIController()
 	m_lastKnownLocation = "LastKnownLocation";
 	m_invesigate = "Investigate";
 	m_move = "Move";
+	m_inCover = "InCover";
 }
 
 void ACPP_AIController::OnPossess( APawn* pawn )
@@ -115,4 +116,9 @@ void ACPP_AIController::PlayerHasShot()
 FVector ACPP_AIController::GetMove()
 {
 	return blackboardComp->GetValueAsVector( m_move );
+}
+
+void ACPP_AIController::SetInCover( bool boolean )
+{
+	blackboardComp->SetValueAsBool( m_inCover, boolean );
 }

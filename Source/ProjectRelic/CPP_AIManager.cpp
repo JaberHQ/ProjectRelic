@@ -327,6 +327,20 @@ void ACPP_AIManager::EnterCover()
 {
 	m_isInCover = true;
 	Crouch();
+	// AI Controller reference
+	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+	if( controllerAI )
+	{
+		
+	}
+}
+
+void ACPP_AIManager::TimeToShoot()
+{
+	FTimerHandle m_shootTimer;
+	GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_PlayerManager::StopShooting, 1.0f, true );
+
+	Crouch();
 }
 
 
