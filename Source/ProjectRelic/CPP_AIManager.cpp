@@ -98,6 +98,8 @@ void ACPP_AIManager::Tick( float DeltaTime )
 				// Set curve float
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
 				//controllerAI->PlayerHasShot();
+
+				controllerAI->SetHasLineOfSight( true );
 			}
 		}
 	}
@@ -338,9 +340,19 @@ void ACPP_AIManager::EnterCover()
 void ACPP_AIManager::TimeToShoot()
 {
 	FTimerHandle m_shootTimer;
-	GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_PlayerManager::StopShooting, 1.0f, true );
+	GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_PlayerManager::StopShooting, 5.0f, true );
 
 	Crouch();
+}
+
+void ACPP_AIManager::SetHasCaughtPlayer( bool boolean )
+{
+	m_hasBeenCaught = boolean;
+}
+
+void ACPP_AIManager::SetMaxWalkSpeed( float speed )
+{
+	GetCharacterMovement()->MaxWalkSpeed = speed;
 }
 
 

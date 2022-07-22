@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CPP_ShootFromCover.h"
+#include "CPP_EnterCoverTask.h"
 #include "CPP_AIController.h"
 #include "CPP_AIManager.h"
-#include "Engine/World.h"
-EBTNodeResult::Type UCPP_ShootFromCover::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
+
+EBTNodeResult::Type UCPP_EnterCoverTask::ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory )
 {
 	// Get AI controller
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( ownerComp.GetAIOwner() );
@@ -17,18 +17,15 @@ EBTNodeResult::Type UCPP_ShootFromCover::ExecuteTask( UBehaviorTreeComponent& ow
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
 		if( managerAI )
 		{
-			managerAI->UnCrouch();
-			managerAI->ShootProjectile();
+			managerAI->EnterCover();
 
-			managerAI->TimeToShoot();
-			managerAI->SetHasCaughtPlayer( true );
-			// Success
+
+			controllerAI->SetInCover( true );
+
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 			return EBTNodeResult::Succeeded;
 		}
 	}
+
 	return EBTNodeResult::Failed;
 }
-
-
-

@@ -19,13 +19,10 @@ EBTNodeResult::Type UCPP_GetIntoCoverTask::ExecuteTask( UBehaviorTreeComponent& 
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
 		if( managerAI )
 		{
-			controllerAI->MoveToLocation( controllerAI->GetMove() );
-			
+			managerAI->UnCrouch();
+			managerAI->SetMaxWalkSpeed( 500.0f );
+			//controllerAI->MoveToLocation( controllerAI->GetMove() );
 
-			managerAI->EnterCover();
-
-
-			controllerAI->SetInCover( true );
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 
 			return EBTNodeResult::Succeeded;

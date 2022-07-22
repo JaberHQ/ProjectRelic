@@ -345,4 +345,8 @@ public:
 	void EnterCover();
 
 	void TimeToShoot();
+
+	void SetHasCaughtPlayer( bool boolean );
+
+	void SetMaxWalkSpeed( float speed );
 };
