@@ -19,10 +19,10 @@ EBTNodeResult::Type UCPP_EnterCoverTask::ExecuteTask( UBehaviorTreeComponent& ow
 		{
 			managerAI->EnterCover();
 
+			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 
 			controllerAI->SetInCover( true );
 
-			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 			return EBTNodeResult::Succeeded;
 		}
 	}
