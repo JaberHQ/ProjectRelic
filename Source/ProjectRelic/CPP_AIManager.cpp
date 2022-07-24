@@ -196,10 +196,9 @@ void ACPP_AIManager::TakeAttack()
 		m_sightValuePercent = 1.0f;
 		if( playerManager )
 		{
-			if( health <= 0 )
-			{
-				playerManager->SetHitmarkerActive( true );
-			}
+			
+			playerManager->SetHitmarkerActive( true );
+			
 		}
 	}
 
