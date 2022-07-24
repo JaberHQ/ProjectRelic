@@ -120,10 +120,10 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	AmmoTick();
 
-	if( m_hitmarkerActive )
+	/*if( m_hitmarkerActive )
 	{
 		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_PlayerManager::HitmarkerFinished, 1.0f, true );
-	}
+	}*/
 }
 
 void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
