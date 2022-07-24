@@ -120,10 +120,10 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	AmmoTick();
 
-	/*if( m_hitmarkerActive )
+	if( m_hitmarkerActive )
 	{
 		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_PlayerManager::HitmarkerFinished, 1.0f, true );
-	}*/
+	}
 }
 
 void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
@@ -453,7 +453,10 @@ bool ACPP_PlayerManager::GetThrowable()
 
 void ACPP_PlayerManager::SetHitmarkerActive( bool hitmarkerActive )
 {
-	m_hitmarkerActive = hitmarkerActive;
+	if( m_ammoAR > 0 || m_ammoPistol > 0 )
+	{
+		m_hitmarkerActive = hitmarkerActive;
+	}
 }
 
 void ACPP_PlayerManager::DistractEnemy()
@@ -464,6 +467,16 @@ void ACPP_PlayerManager::DistractEnemy()
 		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location, 0.4f );
 		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 	}
+}
+
+void ACPP_PlayerManager::SetDeathHitmarkerActive( bool deathHitmarkerActive )
+{
+	m_deathHitmarkerActive = deathHitmarkerActive;
+}
+
+bool ACPP_PlayerManager::GetDeathHitmarkerActive()
+{
+	return m_deathHitmarkerActive;
 }
 
 void ACPP_PlayerManager::TraceForwardImplementation()

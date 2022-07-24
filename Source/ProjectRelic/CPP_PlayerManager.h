@@ -55,6 +55,7 @@ private:
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 
 	bool m_hitmarkerActive;
+	bool m_deathHitmarkerActive;
 
 	FTimerHandle m_hitmarkerTimer;
 
@@ -269,4 +270,9 @@ public:
 	
 		void SetHitmarkerActive( bool hitmarkerActive );
 	void DistractEnemy();
+
+	void SetDeathHitmarkerActive( bool deathHitmarkerActive );
+
+	UFUNCTION( BlueprintCallable )
+		bool GetDeathHitmarkerActive();
 };
