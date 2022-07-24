@@ -42,6 +42,7 @@ private:
 	UBehaviorTreeComponent* behaviourComp; // Behaviour Tree comp
 	UBlackboardComponent* blackboardComp; // Blackboard Comp
 
+private:
 	// BB keys
 	UPROPERTY( EditDefaultsOnly, Category = AI )
 		FName m_patrolLocation; // Patrol location
@@ -172,7 +173,7 @@ public:
 	 *************************************************************************************/
 	FVector GetLastKnownLocation();
 	/*****************************************************************************
-	 *   Function        : void PlayerHasShot()
+	 *   Function        : void CaughtPlayer()
 	 *   Purpose         : Set player to be caught 
 	 *   Parameters      : N/A
 	 *   Returns         : N/A
@@ -181,9 +182,27 @@ public:
 	 *   Notes           : N/A
 	 *   See also        : N/A
 	 *****************************************************************************/
-	void PlayerHasShot();
-
+	void CaughtPlayer();
+	/*****************************************************************************
+	 *   Function        : FVector GetMove()
+	 *   Purpose         : Get move key from BB
+	 *   Parameters      : blackboardComp->GetValueAsVector( m_move )
+	 *   Returns         : N/A
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *****************************************************************************/
 	FVector GetMove();
-
+	/*****************************************************************************
+	 *   Function        : void SetInCover( bool boolean )
+	 *   Purpose         : Set if enemy is in cover
+	 *   Parameters      : bool boolean
+	 *   Returns         : N/A
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *****************************************************************************/
 	void SetInCover( bool boolean );
 };

@@ -95,10 +95,11 @@ void ACPP_AIController::SetInvestigate( bool boolean )
 
 FVector ACPP_AIController::GetLastKnownLocation()
 {
+	// Return vector
 	return blackboardComp->GetValueAsVector( m_lastKnownLocation );
 }
 
-void ACPP_AIController::PlayerHasShot()
+void ACPP_AIController::CaughtPlayer()
 {
 	if( blackboardComp )
 	{
