@@ -472,6 +472,7 @@ int ACPP_CharacterManager::GetSplineIndex()
 
 void ACPP_CharacterManager::StartAim()
 {
+	
 	m_aimingIn = true;
 	springArmComp->TargetArmLength = 100.0f;
 	if( m_throwable )
