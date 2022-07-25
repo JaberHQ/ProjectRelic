@@ -305,4 +305,6 @@ public:
 	virtual void StartAim() override;
 
 	void EquipWeaponTick();
+
+	void HitmarkerTick();
 };

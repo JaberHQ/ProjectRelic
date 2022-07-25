@@ -120,17 +120,9 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	EquipWeaponTick();
 
-	if( m_ammoAR == 0 || m_ammoPistol == 0 )
-	{
-		m_isShooting = false;
-	}
-
 	AmmoTick();
 
-	if( m_hitmarkerActive )
-	{
-		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_PlayerManager::HitmarkerFinished, 1.0f, true );
-	}
+	HitmarkerTick();
 }
 
 void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
@@ -139,24 +131,25 @@ void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
 
 	InvisibilityMaterial();
 }
+
 void ACPP_PlayerManager::InvisibilityEvaluation( float DeltaTime )
 {
-	if( m_invisibilityPercent > 0.0f && m_invisibility == true )
+	if( m_invisibilityPercent > 0.0f && m_invisibility )
 	{
 		GetWorld()->GetTimerManager().SetTimer( m_invisiblityTimer, this, &ACPP_PlayerManager::InvisibilityFinished, 1.0f, true );
-		m_invisibilityPercent -= ( DeltaTime * m_invisibilityTimeDrain );
+		m_invisibilityPercent -= DeltaTime * m_invisibilityTimeDrain;
 		m_aimingIn = false;
 	}
 
-	if( m_invisibilityPercent < m_invisibilityFull && !m_invisibility|| m_invisibilityPercent == 0 )
+	if( m_invisibilityPercent < m_invisibilityFull && !m_invisibility || m_invisibilityPercent == 0 )
 	{
 		m_invisibilityPercent += ( DeltaTime * m_invisibilityTimeMultiplier );
 	}
 
-	if( m_invisibilityPercent == 0 )
+	/*if( m_invisibilityPercent == 0 )
 	{
 		m_invisibilityPercent += ( DeltaTime * m_invisibilityTimeMultiplier );
-	}
+	}*/
 }
 
 void ACPP_PlayerManager::InvisibilityMaterial()
@@ -279,15 +272,16 @@ void ACPP_PlayerManager::InvisibilityFinished()
 
 void ACPP_PlayerManager::Respawn()
 {
+	// Play death anim montage
 	PlayAnimMontage( deadAnim );
 
+	// Reset health
 	health = defaultHealth;
-	//SetActorLocation( FVector( 1552.347534, 258.646729, 1772.000000 ) );
-
 }
 
 void ACPP_PlayerManager::IncreaseAmmoCount( int ammo )
 {
+	// Increase ammunition
 	m_ammoAR += 10;
 	m_ammoPistol += 5;	
 }
@@ -312,7 +306,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		m_pistol = false;
 		m_throwable = false;
 
-		// Attach to gun socket
+		// Attach to selected component
 		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 		bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, muzzleSocket );
 
@@ -325,6 +319,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		m_pistol = true;
 		m_throwable = false;
 
+		// Attach to selected component
 		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolSocket );
 		bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolMuzzleSocket );
 
@@ -336,6 +331,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		m_pistol = false;
 		m_throwable = true;
 
+		// Attach to selected component
 		WeaponInventory[ m_currentlyEquipped ]->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_throwSocket );
 
 	}
@@ -343,27 +339,31 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 
 void ACPP_PlayerManager::ChangeWeapons( float inputAxis )
 {
+	// Value of which weapon is chosen from mouse wheel
 	int value = UKismetMathLibrary::FTrunc( inputAxis );
 	int changeWeaponValue = value + m_currentlyEquipped;
 
 	if( m_weaponInventory.IsValidIndex( changeWeaponValue ) )
 	{
+		// Equip weapon of that value
 		m_currentlyEquipped = changeWeaponValue;
 	}
 	else 
 	{
 		if( changeWeaponValue < 0 )
 		{
+			// Weapon value is equal to the final weapon
 			m_currentlyEquipped = m_weaponInventory.Num() - 1;
 		}
 		else
 		{
+			// Weapon value is equal to the first weapon
 			m_currentlyEquipped = 0;
 		}
 	}
 
+	// Equip that weapon
 	EquipGun( m_weaponInventory );
-
 }
 
 bool ACPP_PlayerManager::GetHitmarkerActive()
@@ -398,8 +398,11 @@ void ACPP_PlayerManager::DistractEnemy()
 {
 	if( callEnemy )
 	{
+		// Play sound at player location
 		FVector const location = GetActorLocation();
 		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location, 0.4f );
+
+		// Report noise to event so that enemy can 'hear' it
 		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 	}
 }
@@ -421,6 +424,7 @@ void ACPP_PlayerManager::TraceForwardImplementation()
 	FHitResult hit; // Hit
 	FCollisionQueryParams traceParams; // Trace parameters
 
+	// Player viewpoint
 	GetController()->GetPlayerViewPoint( location, rotation );
 
 	// Set start and end
@@ -429,9 +433,6 @@ void ACPP_PlayerManager::TraceForwardImplementation()
 
 	// Line trace
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
-
-	// Draw a line for debug
-	//DrawDebugLine( GetWorld(), start, end, FColor::Red, false, 5.0f );
 
 	// If line has hit
 	if( bHit )
@@ -442,10 +443,7 @@ void ACPP_PlayerManager::TraceForwardImplementation()
 		// Get AI controller
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );
 		if( managerAI )
-		{
-			// Debug
-			//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, hit.GetActor()->GetName() );
-			
+		{		
 			// --- Spring arm stuff ---
 
 			// Disable character movement
@@ -485,12 +483,13 @@ void ACPP_PlayerManager::AnimationExecuted()
 
 	// Enable Player input
 	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-	EnableInput( playerController );
+	if( playerController )
+	{
+		EnableInput( playerController );
+	}
 
 	// Re-enable movement
 	GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
-
-	// --- Move back camera ---
 
 	// Player can takedown AI again
 	m_canTakedown = true;
@@ -506,15 +505,11 @@ void ACPP_PlayerManager::TakeAttack()
 		// If health remains, decrease health else pronounce Player as dead
 		health > 0.0f ? health -= m_shotDamage : Respawn();
 	}
-
-	// Debug
-	//FString healthDebug = FString::SanitizeFloat( health );
-	//GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, FString::SanitizeFloat( chanceOfHit ) );
-	
 }
 
 void ACPP_PlayerManager::userInterfaceDelegate()
 {
+	// Broadcast delegates depending on which ammunition counter to display
 	if( m_assaultRifle )
 	{
 		userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_ammoAR, m_reserveAR, m_assaultRifle, m_pistol, m_throwable );
@@ -534,7 +529,10 @@ void ACPP_PlayerManager::StartAim()
 {
 	if( !m_invisibility )
 	{
+		// Set bool to true
 		m_aimingIn = true;
+
+		// Zoom in camera
 		springArmComp->TargetArmLength = 100.0f;
 	}
 }
@@ -543,4 +541,13 @@ void ACPP_PlayerManager::EquipWeaponTick()
 {
 	// If player is aiming in, show weapon
 	m_aimingIn ? m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true ) : m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
+}
+
+void ACPP_PlayerManager::HitmarkerTick()
+{
+	if( m_hitmarkerActive )
+	{
+		// Set timer to deactive hitmarker bool
+		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_PlayerManager::HitmarkerFinished, 1.0f, true );
+	}
 }
