@@ -245,6 +245,8 @@ bool ACPP_PlayerManager::GetCanTakedown()
 
 void ACPP_PlayerManager::Takedown()
 {
+	health -= 25.0f; // DELETE ---------------------------------------------
+
 	if( m_canTakedown )
 	{
 		TraceForwardImplementation();
@@ -550,4 +552,9 @@ void ACPP_PlayerManager::HitmarkerTick()
 		// Set timer to deactive hitmarker bool
 		GetWorld()->GetTimerManager().SetTimer( m_hitmarkerTimer, this, &ACPP_PlayerManager::HitmarkerFinished, 1.0f, true );
 	}
+}
+
+float ACPP_PlayerManager::GetHealth()
+{
+	return health;
 }

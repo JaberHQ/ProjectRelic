@@ -294,7 +294,8 @@ public:
 		bool GetHitmarkerActive();
 
 	
-		void SetHitmarkerActive( bool hitmarkerActive );
+	void SetHitmarkerActive( bool hitmarkerActive );
+
 	void DistractEnemy();
 
 	void SetDeathHitmarkerActive( bool deathHitmarkerActive );
@@ -307,4 +308,6 @@ public:
 	void EquipWeaponTick();
 
 	void HitmarkerTick();
+	UFUNCTION( BlueprintCallable )
+		float GetHealth();
 };
