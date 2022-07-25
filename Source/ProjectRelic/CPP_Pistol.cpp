@@ -3,3 +3,6 @@
 
 #include "CPP_Pistol.h"
 
+ACPP_Pistol::ACPP_Pistol()
+{
+}

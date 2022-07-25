@@ -308,6 +308,12 @@ public:
 	void EquipWeaponTick();
 
 	void HitmarkerTick();
+	
 	UFUNCTION( BlueprintCallable )
 		float GetHealth();
+
+	void PlayerDead();
+
+	UFUNCTION( BlueprintCallable )
+		void Reset();
 };

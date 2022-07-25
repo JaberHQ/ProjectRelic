@@ -123,6 +123,11 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	AmmoTick();
 
 	HitmarkerTick();
+
+	if( health == 0 )
+	{
+		PlayerDead();
+	}
 }
 
 void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
@@ -557,4 +562,21 @@ void ACPP_PlayerManager::HitmarkerTick()
 float ACPP_PlayerManager::GetHealth()
 {
 	return health;
+}
+
+void ACPP_PlayerManager::PlayerDead()
+{
+	// Disable character movement
+	GetCharacterMovement()->DisableMovement();
+
+	// Disable Player input
+	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+	if( playerController )
+	{
+		DisableInput( playerController );
+	}
+}
+
+void ACPP_PlayerManager::Reset()
+{
 }

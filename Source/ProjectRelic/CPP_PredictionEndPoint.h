@@ -6,7 +6,25 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "CPP_PredictionEndPoint.generated.h"
-
+/********************************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_PredictionEndPoint
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: End point actor for the end of the throwing prediction
+ *
+ * Functions: ACPP_PredictionEndPoint(), UStaticMeshComponent* endPoint, BeginPlay(), Tick( float DeltaTime )
+ *
+ * References: N/A
+ *
+ * See Also: CPP_PlayerManager
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 25/07/2022    JA			 v1.0        Created a prediction end point
+********************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_PredictionEndPoint : public AActor
 {
