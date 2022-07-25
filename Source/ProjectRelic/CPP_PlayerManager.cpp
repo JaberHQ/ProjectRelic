@@ -33,15 +33,20 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,callEnemy()
 	,m_hitmarkerActive( false )
 	,m_hitmarkerTimer()
+	,m_invisibilityFull( 100.0f )
+	,m_invisibilityTimeMultiplier( 10.0f )
+	,m_invisibilityTimeDrain( 25.0f )
 {
-	health = defaultHealth;
-
+	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
 	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
+
+	// Add child actors to array
 	m_weaponInventory.Add( primaryGun );
 	m_weaponInventory.Add( pistol );
 	m_weaponInventory.Add( throwable );
 
+	// Attach pistol
 	pistol->SetupAttachment( GetMesh(), m_pistolSocket );
 	
 }
@@ -50,12 +55,14 @@ void ACPP_PlayerManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Attach components to sockets
 	gunComp->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), weaponSocket );
 	primaryGun->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, weaponSocket );
 	bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, muzzleSocket );
 	throwable->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_throwSocket );
 	m_throwSceneComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_throwSocket);
 
+	// Equip weapon
 	EquipGun( m_weaponInventory );
 
 	// Set texture of the player
@@ -74,12 +81,16 @@ void ACPP_PlayerManager::BeginPlay()
 	m_material9 = GetMesh()->GetMaterial( 9 );
 	m_material10 = GetMesh()->GetMaterial( 10 );
 
+	// Create dynamic material
 	m_dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
+
+	// Set dynamic material
 	GetMesh()->SetMaterial( 0, m_dynamicMaterial );
 	m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
 	m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
-	//pistol->AttachToComponent( GetMesh(), FAttachmentTransformRules( EAttachmentRule::SnapToTarget, true ), m_pistolSocket );
+	// Set health to full
+	health = defaultHealth;
 }
 
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
@@ -97,9 +108,6 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::WallTrace );
 	PlayerInputComponent->BindAction( "DistractEnemy", IE_Pressed, this, &ACPP_PlayerManager::DistractEnemy );
 
-
-
-	//PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::StartCover );
 }
 
 void ACPP_PlayerManager::Tick( float DeltaTime )
@@ -110,8 +118,7 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	InvisibilityTick( DeltaTime );
 
-	// If player is aiming in, show weapon
-	m_aimingIn ? m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true ) : m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
+	EquipWeaponTick();
 
 	if( m_ammoAR == 0 || m_ammoPistol == 0 )
 	{
@@ -137,17 +144,18 @@ void ACPP_PlayerManager::InvisibilityEvaluation( float DeltaTime )
 	if( m_invisibilityPercent > 0.0f && m_invisibility == true )
 	{
 		GetWorld()->GetTimerManager().SetTimer( m_invisiblityTimer, this, &ACPP_PlayerManager::InvisibilityFinished, 1.0f, true );
-		m_invisibilityPercent -= ( DeltaTime * 25.0f );
+		m_invisibilityPercent -= ( DeltaTime * m_invisibilityTimeDrain );
+		m_aimingIn = false;
 	}
 
-	if( m_invisibilityPercent < 100.0f && m_invisibility == false || m_invisibilityPercent == 0 )
+	if( m_invisibilityPercent < m_invisibilityFull && !m_invisibility|| m_invisibilityPercent == 0 )
 	{
-		m_invisibilityPercent += ( DeltaTime * 10.0f );
+		m_invisibilityPercent += ( DeltaTime * m_invisibilityTimeMultiplier );
 	}
 
 	if( m_invisibilityPercent == 0 )
 	{
-		m_invisibilityPercent += ( DeltaTime * 10.0f );
+		m_invisibilityPercent += ( DeltaTime * m_invisibilityTimeMultiplier );
 	}
 }
 
@@ -156,22 +164,11 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 	// If player is invisible
 	if( m_invisibility )
 	{
-		for( int i = 0; i < 10; i++ )
+		
+		for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
 		{
 			GetMesh()->SetMaterial( i, invisibleMaterial );
 		}
-		/*GetMesh()->SetMaterial( 0, invisibleMaterial );
-		GetMesh()->SetMaterial( 1, invisibleMaterial );
-		GetMesh()->SetMaterial( 2, invisibleMaterial );
-		GetMesh()->SetMaterial( 3, invisibleMaterial );
-		GetMesh()->SetMaterial( 4, invisibleMaterial );
-		GetMesh()->SetMaterial( 5, invisibleMaterial );
-		GetMesh()->SetMaterial( 6, invisibleMaterial );
-		GetMesh()->SetMaterial( 7, invisibleMaterial );
-		GetMesh()->SetMaterial( 8, invisibleMaterial );
-		GetMesh()->SetMaterial( 9, invisibleMaterial );
-		GetMesh()->SetMaterial( 10, invisibleMaterial );*/
-
 	}
 	else
 	{
@@ -199,74 +196,12 @@ void ACPP_PlayerManager::AmmoTick()
 {
 	if( m_assaultRifle )
 	{
-		// If there is reserve ammo available
-		if( m_ammoAR > m_fullMagAR )
-		{
-			m_reserveAR = m_ammoAR - m_fullMagAR;
-			m_ammoAR = m_fullMagAR;
-		}
-
-		if( m_isShooting )
-		{
-		}
-
-		// If there is no ammo in the main tank left
-		if( m_ammoAR == 0 )
-		{
-			m_isShooting = false;
-
-			// If there is enough reserve for a full reload
-			if( m_reserveAR >= m_fullMagAR )
-			{
-				m_ammoAR = m_fullMagAR;
-
-				m_reserveAR -= m_fullMagAR;
-			}
-
-			// If there is not enough reserve for a full reload but enough for a partial reload
-			if( m_reserveAR < m_fullMagAR && m_reserveAR > 0 )
-			{
-				m_ammoAR = m_reserveAR;
-
-				m_reserveAR = 0;
-			}
-		}
+		AmmoEvaluation( m_ammoAR, m_reserveAR, m_fullMagAR );
 	}
 
 	if( m_pistol )
 	{
-		// If there is reserve ammo available
-		if( m_ammoPistol > m_fullMagPistol )
-		{
-			m_reservePistol = m_ammoPistol - m_fullMagPistol;
-			m_ammoPistol = m_fullMagPistol;
-		}
-
-		if( m_isShooting )
-		{
-		}
-
-		// If there is no ammo in the main tank left
-		if( m_ammoPistol == 0 )
-		{
-			m_isShooting = false;
-
-			// If there is enough reserve for a full reload
-			if( m_reservePistol >= m_fullMagPistol )
-			{
-				m_ammoPistol = m_fullMagPistol;
-
-				m_reservePistol -= m_fullMagPistol;
-			}
-
-			// If there is not enough reserve for a full reload but enough for a partial reload
-			if( m_reservePistol < m_fullMagPistol && m_reservePistol > 0 )
-			{
-				m_ammoPistol = m_reservePistol;
-
-				m_reservePistol = 0;
-			}
-		}
+		AmmoEvaluation( m_ammoPistol, m_reservePistol, m_fullMagPistol );
 	}
 }
 void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fullMag )
@@ -453,7 +388,10 @@ bool ACPP_PlayerManager::GetThrowable()
 
 void ACPP_PlayerManager::SetHitmarkerActive( bool hitmarkerActive )
 {
-	m_hitmarkerActive = hitmarkerActive;
+	if( m_ammoAR > 0 || m_ammoPistol > 0 )
+	{
+		m_hitmarkerActive = hitmarkerActive;
+	}
 }
 
 void ACPP_PlayerManager::DistractEnemy()
@@ -464,6 +402,16 @@ void ACPP_PlayerManager::DistractEnemy()
 		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location, 0.4f );
 		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 	}
+}
+
+void ACPP_PlayerManager::SetDeathHitmarkerActive( bool deathHitmarkerActive )
+{
+	m_deathHitmarkerActive = deathHitmarkerActive;
+}
+
+bool ACPP_PlayerManager::GetDeathHitmarkerActive()
+{
+	return m_deathHitmarkerActive;
 }
 
 void ACPP_PlayerManager::TraceForwardImplementation()
@@ -582,5 +530,17 @@ void ACPP_PlayerManager::userInterfaceDelegate()
 
 	}
 }
+void ACPP_PlayerManager::StartAim()
+{
+	if( !m_invisibility )
+	{
+		m_aimingIn = true;
+		springArmComp->TargetArmLength = 100.0f;
+	}
+}
 
-
+void ACPP_PlayerManager::EquipWeaponTick()
+{
+	// If player is aiming in, show weapon
+	m_aimingIn ? m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( true ) : m_weaponInventory[ m_currentlyEquipped ]->SetVisibility( false );
+}

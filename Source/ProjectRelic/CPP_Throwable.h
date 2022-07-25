@@ -6,7 +6,25 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "CPP_Throwable.generated.h"
-
+/********************************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_Throwable
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Parent class for throwable objects
+ *
+ * Functions: ACPP_Throwable, BeginPlay, Tick( float DeltaTime ), ThrowObject( FVector forwardVector )
+ *
+ * References: N/A
+ *
+ * See Also: CPP_PlayerManager
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 25/07/2022    JA			 v1.0        Created a throwable object
+********************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_Throwable : public AActor
 {

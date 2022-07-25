@@ -28,6 +28,8 @@ ACPP_AIManager::ACPP_AIManager()
 	,m_headShotDamage( 2.0f )
 	,soundHuh()
 	,m_isInCover( false )
+	,animDeath()
+	,m_dead()
 {
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
@@ -102,6 +104,11 @@ void ACPP_AIManager::Tick( float DeltaTime )
 				controllerAI->SetHasLineOfSight( true );
 			}
 		}
+		if( m_dead )
+		{
+			
+		}
+
 	}
 
 	// Broadcast delegate for sight detection widget
@@ -181,7 +188,7 @@ void ACPP_AIManager::TakeAttack()
 	}
 	
 	// If health remains, decrease health else pronounce Enemy Dead
-	health >= 0.0f ? health -= damage : Destroy(); // Change to death animation
+	health >= 0.0f ? health -= damage : m_dead = true; // Change to death animation
 	
 	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
@@ -196,10 +203,29 @@ void ACPP_AIManager::TakeAttack()
 		m_sightValuePercent = 1.0f;
 		if( playerManager )
 		{
-			if( health <= 0 )
+			if( health > 0.0f )
 			{
 				playerManager->SetHitmarkerActive( true );
 			}
+			else
+			{
+				playerManager->SetDeathHitmarkerActive( true );
+				m_dead = true;
+			}
+			
+		}
+		if( m_dead )
+		{
+			// Disable movement
+			GetCharacterMovement()->DisableMovement();
+
+			//Unpossess
+			UnPossessed();
+
+			// Set collision
+			SetActorEnableCollision( false );
+
+			PlayAnimMontage( animDeath );
 		}
 	}
 

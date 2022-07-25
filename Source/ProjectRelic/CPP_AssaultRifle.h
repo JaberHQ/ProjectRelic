@@ -16,8 +16,8 @@ class PROJECTRELIC_API ACPP_AssaultRifle : public ACPP_GunManager
 private:
 public:
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : ACPP_AssaultRifle()
+	  *   Purpose         : Constructor
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022

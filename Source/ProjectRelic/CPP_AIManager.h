@@ -96,13 +96,13 @@ private:
 
 	bool m_hasSeenSomething;
 	bool m_isInCover; // AI is in cover
+	bool m_dead;
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
 
 	UPROPERTY( EditAnywhere, Category = "SFX" )
 		USoundBase* soundHuh;
-
 
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
@@ -128,6 +128,11 @@ public:
 
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float defaultHealth; // Player default health
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animDeath; // Animation Montage
+
+		
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
