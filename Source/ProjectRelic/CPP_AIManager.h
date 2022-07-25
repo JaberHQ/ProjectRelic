@@ -80,31 +80,29 @@ private:
 	float m_patrolSpeed; // Enemy walk (patrol) speed
 	float m_chaseSpeed; // Enemy run (chase) speed
 	float m_detectionSpeed; // Speed of detection
+	bool m_canTakedown; // If AI can be taken down
 	float m_shotDamage; // Damage per shot taken from Player
 	float m_deathTimer; // Timer for despawn after death 
 	float m_headShotDamage; // Damage multiplier for headshots
-	float m_sightValuePercent; // Percentage of detection meter
-	float m_curveFloat; // The sight curve
-	bool m_canTakedown; // If AI can be taken down
+	float m_sightValuePercent;
+	//float m_detectionCount; // Counter for Stealth Detection UI 
+
 	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
 	bool m_hasBeenCaught; // For when the player has been caught by AI
-	bool m_hasBeenShot; // If the enemy has been shot
-	bool m_hasSeenSomething; // If the enemy has seen the player has not fully caught them
+
+	bool m_hasBeenShot;
+
+	float m_curveFloat;
+
+	bool m_hasSeenSomething;
 	bool m_isInCover; // AI is in cover
-	bool m_dead; // If the enemy is dead
+	bool m_dead;
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
 
 	UPROPERTY( EditAnywhere, Category = "SFX" )
 		USoundBase* soundHuh;
-
-	UPROPERTY( EditAnywhere, Category = "Health" )
-		float health; // Player health
-
-	UPROPERTY( EditAnywhere, Category = "Health" )
-		float defaultHealth; // Player default health
-
 
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
@@ -117,7 +115,7 @@ public:
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
 	UPROPERTY( VisibleAnywhere, Category = "AI" )
-		class UAISenseConfig_Hearing* hearingConfig; // Hearing config
+		class UAISenseConfig_Hearing* hearingConfig;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UBoxComponent* boxComponent; // Box Component
@@ -125,11 +123,16 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animTakedownAI; // Animation Montage
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
-		UAnimMontage* animDeath; // Animation Montage	
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float health; // Player health
 
-	UPROPERTY( EditDefaultsOnly, Category = "Curve" )
-		UCurveFloat* myCurve; // Curve for detection
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float defaultHealth; // Player default health
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animDeath; // Animation Montage
+
+		
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
@@ -143,18 +146,6 @@ private:
 	**********************************************************************************/
 	UFUNCTION()
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
-	
-	/*****************************************************************************
-	 *   Function        : void DelayDeath()
-	 *   Purpose         : After AI takedown, a delay before they are destroyed
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_AIManager::Takedown
-   *****************************************************************************/
-	void DelayDeath();
 public:
 	/*****************************************************************************
 	 *   Function        : virtual void BeginPlay() override
@@ -241,6 +232,17 @@ public:
 	UFUNCTION()
 		void Takedown();
 	/*****************************************************************************
+	 *   Function        : void DelayDeath()
+	 *   Purpose         : After AI takedown, a delay before they are destroyed
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_AIManager::Takedown
+   *****************************************************************************/
+	void DelayDeath();
+	/*****************************************************************************
 	 *   Function        : virtual void TakeAttack() override
 	 *   Purpose         : When AI has been hit by projectiles
 	 *   Parameters      : N/A
@@ -252,7 +254,8 @@ public:
    *****************************************************************************/
 	virtual void TakeAttack() override;
 
-	
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
+		UCurveFloat* myCurve;
 	/****************************************************************************************
 	  *   Function        : void SightDetectionDelegate();
 	  *   Purpose         : Delegate macro to send variables to BP for sight detection meter

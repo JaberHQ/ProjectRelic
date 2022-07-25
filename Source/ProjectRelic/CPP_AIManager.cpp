@@ -199,7 +199,7 @@ void ACPP_AIManager::TakeAttack()
 	if( controllerAI )
 	{
 		// Set player caught
-		controllerAI->CaughtPlayer();
+		controllerAI->PlayerHasShot();
 		m_sightValuePercent = 1.0f;
 		if( playerManager )
 		{
@@ -339,7 +339,7 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 				if( m_hasBeenCaught )
 				{
 					// Set actor (Player) as caught
-					controllerAI->CaughtPlayer();
+					controllerAI->PlayerHasShot();
 				}
 			}
 		}
@@ -446,7 +446,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 			if( m_hasBeenCaught )
 			{
 				// Set actor (Player) as caught
-				controllerAI->CaughtPlayer();
+				controllerAI->PlayerHasShot();
 			}	
 		}
 	}
