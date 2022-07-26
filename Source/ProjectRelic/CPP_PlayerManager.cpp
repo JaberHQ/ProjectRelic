@@ -193,12 +193,76 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 }
 void ACPP_PlayerManager::AmmoTick()
 {
+	if( m_assaultRifle )
+	{
+		// If there is reserve ammo available
+		if( m_ammoAR > m_fullMagAR )
+		{
+			m_reserveAR = m_ammoAR - m_fullMagAR;
+			m_ammoAR = m_fullMagAR;
+		}
+
+
+		// If there is no ammo in the main tank left
+		if( m_ammoAR == 0 )
+		{
+			m_isShooting = false;
+
+			// If there is enough reserve for a full reload
+			if( m_reserveAR >= m_fullMagAR )
+			{
+				m_ammoAR = m_fullMagAR;
+
+				m_reserveAR -= m_fullMagAR;
+			}
+
+			// If there is not enough reserve for a full reload but enough for a partial reload
+			if( m_reserveAR < m_fullMagAR && m_reserveAR > 0 )
+			{
+				m_ammoAR = m_reserveAR;
+
+				m_reserveAR = 0;
+			}
+		}
+	}
+	if( m_pistol )
+	{
+		// If there is reserve ammo available
+		if( m_ammoPistol > m_fullMagPistol )
+		{
+			m_reservePistol = m_ammoPistol - m_fullMagPistol;
+			m_ammoPistol = m_fullMagPistol;
+		}
+
+
+		// If there is no ammo in the main tank left
+		if( m_ammoPistol == 0 )
+		{
+			m_isShooting = false;
+
+			// If there is enough reserve for a full reload
+			if( m_reservePistol >= m_fullMagPistol )
+			{
+				m_ammoPistol = m_fullMagPistol;
+
+				m_reservePistol -= m_fullMagPistol;
+			}
+
+			// If there is not enough reserve for a full reload but enough for a partial reload
+			if( m_reservePistol < m_fullMagPistol && m_reservePistol > 0 )
+			{
+				m_ammoPistol = m_reservePistol;
+
+				m_reservePistol = 0;
+			}
+		}
+	}
 	
 	AmmoEvaluation( m_ammoAR, m_reserveAR, m_fullMagAR );
-	
 
-	
 	AmmoEvaluation( m_ammoPistol, m_reservePistol, m_fullMagPistol );
+
+	UserInterfaceDelegate();
 	
 }
 void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fullMag )
@@ -233,7 +297,7 @@ void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fu
 		}
 	}
 
-	UserInterfaceDelegate();
+	
 }
 void ACPP_PlayerManager::HitmarkerFinished()
 {
