@@ -260,11 +260,23 @@ void ACPP_PlayerManager::Takedown()
 
 void ACPP_PlayerManager::Invisibility()
 {
-	// If invisiblity bar is above 0
-	if( m_invisibilityPercent > 0.0f )
+	if( m_invisibility )
 	{
-		m_invisibility = !m_invisibility;
+		// If invisiblity bar is above 0
+		if( m_invisibilityPercent > 0.0f )
+		{
+			m_invisibility = !m_invisibility;
+		}
 	}
+
+	if( !m_invisibility )
+	{
+		if( m_invisibilityPercent >= 100.0f )
+		{
+			m_invisibility = !m_invisibility;
+		}
+	}
+	
 }
 
 bool ACPP_PlayerManager::GetInvisibilityStatus()
@@ -283,7 +295,7 @@ void ACPP_PlayerManager::Respawn()
 	PlayAnimMontage( deadAnim );
 
 	// Reset health
-	health = defaultHealth;
+	//health = defaultHealth;
 }
 
 void ACPP_PlayerManager::IncreaseAmmoCount( int ammo )

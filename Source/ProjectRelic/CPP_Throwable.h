@@ -31,20 +31,56 @@ class PROJECTRELIC_API ACPP_Throwable : public AActor
 	GENERATED_BODY()
 private:
 	FVector m_velocity;
-public:	
-	// Sets default values for this actor's properties
-	ACPP_Throwable();
-	
+
+public:
 	UPROPERTY( EditDefaultsOnly, Category = "Throwable" )
 		class USkeletalMeshComponent* throwableMeshComp;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	/*****************************************************************************
+	*   Function        : ACPP_Throwable()
+	*   Purpose         : Constructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 26/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A           
+	*****************************************************************************/
+	ACPP_Throwable();
+	/*****************************************************************************
+	*   Function        : virtual void Tick( float DeltaTime ) override
+	*   Purpose         : Event tick
+	*   Parameters      : float DeltaTime
+	*   Returns         : N/A
+	*   Date altered    : 26/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A           
+	*****************************************************************************/
+	virtual void Tick( float DeltaTime ) override;
+	/*****************************************************************************
+	*   Function        : void ThrowObject( FVector forwardVector )
+	*   Purpose         : Impulse to throw object
+	*   Parameters      : FVector forwardVector
+	*   Returns         : N/A
+	*   Date altered    : 26/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void ThrowObject( FVector forwardVector );
+
+protected:
+	/*****************************************************************************
+	*   Function        : virtual void BeginPlay() override
+	*   Purpose         : Begin play event
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 26/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+    *****************************************************************************/
+	virtual void BeginPlay() override;
 };

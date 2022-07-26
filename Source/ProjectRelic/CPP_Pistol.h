@@ -31,5 +31,15 @@ class PROJECTRELIC_API ACPP_Pistol : public ACPP_GunManager
 	GENERATED_BODY()
 private:
 public:
+/*****************************************************************************
+  *   Function        : ACPP_Pistol();
+  *   Purpose         : Constructor
+  *   Parameters      : N/A
+  *   Returns         : N/A
+  *   Date altered    : 26/07/2022
+  *   Contributors    : Jaber Ahmed
+  *   Notes           : N/A
+  *   See also        : N/A           
+*****************************************************************************/
 	ACPP_Pistol();
 };
