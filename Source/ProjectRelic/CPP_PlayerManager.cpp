@@ -114,13 +114,12 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	userInterfaceDelegate();
+	AmmoTick();
 
 	InvisibilityTick( DeltaTime );
 
 	EquipWeaponTick();
 
-	AmmoTick();
 
 	HitmarkerTick();
 
@@ -128,6 +127,8 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	{
 		PlayerDead();
 	}
+
+	//userInterfaceDelegate();
 }
 
 void ACPP_PlayerManager::InvisibilityTick( float DeltaTime )
@@ -192,15 +193,13 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 }
 void ACPP_PlayerManager::AmmoTick()
 {
-	if( m_assaultRifle )
-	{
-		AmmoEvaluation( m_ammoAR, m_reserveAR, m_fullMagAR );
-	}
+	
+	AmmoEvaluation( m_ammoAR, m_reserveAR, m_fullMagAR );
+	
 
-	if( m_pistol )
-	{
-		AmmoEvaluation( m_ammoPistol, m_reservePistol, m_fullMagPistol );
-	}
+	
+	AmmoEvaluation( m_ammoPistol, m_reservePistol, m_fullMagPistol );
+	
 }
 void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fullMag )
 {
@@ -233,6 +232,8 @@ void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fu
 			reserveCount = 0;
 		}
 	}
+
+	UserInterfaceDelegate();
 }
 void ACPP_PlayerManager::HitmarkerFinished()
 {
@@ -250,8 +251,6 @@ bool ACPP_PlayerManager::GetCanTakedown()
 
 void ACPP_PlayerManager::Takedown()
 {
-	health -= 25.0f; // DELETE ---------------------------------------------
-
 	if( m_canTakedown )
 	{
 		TraceForwardImplementation();
@@ -526,7 +525,7 @@ void ACPP_PlayerManager::TakeAttack()
 	}
 }
 
-void ACPP_PlayerManager::userInterfaceDelegate()
+void ACPP_PlayerManager::UserInterfaceDelegate()
 {
 	// Broadcast delegates depending on which ammunition counter to display
 	if( m_assaultRifle )

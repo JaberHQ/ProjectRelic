@@ -85,18 +85,13 @@ private:
 	float m_deathTimer; // Timer for despawn after death 
 	float m_headShotDamage; // Damage multiplier for headshots
 	float m_sightValuePercent;
-	//float m_detectionCount; // Counter for Stealth Detection UI 
-
 	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
 	bool m_hasBeenCaught; // For when the player has been caught by AI
-
-	bool m_hasBeenShot;
-
-	float m_curveFloat;
-
-	bool m_hasSeenSomething;
+	bool m_hasBeenShot; // AI has been shot
+	float m_curveFloat; // Value for sight detection curve
+	bool m_hasSeenSomething; // If AI has seen but no caught something
 	bool m_isInCover; // AI is in cover
-	bool m_dead;
+	bool m_dead; // If AI is dead
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -354,4 +349,6 @@ public:
 	void SetHasCaughtPlayer( bool boolean );
 
 	void SetMaxWalkSpeed( float speed );
+
+	void SetSightValuePercent( float sightValuePercent );
 };

@@ -260,7 +260,7 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
-		void userInterfaceDelegate();
+		void UserInterfaceDelegate();
 
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FPlayerUI userInterfaceD;

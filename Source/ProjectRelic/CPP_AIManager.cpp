@@ -201,6 +201,9 @@ void ACPP_AIManager::TakeAttack()
 		// Set player caught
 		controllerAI->PlayerHasShot();
 		m_sightValuePercent = 1.0f;
+
+		SetSightValuePercent( 100.0f );
+
 		if( playerManager )
 		{
 			if( health > 0.0f )
@@ -322,7 +325,7 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 						{
 							// Set bool to investigate
 							m_hasSeenSomething = true;
-							UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
+							//UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
 						}
 						else
 						{
@@ -379,6 +382,11 @@ void ACPP_AIManager::SetHasCaughtPlayer( bool boolean )
 void ACPP_AIManager::SetMaxWalkSpeed( float speed )
 {
 	GetCharacterMovement()->MaxWalkSpeed = speed;
+}
+
+void ACPP_AIManager::SetSightValuePercent( float sightValuePercent )
+{
+	m_sightValuePercent = sightValuePercent;
 }
 
 
