@@ -30,8 +30,6 @@
  *
  * Purpose: Parent class for all AI
  *
- * Functions: ACPP_AIManager()
- *
  * References: https://www.youtube.com/watch?v=3IDflM4GuCY&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=9
  *				https://www.youtube.com/watch?v=nshHCycft4A&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=9
  *				https://www.youtube.com/watch?v=owZz-ffUzsc&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=11
@@ -84,7 +82,7 @@ private:
 	float m_shotDamage; // Damage per shot taken from Player
 	float m_deathTimer; // Timer for despawn after death 
 	float m_headShotDamage; // Damage multiplier for headshots
-	float m_sightValuePercent;
+	float m_sightValuePercent; // Sight value percent
 	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
 	bool m_hasBeenCaught; // For when the player has been caught by AI
 	bool m_hasBeenShot; // AI has been shot
@@ -97,7 +95,7 @@ private:
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
 
 	UPROPERTY( EditAnywhere, Category = "SFX" )
-		USoundBase* soundHuh;
+		USoundBase* soundHuh; // Sound huh -- Depreciated since the BT has sound cue's, better to use those
 
 public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
@@ -110,7 +108,7 @@ public:
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
 	UPROPERTY( VisibleAnywhere, Category = "AI" )
-		class UAISenseConfig_Hearing* hearingConfig;
+		class UAISenseConfig_Hearing* hearingConfig; // Hearing configuration
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UBoxComponent* boxComponent; // Box Component
@@ -127,7 +125,11 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UAnimMontage* animDeath; // Animation Montage
 
-		
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
+		FSightDetectionD sightDetectionD;
+
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
+		UCurveFloat* myCurve;
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
@@ -188,18 +190,211 @@ public:
 	 *   See also        : CPP_PatrolPoint
    *****************************************************************************/
 	ACPP_PatrolPoint* GetPatrolPath();
-	 /********************************************************************************************************************************************************************
-	  *   Function        : void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, 
-	  *							AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  )
-	  *   Purpose         : When Character overlaps (enters) the collision box
-	  *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
-	  *							UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+	/*****************************************************************************
+	 *   Function        : void DelayDeath()
+	 *   Purpose         : After AI takedown, a delay before they are destroyed
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_AIManager::Takedown
+   *****************************************************************************/
+	void DelayDeath();
+	/*****************************************************************************
+	 *   Function        : virtual void TakeAttack() override
+	 *   Purpose         : When AI has been hit by projectiles
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Overriden for specific effect on relative actor
+	 *   See also        : CPP_CharacterManager::ShootProjectile
+   *****************************************************************************/
+	virtual void TakeAttack() override;
+	/*****************************************************************************
+	  *   Function        : void EvaluateSightDetection();
+	  *   Purpose         : Whether sight detection meter goes up or down
+	  *   Parameters      : N/A
 	  *   Returns         : N/A
-	  *   Date altered    : 30/05/2022
+	  *   Date altered    : 01/07/2022
 	  *   Contributors    : Jaber Ahmed
 	  *   Notes           : N/A
-	  *   See also        : N/A           
-	 *********************************************************************************************************************************************************************/
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void EvaluateSightDetection();
+	/*****************************************************************************
+	  *   Function        : void SeenPlayer()
+	  *   Purpose         : What AI do when they see the player
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void SeenPlayer();
+	/*****************************************************************************
+	  *   Function        : void LostPlayer()
+	  *   Purpose         : What AI to do when they lose the player
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void LostPlayer();
+	/*****************************************************************************
+	  *   Function        : float DetectionSpeedCalculation()
+	  *   Purpose         : Calculation for stealth detection widget
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	float DetectionSpeedCalculation();
+	  /*****************************************************************************
+	*   Function        : void DelayInvestigate()
+	*   Purpose         : Delay AI investigating state
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	void DelayInvestigate();
+	/*****************************************************************************
+	 *   Function        : void SetupPerceptionSystem()
+	 *   Purpose         : Setup the sight perception component
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void SetupPerceptionSystem();
+	/*****************************************************************************
+	 *   Function        : void EnterCover()
+	 *   Purpose         : AI action when entering cover 
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_EnterCoverTask
+	*****************************************************************************/
+	void EnterCover();
+	/*****************************************************************************
+	 *   Function        : void TimeToShoot();
+	 *   Purpose         : Shooting task when in cover
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_ShootFromCover
+	*****************************************************************************/
+	void TimeToShoot();
+	/*****************************************************************************
+	 *   Function        : void SetHasCaughtPlayer( bool boolean )
+	 *   Purpose         : Set boolean to catch the player
+	 *   Parameters      : bool boolean 
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void SetHasCaughtPlayer( bool boolean );
+	/*********************************************************************************
+	 *   Function        : void SetMaxWalkSpeed( float speed )
+	 *   Purpose         : Set max walk speed of the AI
+	 *   Parameters      : float speed
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Possibly unnecessary since character manager also has this
+	 *   See also        : N/A
+	**********************************************************************************/
+	void SetMaxWalkSpeed( float speed );
+	/***********************************************************************************
+	 *   Function        : void SetSightValuePercent( float sightValuePercent )
+	 *   Purpose         : Set sight value percent
+	 *   Parameters      : float sightValuePercent 
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Created to make sight value full when player has been caught
+	 *   See also        : N/A
+	***********************************************************************************/
+	void SetSightValuePercent( float sightValuePercent );
+
+public:
+	/*****************************************************************************
+	 *   Function        : bool GetHasCaughtPlayer()
+	 *   Purpose         : Get If player has been caught by AI
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetHasCaughtPlayer();
+	/*****************************************************************************
+	 *   Function        : void OnUpdated( const TArray<AActor*> & caughtActors )
+	 *   Purpose         : What to do when player has been caught
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void OnUpdated( const TArray<AActor*>& caughtActors );
+	/*****************************************************************************
+  *   Function        : void GiveUp()
+  *   Purpose         : When AI loses the player
+  *   Parameters      : N/A
+  *   Returns         : N/A
+  *   Date altered    : 01/07/2022
+  *   Contributors    : Jaber Ahmed
+  *   Notes           : N/A
+  *   See also        : N/A
+  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void GiveUp();
+	/****************************************************************************************
+	*   Function        : void SightDetectionDelegate();
+	*   Purpose         : Delegate macro to send variables to BP for sight detection meter
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : Uses macro that sends two params 
+	*   See also        : N/A
+	**************************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void SightDetectionDelegate();
+	/********************************************************************************************************************************************************************
+	 *   Function        : void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp,
+	 *							AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  )
+	 *   Purpose         : When Character overlaps (enters) the collision box
+	 *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	 *							UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*********************************************************************************************************************************************************************/
 	UFUNCTION()
 		void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
 	/*****************************************************************************
@@ -226,129 +421,4 @@ public:
    *****************************************************************************/
 	UFUNCTION()
 		void Takedown();
-	/*****************************************************************************
-	 *   Function        : void DelayDeath()
-	 *   Purpose         : After AI takedown, a delay before they are destroyed
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_AIManager::Takedown
-   *****************************************************************************/
-	void DelayDeath();
-	/*****************************************************************************
-	 *   Function        : virtual void TakeAttack() override
-	 *   Purpose         : When AI has been hit by projectiles
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : Overriden for specific effect on relative actor
-	 *   See also        : CPP_CharacterManager::ShootProjectile
-   *****************************************************************************/
-	virtual void TakeAttack() override;
-
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
-		UCurveFloat* myCurve;
-	/****************************************************************************************
-	  *   Function        : void SightDetectionDelegate();
-	  *   Purpose         : Delegate macro to send variables to BP for sight detection meter
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : Uses macro that sends two params 
-	  *   See also        : N/A
-	  **************************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void SightDetectionDelegate();
-
-	UPROPERTY( BlueprintCallable, BlueprintAssignable )
-		FSightDetectionD sightDetectionD;
-	/*****************************************************************************
-	  *   Function        : void EvaluateSightDetection();
-	  *   Purpose         : Whether sight detection meter goes up or down
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void EvaluateSightDetection();
-	/*****************************************************************************
-	  *   Function        : void GiveUp()
-	  *   Purpose         : When AI loses the player
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void GiveUp();
-	/*****************************************************************************
-	  *   Function        : void SeenPlayer()
-	  *   Purpose         :
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void SeenPlayer();
-	/*****************************************************************************
-	  *   Function        : void LostPlayer()
-	  *   Purpose         :
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void LostPlayer();
-	/*****************************************************************************
-	  *   Function        : float DetectionSpeedCalculation()
-	  *   Purpose         :
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	float DetectionSpeedCalculation();
-	  /*****************************************************************************
-	*   Function        : void DelayInvestigate()
-	*   Purpose         : 
-	*   Parameters      : N/A
-	*   Returns         : N/A
-	*   Date altered    : 01/07/2022
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : N/A
-	*   See also        : N/A
-	*****************************************************************************/
-	void DelayInvestigate();
-
-	UFUNCTION( BlueprintCallable )
-		bool HasCaughtPlayer();
-
-	UFUNCTION( BlueprintCallable )
-		void OnUpdated( const TArray<AActor*> & caughtActors );
-
-	void SetupPerceptionSystem();
-
-	void EnterCover();
-
-	void TimeToShoot();
-
-	void SetHasCaughtPlayer( bool boolean );
-
-	void SetMaxWalkSpeed( float speed );
-
-	void SetSightValuePercent( float sightValuePercent );
 };

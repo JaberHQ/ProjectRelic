@@ -6,9 +6,23 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "CPP_InvestgateOffTask.generated.h"
 
-/**
- * 
- */
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_InvestgateOffTask
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: For AI to stop investigating
+ *
+ * References: N/A
+ *
+ * See Also: N/A
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 28/07/2022    JA          v1.0        Created investigate off task
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API UCPP_InvestgateOffTask : public UBTTaskNode
 {

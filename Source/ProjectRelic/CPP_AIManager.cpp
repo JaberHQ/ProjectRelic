@@ -266,7 +266,7 @@ void ACPP_AIManager::DelayInvestigate()
 {
 }
 
-bool ACPP_AIManager::HasCaughtPlayer()
+bool ACPP_AIManager::GetHasCaughtPlayer()
 {
 	return m_hasBeenCaught;
 }

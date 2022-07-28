@@ -6,9 +6,23 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "CPP_EnterCoverTask.generated.h"
 
-/**
- * 
- */
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_EnterCoverTask 
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: AI to enter cover within Behaviour Tree
+ *
+ * References: N/A
+ *
+ * See Also: BT_AssaultSoldier
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 28/07/2022    JA          v1.0        Created a task for AI to enter cover
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API UCPP_EnterCoverTask : public UBTTaskNode
 {

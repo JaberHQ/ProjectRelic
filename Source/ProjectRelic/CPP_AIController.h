@@ -9,7 +9,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 
 #include "CPP_AIController.generated.h"
-/**************************************************************************************
+/*********************************************************************************************************************************************************
  * Type: Class
  *
  * Name: CPP_AIController
@@ -17,8 +17,6 @@
  * Author: Jaber Ahmed
  *
  * Purpose: AI Controller to control Enemy Behaviour
- *
- * Functions: ACPP_AIController(), UBlackboardComponent* GetBlackboardComp() const
  *
  * References: Unreal Engine, [Online] https://www.youtube.com/watch?v=iY1jnFvHgbE&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=3 [Accessed 02/05/2022],
  *			   Reubs, [Online] https://www.youtube.com/watch?v=3Z1A825gTA8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=4 [Accessed 02/05/2022],
@@ -32,7 +30,7 @@
  * 13/06/2022    JA		     v2.1		 Investigating
  * 13/06/2022	 JA		     v2.2		 Detection meter
  * 15/07/2022	 JA			 v2.3		 Improving AI functionality
- **************************************************************************************/
+*********************************************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIController : public AAIController
 {
@@ -182,8 +180,26 @@ public:
 	 *   See also        : N/A
 	 *****************************************************************************/
 	void PlayerHasShot();
-
+	/*****************************************************************************
+	 *   Function        : FVector GetMove()
+	 *   Purpose         : Get move location from BB
+	 *   Parameters      : N/A
+	 *   Returns         : blackboardComp->GetValueAsVector( m_move )
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *****************************************************************************/
 	FVector GetMove();
-
+	/*****************************************************************************
+	 *   Function        : void SetInCover( bool boolean )
+	 *   Purpose         : Set player to be in cover
+	 *   Parameters      : bool boolean
+	 *   Returns         : N/A
+	 *   Date altered    : 15/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : Behaviour Tree - BT_AssaultSoldier 
+	 *****************************************************************************/
 	void SetInCover( bool boolean );
 };
