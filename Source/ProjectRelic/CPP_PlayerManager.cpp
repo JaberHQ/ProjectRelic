@@ -482,7 +482,7 @@ void ACPP_PlayerManager::DistractEnemy()
 	{
 		// Play sound at player location
 		FVector const location = GetActorLocation();
-		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location, 0.4f );
+		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location );
 
 		// Report noise to event so that enemy can 'hear' it
 		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );

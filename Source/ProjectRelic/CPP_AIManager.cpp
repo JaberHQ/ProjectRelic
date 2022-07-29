@@ -57,6 +57,7 @@ ACPP_AIManager::ACPP_AIManager()
 	hearingConfig->SetMaxAge( 35.0f );
 
 	perceptionComp->ConfigureSense( *hearingConfig );
+	//perceptionComp->SetDominantSense( hearingConfig->GetSenseImplementation() );
 
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
@@ -121,7 +122,7 @@ void ACPP_AIManager::BeginPlay()
 
 
 	// If enemy 'senses' the player
-	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnUpdated );
 
 	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
@@ -275,9 +276,6 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 {
 	for( int i = 0; i < caughtActors.Num(); i++ )
 	{
-
-
-
 		// AI Controller reference
 		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
 
@@ -320,6 +318,8 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 					else
 					{
 						controllerAI->SetHasLineOfSight( true );
+
+						FAIStimulus stimulus = info.LastSensedStimuli[ j ];
 
 						if( stim.WasSuccessfullySensed() )
 						{
@@ -437,7 +437,7 @@ void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 					{
 						// Set bool to investigate
 						m_hasSeenSomething = true;
-						UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
+						//UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
 					}
 					else
 					{
