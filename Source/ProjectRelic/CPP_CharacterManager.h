@@ -170,13 +170,15 @@ public:
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* throwable;
 
+	FTimerHandle m_shootTime;
+
 	FName weaponSocket;
 	FName muzzleSocket;
 	FName headSocket;
 	FName m_throwSocket;
 
 	FName noiseTag;
-	
+	FName gunNoiseTag;
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
@@ -388,8 +390,6 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	void StopAim();
-
-	FTimerHandle m_shootTime;
 	/*****************************************************************************
 	  *   Function        : void
 	  *   Purpose         :

@@ -9,7 +9,7 @@ ACPP_Throwable::ACPP_Throwable()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	throwableMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "Throwable Mesh" ) );
+	throwableMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "ThrowableMesh" ) );
 }
 
 // Called when the game starts or when spawned

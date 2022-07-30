@@ -40,7 +40,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
 	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
-
+	
 	// Add child actors to array
 	m_weaponInventory.Add( primaryGun );
 	m_weaponInventory.Add( pistol );
@@ -48,7 +48,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 
 	// Attach pistol
 	pistol->SetupAttachment( GetMesh(), m_pistolSocket );
-	
+	throwable->SetupAttachment( GetMesh(), m_throwSocket );
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -520,7 +520,7 @@ void ACPP_PlayerManager::TraceForwardImplementation()
 	if( bHit )
 	{
 		// Box where collision has occured
-		DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
+		//DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
 
 		// Get AI controller
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );

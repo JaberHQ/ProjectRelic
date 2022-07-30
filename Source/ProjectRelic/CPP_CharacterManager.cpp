@@ -6,6 +6,7 @@
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include <Perception/AISenseConfig_Hearing.h>
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -144,7 +145,7 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 
 	PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
 	PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
-	PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACPP_CharacterManager::BeginCrouch );
+	//PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACPP_CharacterManager::BeginCrouch );
 	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
 	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_CharacterManager::BeginSprint );
 	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_CharacterManager::EndSprint );
@@ -336,13 +337,18 @@ void ACPP_CharacterManager::ThrowObject()
 	ACPP_Throwable* throwableRef = Cast<ACPP_Throwable>( throwable->GetChildActor() );
 	if( throwableRef )
 	{
-		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector(GetControlRotation()) );
+		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector( GetControlRotation() ) );
 		m_throwableAmount--;
 
 		if( animThrow )
 		{
 			PlayAnimMontage( animThrow );
 		}
+
+		//throwableRef->DetachFromActor( FDetachmentTransformRules::KeepRelativeTransform );
+	}
+	else
+	{
 	}
 	
 }
@@ -501,7 +507,9 @@ void ACPP_CharacterManager::ShootProjectile()
 		if( m_assaultRifle )
 		{
 			m_ammoAR -= 1;
+			FVector location = GetActorLocation();
 			UGameplayStatics::PlaySoundAtLocation( GetWorld(), shootSFX, gunComp->GetRelativeLocation(), 0.3f );
+			UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 		}
 		if( m_pistol )
 		{
@@ -582,7 +590,7 @@ void ACPP_CharacterManager::WallTrace()
 	const FVector end = ( GetActorForwardVector() * 100.0f ) + GetActorLocation();
 
 	// Draw a line for debug
-	DrawDebugLine( GetWorld(), start, end, FColor::Yellow, false, 5.0f );
+	//DrawDebugLine( GetWorld(), start, end, FColor::Yellow, false, 5.0f );
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTracer ), true, GetInstigator() );
 
