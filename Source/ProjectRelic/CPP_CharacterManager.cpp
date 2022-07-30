@@ -53,7 +53,8 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,shootSFX()
 	,emptyGunSFX()
 	,noiseTag( TEXT( "Noise" ) )
-
+	,m_turnLeft()
+	,m_turnRight()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -140,7 +141,7 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 
 	PlayerInputComponent->BindAxis( "MoveForward", this, &ACPP_CharacterManager::MoveForward );
 	PlayerInputComponent->BindAxis( "MoveRight", this, &ACPP_CharacterManager::MoveRight );
-	PlayerInputComponent->BindAxis( "Turn", this, &APawn::AddControllerYawInput );
+	PlayerInputComponent->BindAxis( "Turn", this, &ACPP_CharacterManager::Turn );
 	PlayerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
 
 	PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
@@ -152,6 +153,57 @@ void ACPP_CharacterManager::SetupPlayerInputComponent( UInputComponent* PlayerIn
 
 
 
+}
+
+void ACPP_CharacterManager::Turn( float inputAxis )
+{
+	AddControllerYawInput( inputAxis );
+
+	float X = GetVelocity().X;
+	float Y = GetVelocity().Y;
+	float Z = GetVelocity().Z;
+
+	float vectorLength = FMath::Sqrt( X * X + Y * Y + Z * Z );
+
+	if( vectorLength == 0 )
+	{
+		// Right
+		if( inputAxis > 0.3f )
+		{
+			m_turnRight = true;
+		}
+		else
+		{
+			m_turnRight = false;
+		}
+		// Left
+		if( inputAxis < -0.3f )
+		{
+			m_turnLeft = true;
+		}
+		else
+		{
+			m_turnLeft = false;
+
+		}
+
+	}
+	else
+	{
+		m_turnRight = false;
+		m_turnLeft = false;
+	}
+
+}
+
+bool ACPP_CharacterManager::GetTurnRight()
+{
+	return m_turnRight;
+}
+
+bool ACPP_CharacterManager::GetTurnLeft()
+{
+	return m_turnLeft;
 }
 
 void ACPP_CharacterManager::MoveForward( float inputAxis )
@@ -475,6 +527,8 @@ int ACPP_CharacterManager::GetSplineIndex()
 {
 	return m_splineIndex;
 }
+
+
 
 void ACPP_CharacterManager::StartAim()
 {

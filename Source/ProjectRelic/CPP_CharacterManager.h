@@ -84,6 +84,9 @@ protected:
 	int m_throwableAmount; // The ammount of throwables
 
 	int m_splineIndex;
+
+	bool m_turnRight;
+	bool m_turnLeft;
 public:
 	bool m_aimingIn;
 
@@ -179,6 +182,8 @@ public:
 
 	FName noiseTag;
 	FName gunNoiseTag;
+
+
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
@@ -500,4 +505,12 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 		int GetSplineIndex();
+
+	void Turn( float inputAxis );
+
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnRight();
+
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnLeft();
 };
