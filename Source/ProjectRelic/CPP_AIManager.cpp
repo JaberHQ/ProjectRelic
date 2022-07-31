@@ -308,6 +308,8 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 
 			FActorPerceptionBlueprintInfo info;
 			perceptionComp->GetActorsPerception( playerManager, info );
+
+			for( int i =0; i< Caught )
 			if( info.LastSensedStimuli.Num() > 0 )
 			{
 				const FAIStimulus stim = info.LastSensedStimuli[ 0 ];

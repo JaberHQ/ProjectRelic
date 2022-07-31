@@ -321,7 +321,7 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 		{
 			GetMesh()->SetMaterial( i, m_material );
 		}*/
-		GetMesh()->SetMaterial( 0, m_material );
+		/*GetMesh()->SetMaterial( 0, m_material );
 		GetMesh()->SetMaterial( 1, m_material1 );
 		GetMesh()->SetMaterial( 2, m_material2 );
 		GetMesh()->SetMaterial( 3, m_material3 );
@@ -331,7 +331,7 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 		GetMesh()->SetMaterial( 7, m_material7 );
 		GetMesh()->SetMaterial( 8, m_material8 );
 		GetMesh()->SetMaterial( 9, m_material9 );
-		GetMesh()->SetMaterial( 10, m_material10 );
+		GetMesh()->SetMaterial( 10, m_material10 );*/
 
 	}
 }
@@ -966,7 +966,7 @@ void ACPP_PlayerManager::StartShooting()
 		{
 			if( m_throwableAmount == 1 )
 			{
-				ThrowObject();
+				//ThrowObject();
 			}
 		}
 
