@@ -21,6 +21,7 @@ ACPP_AIController::ACPP_AIController()
 	m_invesigate = "Investigate";
 	m_move = "Move";
 	m_inCover = "InCover";
+	m_bottleLocation = "BottleLocation";
 }
 
 void ACPP_AIController::OnPossess( APawn* pawn )
@@ -121,4 +122,14 @@ FVector ACPP_AIController::GetMove()
 void ACPP_AIController::SetInCover( bool boolean )
 {
 	blackboardComp->SetValueAsBool( m_inCover, boolean );
+}
+
+void ACPP_AIController::SetBottleLocation( FVector bottleLocation )
+{
+	blackboardComp->SetValueAsVector( m_bottleLocation, bottleLocation );
+}
+
+FVector ACPP_AIController::GetBottleLocation()
+{
+	return blackboardComp->GetValueAsVector( m_bottleLocation );
 }

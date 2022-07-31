@@ -41,32 +41,35 @@ private:
 	UBlackboardComponent* blackboardComp; // Blackboard Comp
 
 	// BB keys
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_patrolLocation; // Patrol location
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_enemyActor; // Target
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_hasLineOfSight; // Has line of sight bool
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_patrolPathVector; // Patrol path vector
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_patrolPathIndex; // Patrol path index
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_lastKnownLocation; // Patrol path index
 	
-	UPROPERTY( EditDefaultsOnly, Category = AI )
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_invesigate; // Patrol path index
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName m_move;
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
+		FName m_move; // Move to cover
 
-	UPROPERTY( EditDefaultsOnly, Category = AI )
-		FName m_inCover;
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
+		FName m_inCover; // In cover
+
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
+		FName m_bottleLocation;
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -202,4 +205,9 @@ public:
 	 *   See also        : Behaviour Tree - BT_AssaultSoldier 
 	 *****************************************************************************/
 	void SetInCover( bool boolean );
+
+	UFUNCTION( BlueprintCallable )
+		void SetBottleLocation( FVector bottleLocation );
+
+	FVector GetBottleLocation();
 };

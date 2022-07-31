@@ -107,7 +107,7 @@ public:
 	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UAISenseConfig_Sight* sightConfig; // Sight configuration
 
-	UPROPERTY( VisibleAnywhere, Category = "AI" )
+	UPROPERTY( EditAnywhere, Category = "AI" )
 		class UAISenseConfig_Hearing* hearingConfig; // Hearing configuration
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
@@ -128,8 +128,11 @@ public:
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FSightDetectionD sightDetectionD;
 
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = Curve )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Curve" )
 		UCurveFloat* myCurve;
+
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Noise" )
+		FName bottleTag;
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
