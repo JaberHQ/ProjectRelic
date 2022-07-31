@@ -64,7 +64,6 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	cameraComp = CreateDefaultSubobject<UCameraComponent>( TEXT( "CameraComp" ) );
 	gunComp = CreateDefaultSubobject<USkeletalMeshComponent>( TEXT( "GunComp" ) );
 	bulletComp = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "BulletComp" ) );
-	headCollision = CreateDefaultSubobject<USphereComponent>( TEXT( "HeadCollision" ) );
 	throwable = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Throwable" ) );
 	m_predictionSpline = CreateDefaultSubobject<USplineComponent>( TEXT( "Spline Comp" ) );
 
@@ -89,8 +88,6 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	bulletComp->SetupAttachment( gunComp );
 	//bulletComp->AttachTo( gunComp, weaponSocket, EAttachLocation::SnapToTarget, true );
 	//bulletComp->SetRelativeLocation( ( gunComp->GetRelativeLocation() ) );
-
-	headCollision->SetupAttachment( GetMesh(), headSocket );
 
 	// Set class variables of Character Movement Component
 	GetCharacterMovement()->bOrientRotationToMovement = true;

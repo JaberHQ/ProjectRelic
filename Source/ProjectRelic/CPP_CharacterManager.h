@@ -28,19 +28,11 @@
  *
  * Author: Jaber Ahmed
  *
- * Purpose: Parent class for characters (Version 2 and above of the CharacterManager)
+ * Purpose: Parent class for characters (Player and AI in particular)
+ * 
+ * References: 
  *
- * Functions: ACPP_CharacterManager() virtual void BeginPlay() override,
- *			  virtual void Tick( float DeltaTime ) override,
- *			  virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override,
- *			  void UpdateWalkSpeed( float speed ), class USpringArmComponent* springArmComp,
- *			  void MoveForward( float inputAxis ),
- *			  void MoveRight( float inputAxis ), void BeginSprint(), void EndSprint(),
- *			  void BeginCrouch(), void EndCrouch(),
- *	
- * References: N/A
- *
- * See Also: CharacterManager.h
+ * See Also: CPP_PlayerManager, CPP_AIManager
  *
  * Change Log:
  * Date          Initials    Version     Comments
@@ -56,39 +48,73 @@ class PROJECTRELIC_API ACPP_CharacterManager : public ACharacter
 	GENERATED_BODY()
 
 private:
-	bool m_isCrouched; // If character is crouched
+	int m_fullMag; // Amount the magazine can hold
 	float m_muzzleRotationPitch; // Muzzle rotation
+	float m_reloadAnimTime; // Animation time for reloading
 	float m_weaponRange; // The weapon range
+	bool m_isCrouched; // If character is crouched
 	bool m_isInCover; // If character is in cover
 	FTimerHandle m_reloadTime; // Time handle for reloading
-	FTimerHandle m_hitmarkerTimer;
-	float m_reloadAnimTime; // Animation time for reloading
-	int m_fullMag; // Amount the magazine can hold
+	FTimerHandle m_hitmarkerTimer; // Time handle for hitmarkers
 
 
 protected:
-	bool m_isShooting; // If character is shooting
-
-
-	bool m_shotInHead; // If enemy has been shot in the head
-	
-	bool m_hitmarker;
-
 	int m_ammoAR; // Ammo for AR
 	int m_reserveAR; // Reserve ammo for AR
 	int m_fullMagAR; // Full magazine for AR
-
 	int m_ammoPistol; // Ammo for pistol
 	int m_reservePistol; // Reserve ammo for pistol
 	int m_fullMagPistol; // Full magazine for pistol
 	int m_throwableAmount; // The ammount of throwables
-
-	int m_splineIndex;
-
-	bool m_turnRight;
-	bool m_turnLeft;
+	int m_splineIndex; // Prediction spline index
+	bool m_isShooting; // If character is shooting
+	bool m_shotInHead; // If enemy has been shot in the head
+	bool m_hitmarker; // Hitmarker active
+	bool m_turnRight; // Turn right
+	bool m_turnLeft; // Turn left
+	
 public:
-	bool m_aimingIn;
+	float m_throwSpeed; // Throw speed
+	bool m_aimingIn; // Holding down sights
+	TArray<FVector> pointLocation; // Point location
+	FTimerHandle m_shootTime; // Time handle for shooting
+	FName weaponSocket; // Weapon bone socket
+	FName muzzleSocket; // Muzzle bone socket
+	FName headSocket; // Head bone socket
+	FName m_throwSocket; // Throw bone socket
+	FName noiseTag; // Noise tag to report
+	FName gunNoiseTag; // Gun noise tag to report
+
+public:
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "Components" )
+		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "Components" )
+		class UCameraComponent* cameraComp; // Player follow camera
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "Components" )
+		class USkeletalMeshComponent* gunComp; // Mesh for gun
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "Components" )
+		class UStaticMeshComponent* bulletComp; // Mesh for gun
+
+	UPROPERTY( EditAnywhere, Category = "Projectiles" )
+		float m_projectileRange; // Range for projectile ray cast
+
+	UPROPERTY( EditAnywhere, Category = "Projectiles" )
+		float recoil; // Recoil value
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
+		float timeBetweenShots; // Seconds between shots
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
+		FVector m_muzzleOffset; // Muzzle offset
+
+	UPROPERTY( EditDefaultsOnly, Category = "Projectiles" )
+		TSubclassOf<class ACPP_Projectile> projectileClass; // Projectile class
+
+	UPROPERTY( EditAnywhere, Category = "Projectiles" )
+		bool m_canBeShot; // If character can be shot and destroyed by projectile
 
 	UPROPERTY( EditAnywhere, Category = "Weapon" )
 		bool m_assaultRifle; // If AR is active in hand
@@ -98,42 +124,6 @@ public:
 
 	UPROPERTY( EditAnywhere, Category = "Weapon" )
 		bool m_throwable; // If throwable is active in hand
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USpringArmComponent* springArmComp; // Spring Arm Component to follow the camera behind the player
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UCameraComponent* cameraComp; // Player follow camera
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USkeletalMeshComponent* gunComp; // Mesh for gun
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UStaticMeshComponent* bulletComp; // Mesh for gun
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class USphereComponent* headCollision;
-
-	UPROPERTY( EditAnywhere, Category = "Projectiles" )
-		float m_projectileRange; // Range for projectile ray cast
-
-	UPROPERTY( EditAnywhere, Category = "Projectiles" )
-		float recoil; // Recoil value
-
-	UPROPERTY( EditAnywhere, Category = "Projectiles" )
-		bool m_canBeShot; // If character can be shot and destroyed by projectile
-
-	UPROPERTY( EditDefaultsOnly, Category = Projectile )
-		TSubclassOf<class ACPP_Projectile> projectileClass; // Projectile class
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
-		FVector m_muzzleOffset; // Muzzle offset
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
-		float timeBetweenShots; // Seconds between shots
-
-	/*UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Projectiles" )
-		UCameraShakeBase* cameraShake;*/
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UParticleSystem* animShoot; // Anim Montage for Player stealth takedown
@@ -145,45 +135,89 @@ public:
 		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
-		USoundBase* shootSFX;
+		USoundBase* shootSFX; // Shot sound effect
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
-		USoundBase* emptyGunSFX;
+		USoundBase* emptyGunSFX; // Empty magazine sound effect
 	
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-		USplineComponent* m_predictionSpline;
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-		TArray<USplineMeshComponent*> m_predictionSplineMesh;
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
+		USplineComponent* m_predictionSpline; // Prediction spline component
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
-		ACPP_PredictionEndPoint* m_predictionEndPoint;
+		TArray<USplineMeshComponent*> m_predictionSplineMesh; // Prediction spline mesh 
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
-		UStaticMesh* cylinderPredictionMesh;
+		ACPP_PredictionEndPoint* m_predictionEndPoint; // End point of prediction spline
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
+		UStaticMesh* cylinderPredictionMesh; // Prediction spline mesh components
 
-	TArray<FVector> pointLocation;
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "Throwable" )
+		USceneComponent* m_throwSceneComp; // Throw scene comp
 
-	float m_throwSpeed;
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-	USceneComponent* m_throwSceneComp;
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UChildActorComponent* throwable;
-
-	FTimerHandle m_shootTime;
-
-	FName weaponSocket;
-	FName muzzleSocket;
-	FName headSocket;
-	FName m_throwSocket;
-
-	FName noiseTag;
-	FName gunNoiseTag;
-
-
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "Throwable" )
+		class UChildActorComponent* throwable; // Throwable child actor
+public:
+	/*****************************************************************************
+	  *   Function        : void ShootProjectile()
+	  *   Purpose         : Call to shoot projectile
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 30/05/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable, Category = "Projectiles" )
+		void ShootProjectile();
+	/*****************************************************************************
+	 *   Function        : bool GetIsAimedIn()
+	 *   Purpose         : Get bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_aimingIn
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetIsAimedIn();
+	/*****************************************************************************
+	 *   Function        : int GetSplineIndex()
+	 *   Purpose         : Get spline index
+	 *   Parameters      : N/A
+	 *   Returns         : m_splineIndex
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		int GetSplineIndex();
+	/*****************************************************************************
+	 *   Function        : bool GetTurnRight()
+	 *   Purpose         : Get turn right bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_turnRight
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Used in animation blueprint 
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnRight();
+	/*****************************************************************************
+	 *   Function        : bool GetTurnLeft()
+	 *   Purpose         : Get turn left bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_turnLeft
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Used in animation blueprint 
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnLeft();
 public:
 	/*****************************************************************************
 	 *   Function        : ACPP_CharacterManager()
@@ -317,18 +351,6 @@ public:
 	  *   See also        : N/A           
 	  *****************************************************************************/
 	FHitResult RaycastShot();
-	/*****************************************************************************
-	  *   Function        : void ShootProjectile()
-	  *   Purpose         : Call to shoot projectile
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 30/05/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable, Category = "Projectiles" )
-		void ShootProjectile();
 	/*********************************************************************************************************
 	  *   Function        : virtual void TakeAttack()
 	  *   Purpose         : When Character has been hit by projectile
@@ -341,10 +363,10 @@ public:
 	 *********************************************************************************************************/
 	virtual void TakeAttack();
 	/*****************************************************************************
-	  *   Function        : void 
-	  *   Purpose         : 
+	  *   Function        : bool GetIsCrouched() 
+	  *   Purpose         : Get bool for crouching
 	  *   Parameters      : N/A
-	  *   Returns         : N/A
+	  *   Returns         : return m_isCrouched;
 	  *   Date altered    : 01/07/2022
 	  *   Contributors    : Jaber Ahmed
 	  *   Notes           : N/A
@@ -352,8 +374,8 @@ public:
 	  *****************************************************************************/
 	bool GetIsCrouched();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void StartShooting()
+	  *   Purpose         : Character to shoot
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -363,8 +385,8 @@ public:
 	  *****************************************************************************/
 	void StartShooting();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void StopShooting()
+	  *   Purpose         : Character to stop shooting
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -374,8 +396,8 @@ public:
 	  *****************************************************************************/
 	void StopShooting();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : virtual void StartAim()
+	  *   Purpose         : Start aiming in
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -385,8 +407,8 @@ public:
 	  *****************************************************************************/
 	virtual void StartAim();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void StopAim()
+	  *   Purpose         : Stop aiming in
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -396,8 +418,8 @@ public:
 	  *****************************************************************************/
 	void StopAim();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void Reloaded()
+	  *   Purpose         : Reload gun
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -407,9 +429,9 @@ public:
 	  *****************************************************************************/
 	void Reloaded();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
-	  *   Parameters      : N/A
+	  *   Function        : void StartCover( FHitResult hit )
+	  *   Purpose         : Start stealth cover
+	  *   Parameters      : FHitResult hit
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
 	  *   Contributors    : Jaber Ahmed
@@ -418,8 +440,8 @@ public:
 	  *****************************************************************************/
 	void StartCover( FHitResult hit );
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void StopCover()
+	  *   Purpose         : Stop stealth cover
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -429,8 +451,8 @@ public:
 	  *****************************************************************************/
 	void StopCover();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void WallTrace()
+	  *   Purpose         : Trace wall for cover
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -440,8 +462,8 @@ public:
 	  *****************************************************************************/
 	void WallTrace();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void TakeCover()
+	  *   Purpose         : Take cover action
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -451,10 +473,10 @@ public:
 	  *****************************************************************************/
 	void TakeCover();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
+	  *   Function        : bool CoverTrace( float inputAxis )
+	  *   Purpose         : Line trace for cover
+	  *   Parameters      : float inputAxis
+	  *   Returns         : bHit, false
 	  *   Date altered    : 01/07/2022
 	  *   Contributors    : Jaber Ahmed
 	  *   Notes           : N/A
@@ -462,55 +484,124 @@ public:
 	  *****************************************************************************/
 	bool CoverTrace( float inputAxis );
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : bool RightCoverTrace()
+	  *   Purpose         : Line trace for right of the wall 
 	  *   Parameters      : N/A
-	  *   Returns         : N/A
+	  *   Returns         : rightHit
 	  *   Date altered    : 01/07/2022
 	  *   Contributors    : Jaber Ahmed
 	  *   Notes           : N/A
-	  *   See also        : N/A
+	  *   See also        : RightCoverTrace(), LeftCoverTrace(),
 	  *****************************************************************************/
 	bool RightCoverTrace();
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : bool LeftCoverTrace()
+	  *   Purpose         : Line trace for left of the wall 
 	  *   Parameters      : N/A
-	  *   Returns         : N/A
+	  *   Returns         : leftHit
 	  *   Date altered    : 01/07/2022
 	  *   Contributors    : Jaber Ahmed
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
 	bool LeftCoverTrace();
-
+	/*****************************************************************************
+	 *   Function        : void EnemyShoot()
+	 *   Purpose         : For AI to shoot projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void EnemyShoot();
-
-	UFUNCTION( BlueprintCallable )
-		bool GetIsAimedIn();
-
+	/*****************************************************************************
+	 *   Function        : void HasBeenShotInTheHead( bool boolean )
+	 *   Purpose         : Damage multipler for shots to the skull
+	 *   Parameters      : bool boolean 
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void HasBeenShotInTheHead( bool boolean );
-
+	/*****************************************************************************
+	 *   Function        : void HitmarkerFinish()
+	 *   Purpose         : When hitmarker timer has finshed 
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void HitmarkerFinish();
-
+	/*****************************************************************************
+	 *   Function        : void ThrowObject()
+	 *   Purpose         : Throw projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_Throwable.h
+	*****************************************************************************/
 	void ThrowObject();
-
+	/*****************************************************************************
+	 *   Function        : void CreatePredictionSpline()
+	 *   Purpose         : Create prediction spline for projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void CreatePredictionSpline();
-
+	/*****************************************************************************
+	 *   Function        : void DestroyPredictionSpline()
+	 *   Purpose         : Destroy prediction spline for projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void DestroyPredictionSpline();
-
+	/*****************************************************************************
+	 *   Function        : void DestroyPredictionMeshes()
+	 *   Purpose         : Destroy meshes for prediction spline
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void DestroyPredictionMeshes();
-
+	/*****************************************************************************
+	 *   Function        : void DrawPredictionSpline()
+	 *   Purpose         : Draw prediction spline for projectiles
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void DrawPredictionSpline();
-
-	UFUNCTION( BlueprintCallable )
-		int GetSplineIndex();
-
+	/*****************************************************************************
+	 *   Function        : void Turn( float inputAxis )
+	 *   Purpose         : Mouse input turn
+	 *   Parameters      : float inputAxis
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void Turn( float inputAxis );
-
-	UFUNCTION( BlueprintCallable )
-		bool GetTurnRight();
-
-	UFUNCTION( BlueprintCallable )
-		bool GetTurnLeft();
 };
