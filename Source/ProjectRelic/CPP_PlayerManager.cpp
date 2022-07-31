@@ -985,7 +985,7 @@ void ACPP_PlayerManager::ThrowObject()
 	ACPP_Throwable* throwableRef = Cast<ACPP_Throwable>( throwable->GetChildActor() );
 	if( throwableRef )
 	{
-		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector( GetControlRotation() ), GetActorLocation() );
+		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector( GetControlRotation() ) );
 		m_throwableAmount--;
 
 		if( animThrow )
