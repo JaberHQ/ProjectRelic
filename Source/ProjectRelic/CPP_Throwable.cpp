@@ -2,6 +2,7 @@
 
 
 #include "CPP_Throwable.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ACPP_Throwable::ACPP_Throwable()
@@ -26,7 +27,7 @@ void ACPP_Throwable::Tick( float DeltaTime )
 
 }
 
-void ACPP_Throwable::ThrowObject( FVector forwardVector )
+void ACPP_Throwable::ThrowObject( FVector forwardVector, FVector playerLocation )
 {
 	forwardVector *= 2500.0f;
 
@@ -34,8 +35,11 @@ void ACPP_Throwable::ThrowObject( FVector forwardVector )
 	throwableMeshComp->SetCollisionEnabled( ECollisionEnabled::QueryAndPhysics );
 	throwableMeshComp->SetSimulatePhysics( true );
 
-	throwableMeshComp->SetPhysicsLinearVelocity( FVector::ZeroVector );
+	FVector direction = UKismetMathLibrary::GetDirectionUnitVector( playerLocation, GetActorLocation() );
+	float speed = 800.0f;
+	FVector vectorDirection = UKismetMathLibrary::Multiply_VectorFloat( direction, speed );
+	throwableMeshComp->SetPhysicsLinearVelocity( vectorDirection );
 
-	throwableMeshComp->AddImpulse( forwardVector );
+	//throwableMeshComp->AddImpulse( forwardVector );
 }
 

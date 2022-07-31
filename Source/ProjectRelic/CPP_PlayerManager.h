@@ -77,7 +77,8 @@ private:
 	float m_invisibilityTimeDrain; // Multplier for how quick invisibility drains
 	float m_chanceOfHit; // Chance to take damage
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
-	int m_currentlyEquipped; // Currently equipped weapon
+
+
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 
 	bool m_hitmarkerActive;
@@ -114,6 +115,8 @@ private:
 
 	void HitmarkerFinished();
 
+	bool m_isInCover; // If character is in cover
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
@@ -145,7 +148,8 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
 		USoundBase* callEnemy;
 
-	
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Weapons" )
+		int m_currentlyEquipped; // Currently equipped weapon
 public:
 	ACPP_PlayerManager();
 	/*****************************************************************************
@@ -181,18 +185,26 @@ public:
 	 *   See also        : N/A
 	*****************************************************************************/
 	/*****************************************************************************
-		 *   Function        : virtual void Tick( float DeltaTime ) override
-		 *   Purpose         : Event Tick
-		 *   Parameters      : float DeltaTime
-		 *   Returns         : N/A
-		 *   Date altered    : 02/05/2022
-		 *   Contributors    : Jaber Ahmed
-		 *   Notes           : N/A
-		 *   See also        : N/A
-		*****************************************************************************/
+	 *   Function        : virtual void Tick( float DeltaTime ) override
+	 *   Purpose         : Event Tick
+	 *   Parameters      : float DeltaTime
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	virtual void Tick( float DeltaTime ) override;
-
-
+	/*****************************************************************************
+	 *   Function        : void SetCanTakedown( bool canTakedown );
+	 *   Purpose         : Set bool for being able to stealth takedown AI
+	 *   Parameters      : bool canTakedown
+	 *   Returns         : N/A 
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void SetCanTakedown( bool canTakedown );
 	/*****************************************************************************
 	 *   Function        : bool GetCanTakedown()
@@ -303,8 +315,6 @@ public:
 	UFUNCTION( BlueprintCallable )
 		bool GetDeathHitmarkerActive();
 
-	virtual void StartAim() override;
-
 	void EquipWeaponTick();
 
 	void HitmarkerTick();
@@ -316,4 +326,284 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 		void Reset();
+public:
+
+	/*****************************************************************************
+	 *   Function        : bool GetTurnRight()
+	 *   Purpose         : Get turn right bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_turnRight
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Used in animation blueprint
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnRight();
+	/*****************************************************************************
+	 *   Function        : bool GetTurnLeft()
+	 *   Purpose         : Get turn left bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_turnLeft
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Used in animation blueprint
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnLeft();
+public:
+	/*****************************************************************************
+	 *   Function        : void MoveForward( float inputAxis )
+	 *   Purpose         : Make character move forward
+	 *   Parameters      : float inputAxis
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void MoveForward( float inputAxis );
+	/*****************************************************************************
+	 *   Function        : void MoveRight( float inputAxis )
+	 *   Purpose         : Make character move right
+	 *   Parameters      : float inputAxis
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void MoveRight( float inputAxis );
+	/*****************************************************************************
+	 *   Function        : void BeginSprint()
+	 *   Purpose         : Make character sprint
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void BeginSprint();
+	/*****************************************************************************
+	 *   Function        : void EndSprint()
+	 *   Purpose         : Stop character sprinting
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void EndSprint();
+	/*****************************************************************************
+	 *   Function        : void BeginCrouch()
+	 *   Purpose         : Make character crouch
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void BeginCrouch();
+	/*****************************************************************************
+	 *   Function        : void EndCrouch()
+	 *   Purpose         : Stop character crouching
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void EndCrouch();
+	/*****************************************************************************
+	 *   Function        : virtual void StartAim()
+	 *   Purpose         : Start aiming in
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 01/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	 *****************************************************************************/
+	void StartAim();
+	/*****************************************************************************
+	*   Function        : void StopAim()
+	*   Purpose         : Stop aiming in
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	void StopAim();
+	/*****************************************************************************
+	*   Function        : void StartCover( FHitResult hit )
+	*   Purpose         : Start stealth cover
+	*   Parameters      : FHitResult hit
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	void StartCover( FHitResult hit );
+	/*****************************************************************************
+	*   Function        : void StopCover()
+	*   Purpose         : Stop stealth cover
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	void StopCover();
+	/*****************************************************************************
+	  *   Function        : void WallTrace()
+	  *   Purpose         : Trace wall for cover
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void WallTrace();
+	/*****************************************************************************
+	  *   Function        : bool CoverTrace( float inputAxis )
+	  *   Purpose         : Line trace for cover
+	  *   Parameters      : float inputAxis
+	  *   Returns         : bHit, false
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	bool CoverTrace( float inputAxis );
+	/*****************************************************************************
+	  *   Function        : bool GetIsCrouched()
+	  *   Purpose         : Get bool for crouching
+	  *   Parameters      : N/A
+	  *   Returns         : return m_isCrouched;
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	bool GetIsCrouched();
+	/*****************************************************************************
+	  *   Function        : void StartShooting()
+	  *   Purpose         : Character to shoot
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void StartShooting();
+	/*****************************************************************************
+	  *   Function        : void StopShooting()
+	  *   Purpose         : Character to stop shooting
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void StopShooting();
+	/*****************************************************************************
+	  *   Function        : bool RightCoverTrace()
+	  *   Purpose         : Line trace for right of the wall
+	  *   Parameters      : N/A
+	  *   Returns         : rightHit
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : RightCoverTrace(), LeftCoverTrace(),
+	  *****************************************************************************/
+	bool RightCoverTrace();
+	/*****************************************************************************
+	  *   Function        : bool LeftCoverTrace()
+	  *   Purpose         : Line trace for left of the wall
+	  *   Parameters      : N/A
+	  *   Returns         : leftHit
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	bool LeftCoverTrace();
+	/*****************************************************************************
+	 *   Function        : void ThrowObject()
+	 *   Purpose         : Throw projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_Throwable.h
+	*****************************************************************************/
+	void ThrowObject();
+	/*****************************************************************************
+	 *   Function        : void CreatePredictionSpline()
+	 *   Purpose         : Create prediction spline for projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void CreatePredictionSpline();
+	/*****************************************************************************
+	 *   Function        : void DestroyPredictionSpline()
+	 *   Purpose         : Destroy prediction spline for projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void DestroyPredictionSpline();
+	/*****************************************************************************
+	 *   Function        : void DestroyPredictionMeshes()
+	 *   Purpose         : Destroy meshes for prediction spline
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void DestroyPredictionMeshes();
+	/*****************************************************************************
+	 *   Function        : void DrawPredictionSpline()
+	 *   Purpose         : Draw prediction spline for projectiles
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void DrawPredictionSpline();
+	/*****************************************************************************
+ *   Function        : void Turn( float inputAxis )
+ *   Purpose         : Mouse input turn
+ *   Parameters      : float inputAxis
+ *   Returns         : N/A
+ *   Date altered    : 31/07/2022
+ *   Contributors    : Jaber Ahmed
+ *   Notes           : N/A
+ *   See also        : N/A
+*****************************************************************************/
+	void Turn( float inputAxis );
 };

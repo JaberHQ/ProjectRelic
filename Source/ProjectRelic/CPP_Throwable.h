@@ -69,7 +69,7 @@ public:
 	*   Notes           : N/A
 	*   See also        : N/A
 	*****************************************************************************/
-	void ThrowObject( FVector forwardVector );
+	void ThrowObject( FVector forwardVector, FVector playerLocation );
 
 protected:
 	/*****************************************************************************

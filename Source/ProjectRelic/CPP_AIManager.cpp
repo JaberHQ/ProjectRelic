@@ -31,6 +31,8 @@ ACPP_AIManager::ACPP_AIManager()
 	,animDeath()
 	,m_dead()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Initialise components
 	perceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>( TEXT( "AIPerceptionComponent" ) );
 	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>( TEXT( "SightConfig" ) );
@@ -360,7 +362,7 @@ void ACPP_AIManager::EnterCover()
 void ACPP_AIManager::TimeToShoot()
 {
 	FTimerHandle m_shootTimer;
-	GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_PlayerManager::StopShooting, 5.0f, true );
+	//GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_PlayerManager::StopShooting, 5.0f, true );
 
 	Crouch();
 }

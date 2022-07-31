@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+#define COLLISION_COVER ECC_GameTraceChannel2
 
 
 #include "CPP_PlayerManager.h"
@@ -36,6 +36,8 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisibilityFull( 100.0f )
 	,m_invisibilityTimeMultiplier( 10.0f )
 	,m_invisibilityTimeDrain( 25.0f )
+	,m_isInCover()
+
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -96,18 +98,160 @@ void ACPP_PlayerManager::BeginPlay()
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
+	PrimaryActorTick.bCanEverTick = true;
+
+
+	PlayerInputComponent->BindAxis( "MoveForward", this, &ACPP_PlayerManager::MoveForward );
+	PlayerInputComponent->BindAxis( "MoveRight", this, &ACPP_PlayerManager::MoveRight );
+	PlayerInputComponent->BindAxis( "Turn", this, &ACPP_PlayerManager::Turn );
+	PlayerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
+
+	//PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
+	//PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
+	//PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACPP_CharacterManager::BeginCrouch );
+	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
+	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_PlayerManager::BeginSprint );
+	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_PlayerManager::EndSprint );
 
 	PlayerInputComponent->BindAxis( "ChangeWeapons", this, &ACPP_PlayerManager::ChangeWeapons );
 
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
 	PlayerInputComponent->BindAction( "PowerUp", IE_Pressed, this, &ACPP_PlayerManager::Invisibility );
-	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_CharacterManager::StartShooting );
-	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_CharacterManager::StopShooting );
-	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_CharacterManager::StartAim );
-	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_CharacterManager::StopAim );
-	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_CharacterManager::WallTrace );
+	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_PlayerManager::StartShooting );
+	PlayerInputComponent->BindAction( "Shoot", IE_Released, this, &ACPP_PlayerManager::StopShooting );
+	PlayerInputComponent->BindAction( "Aim", IE_Pressed, this, &ACPP_PlayerManager::StartAim );
+	PlayerInputComponent->BindAction( "Aim", IE_Released, this, &ACPP_PlayerManager::StopAim );
+	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_PlayerManager::WallTrace );
 	PlayerInputComponent->BindAction( "DistractEnemy", IE_Pressed, this, &ACPP_PlayerManager::DistractEnemy );
 
+}
+
+void ACPP_PlayerManager::Turn( float inputAxis )
+{
+	AddControllerYawInput( inputAxis );
+
+	float X = GetVelocity().X;
+	float Y = GetVelocity().Y;
+	float Z = GetVelocity().Z;
+
+	float vectorLength = FMath::Sqrt( X * X + Y * Y + Z * Z );
+
+	if( vectorLength == 0 )
+	{
+		// Right
+		if( inputAxis > 0.3f )
+		{
+			m_turnRight = true;
+		}
+		else
+		{
+			m_turnRight = false;
+		}
+		// Left
+		if( inputAxis < -0.3f )
+		{
+			m_turnLeft = true;
+		}
+		else
+		{
+			m_turnLeft = false;
+
+		}
+
+	}
+	else
+	{
+		m_turnRight = false;
+		m_turnLeft = false;
+	}
+
+}
+
+bool ACPP_PlayerManager::GetTurnRight()
+{
+	return m_turnRight;
+}
+
+bool ACPP_PlayerManager::GetTurnLeft()
+{
+	return m_turnLeft;
+}
+
+void ACPP_PlayerManager::MoveForward( float inputAxis )
+{
+	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
+	{
+		// Rotation
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
+
+		// Get forward vector
+		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::X );
+
+		// Add movement in that direction
+		AddMovementInput( Direction, inputAxis );
+	}
+
+}
+
+void ACPP_PlayerManager::MoveRight( float inputAxis )
+{
+	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == false ) )
+	{
+		// Rotation
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
+
+		// Get forward vector
+		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
+
+		// Add movement in that direction
+		AddMovementInput( Direction, inputAxis );
+	}
+	else if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == true ) )
+	{
+		CoverTrace( inputAxis );
+	}
+}
+
+void ACPP_PlayerManager::BeginSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
+}
+
+void ACPP_PlayerManager::EndSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+
+}
+
+void ACPP_PlayerManager::BeginCrouch()
+{
+	//// Set bool to opposite value
+	//m_isCrouched = !m_isCrouched;
+
+	//// If crouched is true, crouch
+	//if( m_isCrouched == true )
+	//{
+	//	Crouch();
+
+	//	// Move camera
+	//	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 140.0f ) );
+	//}
+
+	//// Else, stop crouching
+	//else
+	//{
+	//	UnCrouch();
+
+	//	// Move camera
+	//	springArmComp->SetRelativeLocation( FVector( -80.0f, 0.0f, 160.0f ) );
+	//}
+}
+
+void ACPP_PlayerManager::EndCrouch()
+{
+	//UnCrouch();
 }
 
 void ACPP_PlayerManager::Tick( float DeltaTime )
@@ -191,6 +335,7 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 
 	}
 }
+
 void ACPP_PlayerManager::AmmoTick()
 {
 	if( m_assaultRifle )
@@ -265,6 +410,7 @@ void ACPP_PlayerManager::AmmoTick()
 	UserInterfaceDelegate();
 	
 }
+
 void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fullMag )
 {
 	// If there is reserve ammo available
@@ -299,10 +445,12 @@ void ACPP_PlayerManager::AmmoEvaluation( int ammoCount, int reserveCount, int fu
 
 	
 }
+
 void ACPP_PlayerManager::HitmarkerFinished()
 {
 	m_hitmarkerActive = false;
 }
+
 void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
 {	
 	m_canTakedown = canTakedown;	
@@ -607,6 +755,7 @@ void ACPP_PlayerManager::UserInterfaceDelegate()
 
 	}
 }
+
 void ACPP_PlayerManager::StartAim()
 {
 	if( !m_invisibility )
@@ -654,4 +803,266 @@ void ACPP_PlayerManager::PlayerDead()
 
 void ACPP_PlayerManager::Reset()
 {
+}
+
+void ACPP_PlayerManager::StopAim()
+{
+	m_aimingIn = false;
+	springArmComp->TargetArmLength = 200.0f;
+	if( m_throwable )
+	{
+		//DestroyPredictionSpline();
+	}
+}
+
+void ACPP_PlayerManager::StartCover( FHitResult hit )
+{
+	GetCharacterMovement()->SetPlaneConstraintEnabled( true );
+	GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+	bUseControllerRotationYaw = false;
+	m_isInCover = true;
+
+}
+
+void ACPP_PlayerManager::WallTrace()
+{
+	FVector cameraLocation = cameraComp->GetComponentLocation();
+	FRotator cameraRotation = cameraComp->GetComponentRotation();
+
+	// Start and end of line trace
+	const FVector start = GetActorLocation();
+	const FVector end = ( GetActorForwardVector() * 100.0f ) + GetActorLocation();
+
+	// Draw a line for debug
+	//DrawDebugLine( GetWorld(), start, end, FColor::Yellow, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTracer ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+
+	if( bHit )
+	{
+		StartCover( hit );
+	}
+	else
+	{
+		StopCover();
+	}
+}
+
+void ACPP_PlayerManager::StopCover()
+{
+	GetCharacterMovement()->SetPlaneConstraintEnabled( false );
+	bUseControllerRotationYaw = true;
+	m_isInCover = false;
+}
+
+bool ACPP_PlayerManager::CoverTrace( float inputAxis )
+{
+	bool rightHit = RightCoverTrace();
+	bool leftHit = LeftCoverTrace();
+
+	if( rightHit && leftHit )
+	{
+		// Start and end of line trace
+		const FVector start = GetActorLocation();
+		const FVector end = GetActorLocation() + ( GetCharacterMovement()->GetPlaneConstraintNormal() * 200.0f );
+
+		// Draw a line for debug
+		DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+
+		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+		// Hit result
+		FHitResult hit( ForceInit );
+		bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+
+		if( bHit )
+		{
+			GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+
+			// Rotation
+			const FRotator rotation = Controller->GetControlRotation();
+			const FRotator yawRotation( 0.0f, rotation.Yaw, 0.0f );
+
+			// Get forward vector
+			const FVector direction = FRotationMatrix( yawRotation ).GetUnitAxis( EAxis::Y );
+
+			// Add movement in that direction
+			AddMovementInput( direction, inputAxis );
+
+		}
+		return bHit;
+	}
+
+	else
+	{
+		// Rotation
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
+
+		// Get forward vector
+		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
+
+		if( inputAxis == 1.0f && rightHit )
+		{
+			// Add movement in that direction
+			AddMovementInput( Direction, inputAxis );
+		}
+		else if( inputAxis == -1.0f && leftHit )
+		{
+			// Add movement in that direction
+			AddMovementInput( Direction, inputAxis );
+		}
+
+		return false;
+	}
+	//return false;
+}
+
+void ACPP_PlayerManager::StartShooting()
+{
+	if( m_aimingIn )
+	{
+		if( m_assaultRifle )
+		{
+			if( m_ammoAR > 0 )
+			{
+				m_isShooting = true;
+
+				//m_ammoAR -= 1;
+
+				ShootProjectile();
+
+				GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+			}
+
+			if( m_ammoAR <= 0 )
+			{
+				m_isShooting = false;
+
+				GetWorld()->GetTimerManager().SetTimer( m_reloadTime, this, &ACPP_CharacterManager::Reloaded, m_reloadAnimTime, true );
+			}
+
+		}
+
+		if( m_pistol )
+		{
+			if( m_ammoPistol > 0 )
+			{
+				m_isShooting = true;
+
+				//m_ammoPistol -= 1;
+
+				ShootProjectile();
+			}
+
+		}
+
+		if( m_throwable )
+		{
+			if( m_throwableAmount == 1 )
+			{
+				ThrowObject();
+			}
+		}
+
+	}
+}
+
+void ACPP_PlayerManager::StopShooting()
+{
+	m_isShooting = false;
+	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
+}
+
+void ACPP_PlayerManager::ThrowObject()
+{
+
+	ACPP_Throwable* throwableRef = Cast<ACPP_Throwable>( throwable->GetChildActor() );
+	if( throwableRef )
+	{
+		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector( GetControlRotation() ), GetActorLocation() );
+		m_throwableAmount--;
+
+		if( animThrow )
+		{
+			PlayAnimMontage( animThrow );
+		}
+	}
+	else
+	{
+	}
+
+}
+
+void ACPP_PlayerManager::CreatePredictionSpline()
+{
+	
+}
+
+void ACPP_PlayerManager::DestroyPredictionSpline()
+{
+
+}
+
+void ACPP_PlayerManager::DestroyPredictionMeshes()
+{
+	
+}
+
+void ACPP_PlayerManager::DrawPredictionSpline()
+{
+	
+}
+
+bool ACPP_PlayerManager::GetIsCrouched()
+{
+	return m_isCrouched;
+}
+
+bool ACPP_PlayerManager::RightCoverTrace()
+{
+	// Start and end of line trace
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f );
+	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * 200.0f ) + start;
+
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool rightHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+	return rightHit;
+}
+
+bool ACPP_PlayerManager::LeftCoverTrace()
+{
+	// Left 
+	FVector cameraLocation = cameraComp->GetComponentLocation();
+	FRotator cameraRotation = cameraComp->GetComponentRotation();
+
+	// Start and end of line trace
+
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() );
+	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * 200.0f ) + start;
+
+	// Draw a line for debug
+	DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+	return leftHit;
 }
