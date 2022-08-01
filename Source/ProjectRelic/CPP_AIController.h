@@ -70,6 +70,9 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_bottleLocation;
+
+	UPROPERTY( EditDefaultsOnly, Category = "AI" )
+		FName m_dead;
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -210,4 +213,8 @@ public:
 		void SetBottleLocation( FVector bottleLocation );
 
 	FVector GetBottleLocation();
+
+	void SetDead( bool boolean );
+
+	bool GetDead();
 };
