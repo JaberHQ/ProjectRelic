@@ -20,7 +20,7 @@ EBTNodeResult::Type UCPP_GetIntoCoverTask::ExecuteTask( UBehaviorTreeComponent& 
 		if( managerAI )
 		{
 			managerAI->UnCrouch();
-			managerAI->SetMaxWalkSpeed( 500.0f );
+			managerAI->SetMaxWalkSpeed( 1000.0f );
 			controllerAI->MoveToLocation( controllerAI->GetMove() );
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 

@@ -507,17 +507,7 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	void StartShooting();
-	/*****************************************************************************
-	  *   Function        : void StopShooting()
-	  *   Purpose         : Character to stop shooting
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void StopShooting();
+	
 	/*****************************************************************************
 	  *   Function        : bool RightCoverTrace()
 	  *   Purpose         : Line trace for right of the wall

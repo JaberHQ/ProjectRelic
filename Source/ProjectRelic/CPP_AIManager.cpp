@@ -11,26 +11,26 @@
 
 ACPP_AIManager::ACPP_AIManager()
 	:health( 100.0f )
-	,defaultHealth( 100.0f )
-	,m_sightRadius( 1000.0f )
-	,m_loseSightRadius( 1500.0f )
-	,m_peripheralVisionAngleDegrees( 35.0f )
-	,m_patrolSpeed( 300.0f )
-	,m_chaseSpeed( 600.0f )
-	,m_shotDamage( 23.3f )
-	,m_deathTimer( 25.0f )
-	,m_hasBeenSeen( false )
-	,m_hasBeenCaught( false )
-	,m_sightValuePercent( 0.0f )
-	,m_curveFloat( 0.0f )
-	,m_hasSeenSomething( false )
-	,m_detectionSpeed( 0.0f )
-	,m_headShotDamage( 2.0f )
-	,soundHuh()
-	,m_isInCover( false )
-	,animDeath()
-	,m_dead()
-	,bottleTag(TEXT ( "bottleNoise" ) )
+	, defaultHealth( 100.0f )
+	, m_sightRadius( 1000.0f )
+	, m_loseSightRadius( 1500.0f )
+	, m_peripheralVisionAngleDegrees( 35.0f )
+	, m_patrolSpeed( 300.0f )
+	, m_chaseSpeed( 600.0f )
+	, m_shotDamage( 23.3f )
+	, m_deathTimer( 25.0f )
+	, m_hasBeenSeen( false )
+	, m_hasBeenCaught( false )
+	, m_sightValuePercent( 0.0f )
+	, m_curveFloat( 0.0f )
+	, m_hasSeenSomething( false )
+	, m_detectionSpeed( 0.0f )
+	, m_headShotDamage( 2.0f )
+	, soundHuh()
+	, m_isInCover( false )
+	, animDeath()
+	, m_dead()
+	, bottleTag( TEXT( "bottleNoise" ) )
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -40,30 +40,43 @@ ACPP_AIManager::ACPP_AIManager()
 	hearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>( TEXT( "HearingConfig" ) );
 	boxComponent = CreateDefaultSubobject<UBoxComponent>( TEXT( "TakedownBox" ) );
 
-	// Perception config
-	perceptionComp->ConfigureSense( *sightConfig );
-	perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
+	if( perceptionComp )
+	{
+		// Perception config
+		perceptionComp->ConfigureSense( *sightConfig );
+		perceptionComp->ConfigureSense( *hearingConfig );
+		perceptionComp->SetDominantSense( sightConfig->GetSenseImplementation() );
+	}
 
-	// Sight config
-	sightConfig->SightRadius = m_sightRadius;
-	sightConfig->LoseSightRadius = m_loseSightRadius;
-	sightConfig->PeripheralVisionAngleDegrees = m_peripheralVisionAngleDegrees;
-	sightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 
-	// Hearing config
-	hearingConfig->HearingRange = 3000.0f;
-	hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
-	hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
-	hearingConfig->SetMaxAge( 35.0f );
+	if( sightConfig )
+	{
+		// Sight config
+		sightConfig->SightRadius = m_sightRadius;
+		sightConfig->LoseSightRadius = m_loseSightRadius;
+		sightConfig->PeripheralVisionAngleDegrees = m_peripheralVisionAngleDegrees;
+		sightConfig->DetectionByAffiliation.bDetectEnemies = true;
+		sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+		sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	}
 
-	perceptionComp->ConfigureSense( *hearingConfig );
+	if( hearingConfig )
+	{
+		// Hearing config
+		hearingConfig->HearingRange = 3000.0f;
+		hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
+		hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+		hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+		hearingConfig->SetMaxAge( 35.0f );
+
+
+	}
+
 	//perceptionComp->SetDominantSense( hearingConfig->GetSenseImplementation() );
 
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
+	m_assaultRifle = true;
 }
 
 void ACPP_AIManager::Tick( float DeltaTime )
@@ -108,11 +121,6 @@ void ACPP_AIManager::Tick( float DeltaTime )
 				controllerAI->SetHasLineOfSight( true );
 			}
 		}
-		if( m_dead )
-		{
-			
-		}
-
 	}
 
 	// Broadcast delegate for sight detection widget
@@ -171,6 +179,11 @@ void ACPP_AIManager::Takedown()
 	// Delay then death
 	FTimerHandle deathDelayTimer;
 	GetWorld()->GetTimerManager().SetTimer( deathDelayTimer, this, &ACPP_AIManager::DelayDeath, m_deathTimer, false );
+}
+
+bool ACPP_AIManager::GetInCover()
+{
+	return m_isInCover;
 }
 
 void ACPP_AIManager::DelayDeath()
@@ -277,90 +290,148 @@ bool ACPP_AIManager::GetHasCaughtPlayer()
 
 void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 {
-	// AI Controller reference
 	ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
-
-	// Player reference
-	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
 
 	if( controllerAI )
 	{
-		if( playerManager )
+		// Sight config
+		UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
+		// Get location
+		FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+		FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+		// Distance between Player and Enemy
+		float distance = FVector::Distance( playerLocation, enemyLocation );
+
+		// Set last known location of the Player
+		controllerAI->SetLastKnownLocation( playerLocation );
+
+		//Investigate
+		controllerAI->SetInvestigate( true );
+
+		for( int i = 0; i < caughtActors.Num(); ++i )
 		{
-			if( playerManager->GetInvisibilityStatus() == false )
+			FActorPerceptionBlueprintInfo info;
+			perceptionComp->GetActorsPerception( caughtActors[ i ], info );
+			for( int j = 0; j < info.LastSensedStimuli.Num(); ++j )
 			{
-				// Set bool to investigate
-				m_hasSeenSomething = true;
-
-				// Sight config
-				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
-
-				// Get location
-				FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
-				FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
-
-				// Distance between Player and Enemy
-				float distance = FVector::Distance( playerLocation, enemyLocation );
-
-				// Set last known location of the Player
-				controllerAI->SetLastKnownLocation( playerLocation );
-
-				//Investigate
-				controllerAI->SetInvestigate( true );
-
-				// Actor perception
-				FActorPerceptionBlueprintInfo info;
-				perceptionComp->GetActorsPerception( playerManager, info );
-
-				for( int i = 0; i < caughtActors.Num(); i++ )
+				FAIStimulus stim = info.LastSensedStimuli[ j ];
+				if( stim.Tag == noiseTag )
 				{
-					// If sensed
-					if( info.LastSensedStimuli.Num() > i )
-					{
-						FAIStimulus stimulus = info.LastSensedStimuli[ i ];
-
-						for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
-						{
-							perceptionComp->GetActorsPerception( caughtActors[ i ], info );
-							if( stimulus.Tag == noiseTag )
-							{
-								controllerAI->SetInvestigate( true );
-								controllerAI->SetLastKnownLocation( stimulus.StimulusLocation );
-							}
-							else
-							{
-								if( stimulus.WasSuccessfullySensed() )
-								{
-									// Set bool to investigate
-									m_hasSeenSomething = true;
-									//UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
-								}
-								else
-								{
-									// Go back to regular pathing
-									if( m_hasBeenCaught == false )
-									{
-										m_hasSeenSomething = false;
-									}
-								}
-							}
-						}
-
-						
-
-					}
+					controllerAI->SetLastKnownLocation( playerLocation );
+					controllerAI->SetInvestigate( true );
 				}
+				else
+				{
+					
+					m_hasSeenSomething = true;
+					controllerAI->SetLastKnownLocation( playerLocation );
+					controllerAI->SetInvestigate( true );
 				
-			}
-
-			// If player has been caught
-			if( m_hasBeenCaught )
-			{
-				// Set actor (Player) as caught
-				controllerAI->PlayerHasShot();
+				}
 			}
 		}
+
+		// If player has been caught
+		if( m_hasBeenCaught )
+		{
+			// Set actor (Player) as caught
+			controllerAI->PlayerHasShot();
+		}
+
 	}
+	
+
+
+
+
+
+
+	//// AI Controller reference
+	//ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+	//// Player reference
+	//ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	//if( controllerAI )
+	//{
+	//	if( playerManager )
+	//	{
+	//		if( playerManager->GetInvisibilityStatus() == false )
+	//		{
+	//			// Set bool to investigate
+	//			m_hasSeenSomething = true;
+
+	//			// Sight config
+	//			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
+	//			// Get location
+	//			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+	//			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+	//			// Distance between Player and Enemy
+	//			float distance = FVector::Distance( playerLocation, enemyLocation );
+
+	//			// Set last known location of the Player
+	//			controllerAI->SetLastKnownLocation( playerLocation );
+
+	//			//Investigate
+	//			controllerAI->SetInvestigate( true );
+
+	//			// Actor perception
+	//			FActorPerceptionBlueprintInfo info;
+	//			perceptionComp->GetActorsPerception( playerManager, info );
+
+	//			for( int i = 0; i < caughtActors.Num(); i++ )
+	//			{
+	//				// If sensed
+	//				if( info.LastSensedStimuli.Num() > i )
+	//				{
+	//					FAIStimulus stimulus = info.LastSensedStimuli[ i ];
+
+	//					for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
+	//					{
+	//						perceptionComp->GetActorsPerception( caughtActors[ i ], info );
+	//						if( stimulus.Tag == noiseTag )
+	//						{
+	//							controllerAI->SetInvestigate( true );
+	//							controllerAI->SetLastKnownLocation( stimulus.StimulusLocation );
+	//						}
+	//						else
+	//						{
+	//							if( stimulus.WasSuccessfullySensed() )
+	//							{
+	//								// Set bool to investigate
+	//								m_hasSeenSomething = true;
+	//								//UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
+	//							}
+	//							else
+	//							{
+	//								// Go back to regular pathing
+	//								if( m_hasBeenCaught == false )
+	//								{
+	//									m_hasSeenSomething = false;
+	//								}
+	//							}
+	//						}
+	//					}
+
+	//					
+
+	//				}
+	//			}
+	//			
+	//		}
+
+	//		// If player has been caught
+	//		if( m_hasBeenCaught )
+	//		{
+	//			// Set actor (Player) as caught
+	//			controllerAI->PlayerHasShot();
+	//		}
+	//	}
+	//}
 	
 }
 
@@ -377,7 +448,8 @@ void ACPP_AIManager::EnterCover()
 void ACPP_AIManager::TimeToShoot()
 {
 	FTimerHandle m_shootTimer;
-	//GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_PlayerManager::StopShooting, 5.0f, true );
+	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, 2.0f, true );
+	GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_CharacterManager::StopShooting, 5.0f, true );
 
 	Crouch();
 }

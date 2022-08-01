@@ -424,4 +424,7 @@ public:
    *****************************************************************************/
 	UFUNCTION()
 		void Takedown();
+
+	UFUNCTION( BlueprintCallable )
+		bool GetInCover();
 };

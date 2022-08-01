@@ -258,3 +258,8 @@ void ACPP_CharacterManager::HitmarkerFinish()
 	m_hitmarker = false;
 }
 
+void ACPP_CharacterManager::StopShooting()
+{
+	m_isShooting = false;
+	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
+}

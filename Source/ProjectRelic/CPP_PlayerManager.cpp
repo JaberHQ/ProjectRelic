@@ -629,7 +629,7 @@ void ACPP_PlayerManager::DistractEnemy()
 	if( callEnemy )
 	{
 		// Play sound at player location
-		FVector const location = GetActorLocation();
+		const FVector location = GetActorLocation();
 		UGameplayStatics::PlaySoundAtLocation( GetWorld(), callEnemy, location );
 
 		// Report noise to event so that enemy can 'hear' it
@@ -973,11 +973,7 @@ void ACPP_PlayerManager::StartShooting()
 	}
 }
 
-void ACPP_PlayerManager::StopShooting()
-{
-	m_isShooting = false;
-	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
-}
+
 
 void ACPP_PlayerManager::ThrowObject()
 {
