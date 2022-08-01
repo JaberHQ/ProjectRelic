@@ -68,8 +68,6 @@ ACPP_AIManager::ACPP_AIManager()
 		hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 		hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 		hearingConfig->SetMaxAge( 35.0f );
-
-
 	}
 
 	//perceptionComp->SetDominantSense( hearingConfig->GetSenseImplementation() );
@@ -138,6 +136,8 @@ void ACPP_AIManager::BeginPlay()
 	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
 	boxComponent->OnComponentEndOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxEndOverlap );
+
+
 }
 
 ACPP_PatrolPoint* ACPP_AIManager::GetPatrolPath()
@@ -236,6 +236,7 @@ void ACPP_AIManager::TakeAttack()
 		}
 		if( m_dead )
 		{
+			controllerAI->SetDead( true );
 			// Disable movement
 			GetCharacterMovement()->DisableMovement();
 
@@ -310,15 +311,16 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 		//Investigate
 		controllerAI->SetInvestigate( true );
 
-		for( int i = 0; i < caughtActors.Num(); ++i )
+		for( int i = 0; i < caughtActors.Num(); i++ )
 		{
 			FActorPerceptionBlueprintInfo info;
 			perceptionComp->GetActorsPerception( caughtActors[ i ], info );
-			for( int j = 0; j < info.LastSensedStimuli.Num(); ++j )
+			for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
 			{
 				FAIStimulus stim = info.LastSensedStimuli[ j ];
 				if( stim.Tag == noiseTag )
 				{
+					m_hasSeenSomething = true;
 					controllerAI->SetLastKnownLocation( playerLocation );
 					controllerAI->SetInvestigate( true );
 				}

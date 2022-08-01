@@ -22,6 +22,7 @@ ACPP_AIController::ACPP_AIController()
 	m_move = "Move";
 	m_inCover = "InCover";
 	m_bottleLocation = "BottleLocation";
+	m_dead = "Dead";
 }
 
 void ACPP_AIController::OnPossess( APawn* pawn )
@@ -132,4 +133,14 @@ void ACPP_AIController::SetBottleLocation( FVector bottleLocation )
 FVector ACPP_AIController::GetBottleLocation()
 {
 	return blackboardComp->GetValueAsVector( m_bottleLocation );
+}
+
+void ACPP_AIController::SetDead( bool boolean )
+{
+	blackboardComp->SetValueAsBool( m_dead, boolean );
+}
+
+bool ACPP_AIController::GetDead()
+{
+	return blackboardComp->GetValueAsBool( m_dead );
 }
