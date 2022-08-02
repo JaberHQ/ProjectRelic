@@ -200,8 +200,6 @@ void ACPP_CharacterManager::ShootProjectile()
 	// Get the hit that has been returned
 	FHitResult hit = RaycastShot();
 
-	//FString ammoDebug = FString::SanitizeFloat( m_ammoCount );
-
 	// Get the actor that has been hit
 	ACPP_CharacterManager* hitActor = Cast<ACPP_CharacterManager>( hit.Actor );
 
