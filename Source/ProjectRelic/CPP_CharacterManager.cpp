@@ -53,6 +53,7 @@ ACPP_CharacterManager::ACPP_CharacterManager()
 	,noiseTag( TEXT( "Noise" ) )
 	,m_turnLeft()
 	,m_turnRight()
+	,pistolShootSFX()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -186,6 +187,9 @@ void ACPP_CharacterManager::ShootProjectile()
 		if( m_pistol )
 		{
 			m_ammoPistol -= 1;
+			FVector location = GetActorLocation();
+			UGameplayStatics::PlaySoundAtLocation( GetWorld(), pistolShootSFX, bulletComp->GetRelativeLocation(), 0.3f );
+			UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 		}
 	}
 	if( m_ammoAR == 0 || m_ammoPistol == 0 )

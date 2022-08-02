@@ -136,6 +136,9 @@ public:
 		USoundBase* shootSFX; // Shot sound effect
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* pistolShootSFX; // Shot sound effect
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
 		USoundBase* emptyGunSFX; // Empty magazine sound effect
 	
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Throwable" )
