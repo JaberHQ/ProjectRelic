@@ -181,14 +181,14 @@ void ACPP_CharacterManager::ShootProjectile()
 		{
 			m_ammoAR -= 1;
 			FVector location = GetActorLocation();
-			UGameplayStatics::PlaySoundAtLocation( GetWorld(), shootSFX, gunComp->GetRelativeLocation(), 0.1f );
+			UGameplayStatics::PlaySoundAtLocation( GetWorld(), shootSFX, gunComp->GetRelativeLocation(), 0.3f );
 			UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 		}
 		if( m_pistol )
 		{
 			m_ammoPistol -= 1;
 			FVector location = GetActorLocation();
-			UGameplayStatics::PlaySoundAtLocation( GetWorld(), pistolShootSFX, bulletComp->GetRelativeLocation(), 0.1f );
+			UGameplayStatics::PlaySoundAtLocation( GetWorld(), pistolShootSFX, bulletComp->GetRelativeLocation(), 0.3f );
 			UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
 		}
 	}
