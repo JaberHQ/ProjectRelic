@@ -313,7 +313,6 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 	// If player is invisible
 	if( m_invisibility )
 	{
-		
 		for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
 		{
 			GetMesh()->SetMaterial( i, invisibleMaterial );
@@ -326,6 +325,7 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 		/*for( int i = 0; i < 10; i++ )
 		{
 			GetMesh()->SetMaterial( i, m_material );
+			m_material+i
 		}*/
 		/*GetMesh()->SetMaterial( 0, m_material );
 		GetMesh()->SetMaterial( 1, m_material1 );
