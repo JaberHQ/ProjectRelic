@@ -37,7 +37,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisibilityTimeMultiplier( 10.0f )
 	,m_invisibilityTimeDrain( 25.0f )
 	,m_isInCover()
-
+	,footstepsSFX()
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -190,6 +190,12 @@ void ACPP_PlayerManager::MoveForward( float inputAxis )
 
 		// Add movement in that direction
 		AddMovementInput( Direction, inputAxis );
+
+		const FVector location = GetActorLocation();
+		UGameplayStatics::PlaySoundAtLocation( GetWorld(), footstepsSFX, GetActorLocation() );
+
+		// Report noise to event so that enemy can 'hear' it
+		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 0.1f, this, 0.0f, noiseTag );
 	}
 
 }

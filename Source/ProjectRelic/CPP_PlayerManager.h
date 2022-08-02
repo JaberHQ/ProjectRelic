@@ -148,6 +148,9 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
 		USoundBase* callEnemy;
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* footstepsSFX;
+
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Weapons" )
 		int m_currentlyEquipped; // Currently equipped weapon
 public:
