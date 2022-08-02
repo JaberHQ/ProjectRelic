@@ -192,10 +192,10 @@ void ACPP_PlayerManager::MoveForward( float inputAxis )
 		AddMovementInput( Direction, inputAxis );
 
 		const FVector location = GetActorLocation();
-		UGameplayStatics::PlaySoundAtLocation( GetWorld(), footstepsSFX, GetActorLocation() );
+		//UGameplayStatics::PlaySoundAtLocation( GetWorld(), footstepsSFX, GetActorLocation() );
 
 		// Report noise to event so that enemy can 'hear' it
-		UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 0.1f, this, 0.0f, noiseTag );
+		//UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 0.1f, this, 0.0f, noiseTag );
 	}
 
 }
