@@ -850,4 +850,5 @@ public:
 
 
 	AActor* TakedownTrace();
+
 };

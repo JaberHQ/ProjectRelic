@@ -14,7 +14,7 @@
 
 
 ACPP_PlayerManager::ACPP_PlayerManager()
-	:m_canTakedown( true )
+	:m_canTakedown( false )
 	,takedownTraceDistance( 250.0f )
 	,defaultHealth( 100.0f )
 	,health( 100.0f )
@@ -168,42 +168,7 @@ void ACPP_PlayerManager::Turn( float inputAxis )
 
 }
 
-AActor* ACPP_PlayerManager::TakedownTrace()
-{
-	FVector start = GetActorLocation() + 100.0f;
-	FVector end = ( GetActorForwardVector() * takedownTraceDistance ) + ( start - 100.0f );
-	FHitResult hit;
-	FCollisionQueryParams traceParams; // Trace parameters
 
-	//DrawDebugLine( GetWorld(), start, end, FColor::Red );
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::ECC_Camera, traceParams );
-	if( bHit )
-	{
-		float dotProduct = FVector::DotProduct( GetActorForwardVector(), hit.GetActor()->GetActorForwardVector() );
-
-		bool nearlyEqual = UKismetMathLibrary::NearlyEqual_FloatFloat( dotProduct, 1.0f, 0.1f );
-		if( nearlyEqual )
-		{
-			// Get AI Manager
-			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.Actor );
-			if( managerAI )
-			{
-				if( managerAI->GetCanTakedown() == true )
-				{
-					takedownAvailable = true;
-					//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, hit.GetActor()->GetName() );
-					return hit.GetActor();
-
-				}
-				
-			}
-		}
-	}
-	takedownAvailable = false;
-	return NULL;
-
-
-}
 
 bool ACPP_PlayerManager::GetTurnRight()
 {
@@ -510,7 +475,148 @@ void ACPP_PlayerManager::Takedown()
 {
 	if( m_canTakedown )
 	{
-		TraceForwardImplementation();
+		
+		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, managerAI->GetName() );
+    
+		FActorSpawnParameters spawnInfo;
+		
+		AAIController* controllerAI = GetWorld()->SpawnActor<AAIController>( GetActorLocation(), GetActorRotation(), spawnInfo );
+		
+		if( controllerAI ) 
+		{
+			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( TakedownTrace() );
+			if( managerAI )
+			{
+				managerAI->GetCharacterMovement()->DisableMovement();
+
+				GetCharacterMovement()->DisableMovement();
+
+				GetController()->UnPossess();
+
+				FVector moveToLocation = GetActorLocation() + ( GetActorForwardVector() * -50.0f );
+
+				controllerAI->Possess( this );
+
+				controllerAI->MoveToLocation( moveToLocation );
+
+				controllerAI->MoveToActor( managerAI, 50.0f );
+				
+				if( animTakedown )
+				{
+					PlayAnimMontage( animTakedown );
+
+					// Takedown AI
+					managerAI->Takedown();
+
+					// Delay 
+					FTimerHandle delayTimer;
+					GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, m_animCompletion, false );
+				}
+			}
+		}
+		
+
+		
+
+	}
+}
+
+AActor* ACPP_PlayerManager::TakedownTrace()
+{
+	FVector start = GetActorLocation() + 100.0f;
+	FVector end = ( GetActorForwardVector() * takedownTraceDistance ) + ( start - 100.0f );
+	FHitResult hit;
+	FCollisionQueryParams traceParams; // Trace parameters
+
+	//DrawDebugLine( GetWorld(), start, end, FColor::Red );
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::ECC_Camera, traceParams );
+	if( bHit )
+	{
+		float dotProduct = FVector::DotProduct( GetActorForwardVector(), hit.GetActor()->GetActorForwardVector() );
+
+		bool nearlyEqual = UKismetMathLibrary::NearlyEqual_FloatFloat( dotProduct, 1.0f, 0.1f );
+		if( nearlyEqual )
+		{
+			// Get AI Manager
+			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.Actor );
+			if( managerAI )
+			{
+				if( managerAI->GetCanTakedown() == true )
+				{
+					m_canTakedown = true;
+					takedownAvailable = true;
+					//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, hit.GetActor()->GetName() );
+					return hit.GetActor();
+
+				}
+
+			}
+		}
+	}
+	takedownAvailable = false;
+	m_canTakedown = false;
+	return NULL;
+
+
+}
+
+
+void ACPP_PlayerManager::TraceForwardImplementation()
+{
+	FVector location; // Location
+	FRotator rotation; // Rotation
+	FHitResult hit; // Hit
+	FCollisionQueryParams traceParams; // Trace parameters
+
+	// Player viewpoint
+	GetController()->GetPlayerViewPoint( location, rotation );
+
+	// Set start and end
+	FVector start = location;
+	FVector end = ( GetActorLocation() + ( GetActorForwardVector() * takedownTraceDistance ) );
+
+	// Line trace
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
+
+	// If line has hit
+	if( bHit )
+	{
+		// Box where collision has occured
+		//DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
+
+		// Get AI Manager
+		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );
+		if( managerAI )
+		{		
+			// --- Spring arm stuff ---
+
+			// Disable character movement
+			GetCharacterMovement()->DisableMovement();
+
+			// Disable Player input
+			APlayerController* playerController = GetWorld()->GetFirstPlayerController();
+			DisableInput( playerController );
+
+			// Set bool
+			m_canTakedown = false;
+
+			// Set actor transform
+			SetActorRotation( managerAI->GetActorRotation() ); // Meant to be new transform rotation, not actor rotation
+			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -m_animPosition ) );
+			
+			if( animTakedown )
+			{
+				// Play animation
+				PlayAnimMontage( animTakedown );
+				
+				// Takedown AI
+				managerAI->Takedown();
+
+				// Delay 
+				FTimerHandle delayTimer;
+				GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, m_animCompletion, false );		
+			}
+		}
 	}
 }
 
@@ -692,64 +798,6 @@ bool ACPP_PlayerManager::GetDeathHitmarkerActive()
 	return m_deathHitmarkerActive;
 }
 
-void ACPP_PlayerManager::TraceForwardImplementation()
-{
-	FVector location; // Location
-	FRotator rotation; // Rotation
-	FHitResult hit; // Hit
-	FCollisionQueryParams traceParams; // Trace parameters
-
-	// Player viewpoint
-	GetController()->GetPlayerViewPoint( location, rotation );
-
-	// Set start and end
-	FVector start = location;
-	FVector end = ( GetActorLocation() + ( GetActorForwardVector() * takedownTraceDistance ) );
-
-	// Line trace
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
-
-	// If line has hit
-	if( bHit )
-	{
-		// Box where collision has occured
-		//DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
-
-		// Get AI Manager
-		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );
-		if( managerAI )
-		{		
-			// --- Spring arm stuff ---
-
-			// Disable character movement
-			GetCharacterMovement()->DisableMovement();
-
-			// Disable Player input
-			APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-			DisableInput( playerController );
-
-			// Set bool
-			m_canTakedown = false;
-
-			// Set actor transform
-			SetActorRotation( managerAI->GetActorRotation() ); // Meant to be new transform rotation, not actor rotation
-			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -m_animPosition ) );
-			
-			if( animTakedown )
-			{
-				// Play animation
-				PlayAnimMontage( animTakedown );
-				
-				// Takedown AI
-				managerAI->Takedown();
-
-				// Delay 
-				FTimerHandle delayTimer;
-				GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, m_animCompletion, false );		
-			}
-		}
-	}
-}
 
 void ACPP_PlayerManager::AnimationExecuted()
 {
