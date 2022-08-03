@@ -38,6 +38,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_invisibilityTimeDrain( 25.0f )
 	,m_isInCover()
 	,footstepsSFX()
+	,takedownAvailable( false )
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -167,6 +168,43 @@ void ACPP_PlayerManager::Turn( float inputAxis )
 
 }
 
+AActor* ACPP_PlayerManager::TakedownTrace()
+{
+	FVector start = GetActorLocation() + 100.0f;
+	FVector end = ( GetActorForwardVector() * takedownTraceDistance ) + ( start - 100.0f );
+	FHitResult hit;
+	FCollisionQueryParams traceParams; // Trace parameters
+
+	//DrawDebugLine( GetWorld(), start, end, FColor::Red );
+	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::ECC_Camera, traceParams );
+	if( bHit )
+	{
+		float dotProduct = FVector::DotProduct( GetActorForwardVector(), hit.GetActor()->GetActorForwardVector() );
+
+		bool nearlyEqual = UKismetMathLibrary::NearlyEqual_FloatFloat( dotProduct, 1.0f, 0.1f );
+		if( nearlyEqual )
+		{
+			// Get AI Manager
+			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.Actor );
+			if( managerAI )
+			{
+				if( managerAI->GetCanTakedown() == true )
+				{
+					takedownAvailable = true;
+					//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, hit.GetActor()->GetName() );
+					return hit.GetActor();
+
+				}
+				
+			}
+		}
+	}
+	takedownAvailable = false;
+	return NULL;
+
+
+}
+
 bool ACPP_PlayerManager::GetTurnRight()
 {
 	return m_turnRight;
@@ -277,7 +315,8 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	{
 		PlayerDead();
 	}
-
+	
+	TakedownTrace();
 	//userInterfaceDelegate();
 }
 
@@ -676,7 +715,7 @@ void ACPP_PlayerManager::TraceForwardImplementation()
 		// Box where collision has occured
 		//DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
 
-		// Get AI controller
+		// Get AI Manager
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );
 		if( managerAI )
 		{		

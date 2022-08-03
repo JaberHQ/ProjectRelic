@@ -12,6 +12,7 @@
 ACPP_AIManager::ACPP_AIManager()
 	:health( 100.0f )
 	, defaultHealth( 100.0f )
+	, m_canTakedown( true)
 	, m_sightRadius( 1000.0f )
 	, m_loseSightRadius( 1500.0f )
 	, m_peripheralVisionAngleDegrees( 35.0f )
@@ -384,6 +385,11 @@ void ACPP_AIManager::SetMaxWalkSpeed( float speed )
 void ACPP_AIManager::SetSightValuePercent( float sightValuePercent )
 {
 	m_sightValuePercent = sightValuePercent;
+}
+
+bool ACPP_AIManager::GetCanTakedown()
+{
+	return m_canTakedown;
 }
 
 

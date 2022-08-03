@@ -436,4 +436,5 @@ public:
 	***********************************************************************************/
 	void SetSightValuePercent( float sightValuePercent );
 
+	bool GetCanTakedown();
 };

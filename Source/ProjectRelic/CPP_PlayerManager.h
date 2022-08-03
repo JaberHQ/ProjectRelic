@@ -176,7 +176,7 @@ private:
 
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
 		float takedownTraceDistance; // Raycast distance
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
@@ -196,6 +196,9 @@ public:
 
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float defaultHealth; // Player default health
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
+		bool takedownAvailable;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
 		class UChildActorComponent* primaryGun;
@@ -844,4 +847,7 @@ public:
  *   See also        : N/A
 *****************************************************************************/
 	void Turn( float inputAxis );
+
+
+	AActor* TakedownTrace();
 };
