@@ -83,6 +83,7 @@ private:
 
 	bool m_hitmarkerActive;
 	bool m_deathHitmarkerActive;
+	bool m_isInCover; // If character is in cover
 
 	FTimerHandle m_hitmarkerTimer;
 
@@ -104,18 +105,75 @@ private:
 	FName m_pistolSocket;
 	FName m_pistolMuzzleSocket;
 
+
+private:
+	/*****************************************************************************
+	*   Function        : void InvisibilityTick( float DeltaTime )
+	*   Purpose         : Tick for Player invisiblity
+	*   Parameters      : float DeltaTime
+	*   Returns         : N/A
+	*   Date altered    : 03/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void InvisibilityTick( float DeltaTime );
-	
+	/*****************************************************************************
+	*   Function        : void InvisibilityEvaluation( float DeltaTime )
+	*   Purpose         : Evaluation for if the Player is invisible
+	*   Parameters      : float DeltaTime 
+	*   Returns         : N/A
+	*   Date altered    : 03/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void InvisibilityEvaluation( float DeltaTime );
-	
+	/*****************************************************************************
+	*   Function        : void InvisibilityMaterial()
+	*   Purpose         : Change Player material to turn invisible
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 03/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void InvisibilityMaterial();
-
+	/*****************************************************************************
+	*   Function        : void AmmoTick()
+	*   Purpose         : Tick to handle ammunition and reserve
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 03/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void AmmoTick();
+	/*****************************************************************************
+	*   Function        : void AmmoEvaluation( int ammoCount, int reserveCount, int fullMag )
+	*   Purpose         : Evaluate ammunition and reserve tank
+	*   Parameters      : int ammoCount, int reserveCount, int fullMag 
+	*   Returns         : N/A
+	*   Date altered    : 03/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void AmmoEvaluation( int ammoCount, int reserveCount, int fullMag );
-
+	/*****************************************************************************
+	*   Function        : void HitmarkerFinished()
+	*   Purpose         : Set hitmarker inactive
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 03/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void HitmarkerFinished();
 
-	bool m_isInCover; // If character is in cover
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
@@ -153,7 +211,20 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Weapons" )
 		int m_currentlyEquipped; // Currently equipped weapon
+
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
+		FPlayerUI userInterfaceD;
 public:
+	/*****************************************************************************
+	*   Function        : ACPP_PlayerManager()
+	*   Purpose         : Constructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	ACPP_PlayerManager();
 	/*****************************************************************************
 	*   Function        : virtual void BeginPlay() override
@@ -265,8 +336,8 @@ public:
 	*****************************************************************************/
 	virtual void TakeAttack() override;
 	/*****************************************************************************
-	  *   Function        : void
-	  *   Purpose         :
+	  *   Function        : void UserInterfaceDelegate()
+	  *   Purpose         : Delegate for Players gameplay HUD
 	  *   Parameters      : N/A
 	  *   Returns         : N/A
 	  *   Date altered    : 01/07/2022
@@ -276,57 +347,232 @@ public:
 	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void UserInterfaceDelegate();
-
-	UPROPERTY( BlueprintCallable, BlueprintAssignable )
-		FPlayerUI userInterfaceD;
-	
+	/*****************************************************************************
+	  *   Function        : void Invisibility()
+	  *   Purpose         : Turn player invisibility on or off
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void Invisibility();
-
+	/*****************************************************************************
+	  *   Function        : bool GetInvisibilityStatus()
+	  *   Purpose         : Get if invsibility is on
+	  *   Parameters      : N/A
+	  *   Returns         : m_invisibility
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	bool GetInvisibilityStatus();
-
+	/*****************************************************************************
+	  *   Function        : void InvisibilityFinished()
+	  *   Purpose         : Actions when invisiblity has finished
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void InvisibilityFinished();
-
+	/*****************************************************************************
+	  *   Function        : void Respawn()
+	  *   Purpose         : Respawn Player
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void Respawn();
-
+	/*****************************************************************************
+	  *   Function        : void IncreaseAmmoCount( int ammo )
+	  *   Purpose         : Increase the ammunition of weapons when called
+	  *   Parameters      : int ammo
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void IncreaseAmmoCount( int ammo );
-
+	/*************************************************************************************
+	  *   Function        : void EquipGun( TArray<UChildActorComponent*> WeaponInventory )
+	  *   Purpose         : Choose which gun is equipped by the player 
+	  *   Parameters      : TArray<UChildActorComponent*> WeaponInventory
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : void ChangeWeapons( float inputAxis )
+	  *************************************************************************************/
 	void EquipGun( TArray<UChildActorComponent*> WeaponInventory );
-
+	/*************************************************************************************
+	  *   Function        : void ChangeWeapons( float inputAxis )
+	  *   Purpose         : Change which weapons is chosen
+	  *   Parameters      : float inputAxis
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : void EquipGun( TArray<UChildActorComponent*> WeaponInventory )
+	  *************************************************************************************/
 	void ChangeWeapons( float inputAxis );
-
+	/*****************************************************************************
+	  *   Function        : bool GetAssaultRifle()
+	  *   Purpose         : Get assault rifle bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_assaultRifle
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		bool GetAssaultRifle();
-
+	/*****************************************************************************
+	  *   Function        : bool GetPistol()
+	  *   Purpose         : Get pistol bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_pistol
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		bool GetPistol();
-
+	/*****************************************************************************
+	  *   Function        : bool GetThrowable()
+	  *   Purpose         : Get throwable bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_throwable
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		bool GetThrowable();
-
-
+	/*****************************************************************************
+	  *   Function        : bool GetHitmarkerActive()
+	  *   Purpose         : Get if hitmarker is active or not
+	  *   Parameters      : N/A
+	  *   Returns         : m_hitmarkerActive
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		bool GetHitmarkerActive();
-
-	
+	/*****************************************************************************
+	  *   Function        : void SetHitmarkerActive( bool hitmarkerActive )
+	  *   Purpose         : Set if hitmarker is active or not
+	  *   Parameters      : bool hitmarkerActive
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void SetHitmarkerActive( bool hitmarkerActive );
-
+	/*****************************************************************************
+	  *   Function        : void DistractEnemy()
+	  *   Purpose         : Distract the enemy with a sound
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void DistractEnemy();
-
+	/*****************************************************************************
+	  *   Function        : void SetDeathHitmarkerActive( bool deathHitmarkerActive )
+	  *   Purpose         : Set specific hitmarker for when Player kills AI
+	  *   Parameters      : bool deathHitmarkerActive
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void SetDeathHitmarkerActive( bool deathHitmarkerActive );
-
+	/*****************************************************************************
+	  *   Function        : bool GetDeathHitmarkerActive()
+	  *   Purpose         : Get hitmarker for when AI is shot dead
+	  *   Parameters      : N/A
+	  *   Returns         : m_deathHitmarkerActive
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		bool GetDeathHitmarkerActive();
-
+	/*****************************************************************************
+	  *   Function        : void EquipWeaponTick()
+	  *   Purpose         : Equip weapon within Tick
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void EquipWeaponTick();
-
+	/*****************************************************************************
+	  *   Function        : void HitmarkerTick()
+	  *   Purpose         : Set hitmarker in tick 
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void HitmarkerTick();
-	
+	/*****************************************************************************
+	  *   Function        : float GetHealth()
+	  *   Purpose         : Get Player health
+	  *   Parameters      : N/A
+	  *   Returns         : health
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		float GetHealth();
-
+	/*****************************************************************************
+	  *   Function        : void PlayerDead()
+	  *   Purpose         : Actions when Player is dead
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	void PlayerDead();
-
+	/*****************************************************************************
+	  *   Function        : void Reset()
+	  *   Purpose         : Reset Player stats
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void Reset();
 public:
@@ -510,7 +756,6 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	void StartShooting();
-	
 	/*****************************************************************************
 	  *   Function        : bool RightCoverTrace()
 	  *   Purpose         : Line trace for right of the wall

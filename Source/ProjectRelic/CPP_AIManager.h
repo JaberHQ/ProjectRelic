@@ -148,6 +148,105 @@ private:
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
 public:
 	/*****************************************************************************
+	 *   Function        : bool GetHasCaughtPlayer()
+	 *   Purpose         : Get If player has been caught by AI
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetHasCaughtPlayer();
+	/*****************************************************************************
+	 *   Function        : void OnUpdated( const TArray<AActor*> & caughtActors )
+	 *   Purpose         : What to do when player has been caught
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void OnUpdated( const TArray<AActor*>& caughtActors );
+	/*****************************************************************************
+  *   Function        : void GiveUp()
+  *   Purpose         : When AI loses the player
+  *   Parameters      : N/A
+  *   Returns         : N/A
+  *   Date altered    : 01/07/2022
+  *   Contributors    : Jaber Ahmed
+  *   Notes           : N/A
+  *   See also        : N/A
+  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void GiveUp();
+	/****************************************************************************************
+	*   Function        : void SightDetectionDelegate();
+	*   Purpose         : Delegate macro to send variables to BP for sight detection meter
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : Uses macro that sends two params
+	*   See also        : N/A
+	**************************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void SightDetectionDelegate();
+	/********************************************************************************************************************************************************************
+	 *   Function        : void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp,
+	 *							AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  )
+	 *   Purpose         : When Character overlaps (enters) the collision box
+	 *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	 *							UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*********************************************************************************************************************************************************************/
+	UFUNCTION()
+		void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
+	/*****************************************************************************
+	 *   Function        : void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex )
+	 *   Purpose         : When Character leaves the collision box after overlap
+	 *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+   *****************************************************************************/
+	UFUNCTION()
+		void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex );
+	/*****************************************************************************
+	 *   Function        : void Takedown()
+	 *   Purpose         : Action when AI has been stealth taken down
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_PlayerManager::Takedown
+   *****************************************************************************/
+	UFUNCTION()
+		void Takedown();
+	/*****************************************************************************
+	*   Function        : bool GetInCover()
+	*   Purpose         : Get bool for AI in cover
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+   *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetInCover();
+public:
+	/*****************************************************************************
 	 *   Function        : virtual void BeginPlay() override
 	 *   Purpose         : BeginPlay event
 	 *   Parameters      : N/A
@@ -337,94 +436,4 @@ public:
 	***********************************************************************************/
 	void SetSightValuePercent( float sightValuePercent );
 
-public:
-	/*****************************************************************************
-	 *   Function        : bool GetHasCaughtPlayer()
-	 *   Purpose         : Get If player has been caught by AI
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 28/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetHasCaughtPlayer();
-	/*****************************************************************************
-	 *   Function        : void OnUpdated( const TArray<AActor*> & caughtActors )
-	 *   Purpose         : What to do when player has been caught
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 28/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void OnUpdated( const TArray<AActor*>& caughtActors );
-	/*****************************************************************************
-  *   Function        : void GiveUp()
-  *   Purpose         : When AI loses the player
-  *   Parameters      : N/A
-  *   Returns         : N/A
-  *   Date altered    : 01/07/2022
-  *   Contributors    : Jaber Ahmed
-  *   Notes           : N/A
-  *   See also        : N/A
-  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void GiveUp();
-	/****************************************************************************************
-	*   Function        : void SightDetectionDelegate();
-	*   Purpose         : Delegate macro to send variables to BP for sight detection meter
-	*   Parameters      : N/A
-	*   Returns         : N/A
-	*   Date altered    : 01/07/2022
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : Uses macro that sends two params 
-	*   See also        : N/A
-	**************************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void SightDetectionDelegate();
-	/********************************************************************************************************************************************************************
-	 *   Function        : void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp,
-	 *							AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult  )
-	 *   Purpose         : When Character overlaps (enters) the collision box
-	 *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	 *							UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*********************************************************************************************************************************************************************/
-	UFUNCTION()
-		void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
-	/*****************************************************************************
-	 *   Function        : void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex )
-	 *   Purpose         : When Character leaves the collision box after overlap
-	 *   Parameters      : UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-   *****************************************************************************/
-	UFUNCTION()
-		void OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex );
-	/*****************************************************************************
-	 *   Function        : void Takedown()
-	 *   Purpose         : Action when AI has been stealth taken down
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_PlayerManager::Takedown
-   *****************************************************************************/
-	UFUNCTION()
-		void Takedown();
-
-	UFUNCTION( BlueprintCallable )
-		bool GetInCover();
 };
