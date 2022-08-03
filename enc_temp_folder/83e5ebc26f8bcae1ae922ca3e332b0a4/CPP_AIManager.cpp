@@ -131,7 +131,7 @@ void ACPP_AIManager::BeginPlay()
 
 
 	// If enemy 'senses' the player
-	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnPlayerCaught );
+	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnUpdated );
 
 	// Box component overlap
 	boxComponent->OnComponentBeginOverlap.AddDynamic( this, &ACPP_AIManager::OnBoxBeginOverlap );
@@ -324,20 +324,13 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 					controllerAI->SetLastKnownLocation( playerLocation );
 					controllerAI->SetInvestigate( true );
 				}
-				if( stim.WasSuccessfullySensed()  )
+				else
 				{
 					
 					m_hasSeenSomething = true;
 					controllerAI->SetLastKnownLocation( playerLocation );
 					controllerAI->SetInvestigate( true );
-				}
-				else
-				{
-					// Go back to regular pathing
-					if( m_hasBeenCaught == false )
-					{
-						m_hasSeenSomething = false;
-					}
+				
 				}
 			}
 		}
@@ -348,7 +341,99 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 			// Set actor (Player) as caught
 			controllerAI->PlayerHasShot();
 		}
-	}	
+
+	}
+	
+
+
+
+
+
+
+	//// AI Controller reference
+	//ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+	//// Player reference
+	//ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+	//if( controllerAI )
+	//{
+	//	if( playerManager )
+	//	{
+	//		if( playerManager->GetInvisibilityStatus() == false )
+	//		{
+	//			// Set bool to investigate
+	//			m_hasSeenSomething = true;
+
+	//			// Sight config
+	//			UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
+
+	//			// Get location
+	//			FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+	//			FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ 0 ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+	//			// Distance between Player and Enemy
+	//			float distance = FVector::Distance( playerLocation, enemyLocation );
+
+	//			// Set last known location of the Player
+	//			controllerAI->SetLastKnownLocation( playerLocation );
+
+	//			//Investigate
+	//			controllerAI->SetInvestigate( true );
+
+	//			// Actor perception
+	//			FActorPerceptionBlueprintInfo info;
+	//			perceptionComp->GetActorsPerception( playerManager, info );
+
+	//			for( int i = 0; i < caughtActors.Num(); i++ )
+	//			{
+	//				// If sensed
+	//				if( info.LastSensedStimuli.Num() > i )
+	//				{
+	//					FAIStimulus stimulus = info.LastSensedStimuli[ i ];
+
+	//					for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
+	//					{
+	//						perceptionComp->GetActorsPerception( caughtActors[ i ], info );
+	//						if( stimulus.Tag == noiseTag )
+	//						{
+	//							controllerAI->SetInvestigate( true );
+	//							controllerAI->SetLastKnownLocation( stimulus.StimulusLocation );
+	//						}
+	//						else
+	//						{
+	//							if( stimulus.WasSuccessfullySensed() )
+	//							{
+	//								// Set bool to investigate
+	//								m_hasSeenSomething = true;
+	//								//UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
+	//							}
+	//							else
+	//							{
+	//								// Go back to regular pathing
+	//								if( m_hasBeenCaught == false )
+	//								{
+	//									m_hasSeenSomething = false;
+	//								}
+	//							}
+	//						}
+	//					}
+
+	//					
+
+	//				}
+	//			}
+	//			
+	//		}
+
+	//		// If player has been caught
+	//		if( m_hasBeenCaught )
+	//		{
+	//			// Set actor (Player) as caught
+	//			controllerAI->PlayerHasShot();
+	//		}
+	//	}
+	//}
 	
 }
 
