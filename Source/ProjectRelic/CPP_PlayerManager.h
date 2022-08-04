@@ -72,21 +72,16 @@ private:
 	float m_animCompletion; // How long it takes to compelete the animation montage
 	bool m_invisibility; // Whether the player is invisibile or not
 	float m_invisibilityPercent; // The amount of invisibility powerup left
-	float m_invisibilityFull;
-	float m_invisibilityTimeMultiplier;
+	float m_invisibilityFull; // Full invisibility percentage
+	float m_invisibilityTimeMultiplier; // Increase time invisibility
 	float m_invisibilityTimeDrain; // Multplier for how quick invisibility drains
 	float m_chanceOfHit; // Chance to take damage
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
-
-
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
-
-	bool m_hitmarkerActive;
-	bool m_deathHitmarkerActive;
+	bool m_hitmarkerActive; // If hitmarker is active
+	bool m_deathHitmarkerActive; // If death hitmarker is active
 	bool m_isInCover; // If character is in cover
-
-	FTimerHandle m_hitmarkerTimer;
-
+	FTimerHandle m_hitmarkerTimer; // Hitmarker timer handle
 	UMaterialInterface* m_material; // Material 
 	UMaterialInterface* m_material1; // Material 
 	UMaterialInterface* m_material2; // Material 
@@ -98,15 +93,50 @@ private:
 	UMaterialInterface* m_material8; // Material 
 	UMaterialInterface* m_material9; // Material 
 	UMaterialInterface* m_material10; // Material 
-
-
 	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
+	FName m_pistolSocket; // Pistol socket
+	FName m_pistolMuzzleSocket; // Pistol muzzle socket
+	APlayerController* m_pPlayerController; // Player controller
 
-	FName m_pistolSocket;
-	FName m_pistolMuzzleSocket;
+public:
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
+		float takedownTraceDistance; // Raycast distance
 
-	APlayerController* m_pPlayerController;
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animTakedown; // Anim Montage for Player stealth takedown
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
+		UMaterial* invisibleMaterial; // Invisibility material
+
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float health; // Player health
+
+	UPROPERTY( EditAnywhere, Category = "Health" )
+		float defaultHealth; // Player default health
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
+		bool takedownAvailable; // If takedown is available
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UChildActorComponent* primaryGun; // Primary gun child actor
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
+		class UChildActorComponent* pistol; // Secoundary gun child actor
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* callEnemy; // Call enemy sound effect
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
+		USoundBase* footstepsSFX; // Footstep sound effect
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Weapons" )
+		int m_currentlyEquipped; // Currently equipped weapon
+
+	UPROPERTY( BlueprintCallable, BlueprintAssignable )
+		FPlayerUI userInterfaceD; // User interface delegate
 
 private:
 	/*****************************************************************************
@@ -176,49 +206,6 @@ private:
 	*****************************************************************************/
 	void HitmarkerFinished();
 
-
-public:
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown")
-		float takedownTraceDistance; // Raycast distance
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
-		UAnimMontage* animTakedown; // Anim Montage for Player stealth takedown
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
-		UAnimMontage* deadAnim; // Anim Montage for Player stealth takedown
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
-		UMaterial* invisibleMaterial;
-
-	//UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Material" )
-		//URuntimeMeshComponent* playerMesh;
-
-	UPROPERTY( EditAnywhere, Category = "Health" )
-		float health; // Player health
-
-	UPROPERTY( EditAnywhere, Category = "Health" )
-		float defaultHealth; // Player default health
-
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
-		bool takedownAvailable;
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UChildActorComponent* primaryGun;
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadWrite )
-		class UChildActorComponent* pistol;
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
-		USoundBase* callEnemy;
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
-		USoundBase* footstepsSFX;
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Weapons" )
-		int m_currentlyEquipped; // Currently equipped weapon
-
-	UPROPERTY( BlueprintCallable, BlueprintAssignable )
-		FPlayerUI userInterfaceD;
 public:
 	/*****************************************************************************
 	*   Function        : ACPP_PlayerManager()
@@ -264,16 +251,6 @@ public:
 	*   See also        : N/A
 	*******************************************************************************************************************/
 	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
-	/*****************************************************************************
-	 *   Function        : void SetCanTakedown( bool canTakedown )
-	 *   Purpose         : Set bool for being able to stealth takedown AI
-	 *   Parameters      : bool canTakedown
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
 	/*****************************************************************************
 	 *   Function        : virtual void Tick( float DeltaTime ) override
 	 *   Purpose         : Event Tick
@@ -850,18 +827,26 @@ public:
 	*****************************************************************************/
 	void DrawPredictionSpline();
 	/*****************************************************************************
- *   Function        : void Turn( float inputAxis )
- *   Purpose         : Mouse input turn
- *   Parameters      : float inputAxis
- *   Returns         : N/A
- *   Date altered    : 31/07/2022
- *   Contributors    : Jaber Ahmed
- *   Notes           : N/A
- *   See also        : N/A
-*****************************************************************************/
+	*   Function        : void Turn( float inputAxis )
+	*   Purpose         : Mouse input turn
+	*   Parameters      : float inputAxis
+	*   Returns         : N/A
+	*   Date altered    : 31/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	void Turn( float inputAxis );
-
-
+	/*****************************************************************************
+	*   Function        : AActor* TakedownTrace()
+	*   Purpose         : If Player is behind the AI and ready for takedown
+	*   Parameters      : N/A
+	*   Returns         : hit.GetActor(), NULL
+	*   Date altered    : 31/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
 	AActor* TakedownTrace();
 
 };

@@ -6,9 +6,23 @@
 #include "CPP_GunManager.h"
 #include "CPP_AssaultRifle.generated.h"
 
-/**
- * 
- */
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_AssaultRifle
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Assault rifle weapon
+ *
+ * References: N/A
+ *
+ * See Also: CPP_CharacterManager
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 04/08/2022    JA          v1.0        Created an assault rifle object
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AssaultRifle : public ACPP_GunManager
 {

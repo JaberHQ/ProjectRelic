@@ -30,6 +30,7 @@
  * 13/06/2022    JA		     v2.1		 Investigating
  * 13/06/2022	 JA		     v2.2		 Detection meter
  * 15/07/2022	 JA			 v2.3		 Improving AI functionality
+ * 04/08/2022	 JA			 v2.4		 Created a cover system
 *********************************************************************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AIController : public AAIController
@@ -69,10 +70,10 @@ private:
 		FName m_inCover; // In cover
 
 	UPROPERTY( EditDefaultsOnly, Category = "AI" )
-		FName m_bottleLocation;
+		FName m_bottleLocation; // Location of the projectile
 
 	UPROPERTY( EditDefaultsOnly, Category = "AI" )
-		FName m_dead;
+		FName m_dead; // If AI is dead
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -208,13 +209,49 @@ public:
 	 *   See also        : Behaviour Tree - BT_AssaultSoldier 
 	 *****************************************************************************/
 	void SetInCover( bool boolean );
-
+	/*****************************************************************************
+	 *   Function        : void SetBottleLocation( FVector bottleLocation )
+	 *   Purpose         : Set bottle location
+	 *   Parameters      : FVector bottleLocation 
+	 *   Returns         : N/A
+	 *   Date altered    : 04/08/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : Behaviour Tree - BT_AssaultSoldier
+	 *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void SetBottleLocation( FVector bottleLocation );
-
+	/*********************************************************************************
+	*   Function        : FVector GetBottleLocation()
+	*   Purpose         : Get bottle location
+	*   Parameters      : N/A
+	*   Returns         : return blackboardComp->GetValueAsVector( m_bottleLocation )
+	*   Date altered    : 04/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : Behaviour Tree - BT_AssaultSoldier
+	*********************************************************************************/
 	FVector GetBottleLocation();
-
+	/*********************************************************************************
+	*   Function        : void SetDead( bool boolean )
+	*   Purpose         : Set if AI is dead
+	*   Parameters      : bool boolean
+	*   Returns         : N/A
+	*   Date altered    : 04/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : Behaviour Tree - BT_AssaultSoldier
+	*********************************************************************************/
 	void SetDead( bool boolean );
-
+	/*********************************************************************************
+	*   Function        : bool GetDead
+	*   Purpose         : Get dead bool
+	*   Parameters      : N/A
+	*   Returns         : return blackboardComp->GetValueAsBool( m_dead )
+	*   Date altered    : 04/08/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : Behaviour Tree - BT_AssaultSoldier
+	*********************************************************************************/
 	bool GetDead();
 };

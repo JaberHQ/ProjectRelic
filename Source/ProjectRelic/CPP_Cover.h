@@ -5,7 +5,23 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CPP_Cover.generated.h"
-
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_Cover
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Made for cover system
+ *
+ * References: N/A
+ *
+ * See Also: N/A
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 04/08/2022    JA          N/A         DEPRECIATED
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_Cover : public AActor
 {

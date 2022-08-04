@@ -6,9 +6,23 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "CPP_InvestigateTask.generated.h"
 
-/**
- * 
- */
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: UCPP_InvestigateTask
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Get AI to investigate the player's last known position
+ *
+ * References: N/A
+ *
+ * See Also: BT_AssaultSoldier
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 28/07/2022    JA          v1.0		 Created a task to move to cover
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API UCPP_InvestigateTask : public UBTTaskNode
 {

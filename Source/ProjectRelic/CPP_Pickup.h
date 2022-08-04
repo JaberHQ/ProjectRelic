@@ -6,7 +6,23 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "CPP_Pickup.generated.h"
-
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_Pickup
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Parent for pickups
+ *
+ * References: N/A
+ *
+ * See Also: CPP_PlayerManager
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 25/07/2022    JA          v1.0		 Created pickup manager
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_Pickup : public AActor
 {
@@ -31,7 +47,18 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	/******************************************************************************************************************************************************************
+	 *   Function        : virtual void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, 
+	 *						AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
+	 *   Purpose         : Overlap object
+	 *   Parameters      : PrimitiveComponent* OverlappedComp, 
+	 *						AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+	 *   Returns         : N/A
+	 *   Date altered    :
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	******************************************************************************************************************************************************************/
 	UFUNCTION()
 	virtual void OnBoxBeginOverlap( UPrimitiveComponent* OverlappedComp, 
 		AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );

@@ -23,7 +23,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 02/05/2020    JA          v1.0        DELETE
+ * 02/05/2020    JA          v1.0        DEPRECIATED
  **************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_AI : public ACPP_CharacterManager

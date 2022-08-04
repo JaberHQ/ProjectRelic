@@ -256,7 +256,6 @@ public:
 	 *   See also        : N/A
 	*****************************************************************************/
 	void UpdateWalkSpeed( float speed );
-	
 	 /*****************************************************************************
 	  *   Function        : FHitResult RaycastShot()
 	  *   Purpose         : Send raycast which portrays a projectile being shot

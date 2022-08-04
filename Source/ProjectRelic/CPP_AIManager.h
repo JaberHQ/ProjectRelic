@@ -78,15 +78,15 @@ private:
 	float m_patrolSpeed; // Enemy walk (patrol) speed
 	float m_chaseSpeed; // Enemy run (chase) speed
 	float m_detectionSpeed; // Speed of detection
-	bool m_canTakedown; // If AI can be taken down
 	float m_shotDamage; // Damage per shot taken from Player
 	float m_deathTimer; // Timer for despawn after death 
 	float m_headShotDamage; // Damage multiplier for headshots
 	float m_sightValuePercent; // Sight value percent
+	float m_curveFloat; // Value for sight detection curve
+	bool m_canTakedown; // If AI can be taken down
 	bool m_hasBeenSeen; // For when the player has been seen by AI, but not fully caught 
 	bool m_hasBeenCaught; // For when the player has been caught by AI
 	bool m_hasBeenShot; // AI has been shot
-	float m_curveFloat; // Value for sight detection curve
 	bool m_hasSeenSomething; // If AI has seen but no caught something
 	bool m_isInCover; // AI is in cover
 	bool m_dead; // If AI is dead
@@ -126,13 +126,13 @@ public:
 		UAnimMontage* animDeath; // Animation Montage
 
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
-		FSightDetectionD sightDetectionD;
+		FSightDetectionD sightDetectionD; // Sight detection delegate
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Curve" )
-		UCurveFloat* myCurve;
+		UCurveFloat* myCurve; // Curve for sight detection
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Noise" )
-		FName bottleTag;
+		FName bottleTag; // Tag for for bottle noise
 private:
 	/**********************************************************************************
 	   *   Function        : void OnPlayerCaught( const TArray<AActor*>& CaughtActors )
@@ -435,6 +435,15 @@ public:
 	 *   See also        : N/A
 	***********************************************************************************/
 	void SetSightValuePercent( float sightValuePercent );
-
+	/***********************************************************************************
+	 *   Function        : bool GetCanTakedown();
+	 *   Purpose         : Get can takedowb
+	 *   Parameters      : N/A
+	 *   Returns         : m_canTakedown
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_PLayerManager::Takedown
+	***********************************************************************************/
 	bool GetCanTakedown();
 };

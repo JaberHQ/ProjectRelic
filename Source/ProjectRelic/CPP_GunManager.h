@@ -6,16 +6,30 @@
 #include "CPP_WeaponManager.h"
 #include "CPP_GunManager.generated.h"
 
-/**
- * 
- */
+/*****************************************************************************************************
+ * Type: Class
+ *
+ * Name: CPP_GunManager
+ *
+ * Author: Jaber Ahmed
+ *
+ * Purpose: Parent for all gun style wewapons
+ *
+ * References: N/A
+ *
+ * See Also: N/A
+ *
+ * Change Log:
+ * Date          Initials    Version     Comments
+ * 04/08/2022    JA          v1.0        Created a parent gun manager 
+*****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_GunManager : public ACPP_WeaponManager
 {
 	GENERATED_BODY()
 private:
-	int m_ammoCount;
-	int m_ammoRemaining;
+	int m_ammoCount; // Ammount of ammo weapon can hold
+	int m_ammoRemaining; // Ammo of ammo remaining 
 public:
 	/*****************************************************************************
 	  *   Function        : void

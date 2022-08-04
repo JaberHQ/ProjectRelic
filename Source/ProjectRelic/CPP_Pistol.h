@@ -23,7 +23,7 @@
  *
  * Change Log:
  * Date          Initials    Version     Comments
- * 25/07/2022    JA          v1.0		 N/A
+ * 25/07/2022    JA          v1.0		 Created a pistol
 *****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API ACPP_Pistol : public ACPP_GunManager
