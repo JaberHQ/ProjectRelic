@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "CPP_ShootFromCover.generated.h"
+#include "CPP_StopShootingTask.generated.h"
 
 /**********************************************************************************************************************
  * Type: Class
@@ -24,7 +24,7 @@
  * 25/07/2022    JA          v1.1        Task for AI to shoot
 ***********************************************************************************************************************/
 UCLASS()
-class PROJECTRELIC_API UCPP_ShootFromCover : public UBTTaskNode
+class PROJECTRELIC_API UCPP_StopShootingTask : public UBTTaskNode
 {
 	GENERATED_BODY()
 public:
@@ -33,11 +33,10 @@ public:
 	*   Purpose         : Execute task to investigate Player
 	*   Parameters      : UBehaviorTreeComponent& ownerComp, uint8* nodeMemory
 	*   Returns         : N/A
-	*   Date altered    : 23/06/2022
+	*   Date altered    : 04/08/2022
 	*   Contributors    : Jaber Ahmed
 	*   Notes           : N/A
 	*   See also        : N/A
 	*****************************************************************************************************************************/
 	virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& ownerComp, uint8* nodeMemory ) override;
-
 };

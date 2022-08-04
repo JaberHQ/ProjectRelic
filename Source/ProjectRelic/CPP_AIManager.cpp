@@ -363,9 +363,9 @@ void ACPP_AIManager::EnterCover()
 
 void ACPP_AIManager::TimeToShoot()
 {
-	FTimerHandle m_shootTimer;
-	//GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, 2.0f, true );
-	GetWorld()->GetTimerManager().SetTimer( m_shootTimer, this, &ACPP_CharacterManager::StopShooting, 5.0f, true );
+	//FTimerHandle m_shootTimer;
+
+	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 
 	Crouch();
 }
