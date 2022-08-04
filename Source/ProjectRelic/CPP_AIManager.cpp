@@ -162,20 +162,18 @@ void ACPP_AIManager::OnBoxEndOverlap( UPrimitiveComponent* OverlappedComp, AActo
 
 void ACPP_AIManager::Takedown()
 {
-	// Disable movement
-	GetCharacterMovement()->DisableMovement();
+	
+	if( animTakedownAI )
+	{
+		// Play animation
+		PlayAnimMontage( animTakedownAI );
+	}
 
-	//Unpossess
-	UnPossessed();
+	// Stop AI from behaving
+	GetController()->UnPossess();
 
 	// Set collision
 	SetActorEnableCollision( false );
-	
-	// Play animation
-	if( animTakedownAI )
-	{
-		PlayAnimMontage( animTakedownAI );
-	}
 
 	// Delay then death
 	FTimerHandle deathDelayTimer;

@@ -39,6 +39,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_isInCover()
 	,footstepsSFX()
 	,takedownAvailable( false )
+	,m_pPlayerController( nullptr )
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -52,6 +53,16 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	// Attach pistol
 	pistol->SetupAttachment( GetMesh(), m_pistolSocket );
 	throwable->SetupAttachment( GetMesh(), m_throwSocket );
+}
+
+ACPP_PlayerManager::~ACPP_PlayerManager()
+{
+	//APlayerController* m_pPlayerController = nullptr;
+	//delete m_pPlayerController;
+	m_pPlayerController = nullptr;
+
+	
+	
 }
 
 void ACPP_PlayerManager::BeginPlay()
@@ -487,28 +498,37 @@ void ACPP_PlayerManager::Takedown()
 			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( TakedownTrace() );
 			if( managerAI )
 			{
+				// Disable AI movement
 				managerAI->GetCharacterMovement()->DisableMovement();
 
+				// Disable Player movement
 				GetCharacterMovement()->DisableMovement();
 
+				// Stop controller from possessing the player
 				GetController()->UnPossess();
 
+				// Find the location behind the AI for Player to move to
 				FVector moveToLocation = GetActorLocation() + ( GetActorForwardVector() * -50.0f );
 
+				// Hold the player controller
+				m_pPlayerController = GetWorld()->GetFirstPlayerController();
+
+				// Have AI controller control Player 
 				controllerAI->Possess( this );
 
+				// Have Player automatically move towards location of the AI
 				controllerAI->MoveToLocation( moveToLocation );
-
 				controllerAI->MoveToActor( managerAI, 50.0f );
 				
 				if( animTakedown )
 				{
+					// Play animation
 					PlayAnimMontage( animTakedown );
 
-					// Takedown AI
+					// AI behaviour for when they are being takedown
 					managerAI->Takedown();
 
-					// Delay 
+					// Timer for actions when takedown is completed
 					FTimerHandle delayTimer;
 					GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, m_animCompletion, false );
 				}
@@ -801,21 +821,29 @@ bool ACPP_PlayerManager::GetDeathHitmarkerActive()
 
 void ACPP_PlayerManager::AnimationExecuted()
 {
-	// Return character back to position
-	//SetActorLocation( GetActorLocation() + GetActorForwardVector() * m_animPosition );
-
-	// Enable Player input
-	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-	if( playerController )
+	if( m_pPlayerController )
 	{
-		EnableInput( playerController );
+		m_pPlayerController->Possess( this );
 	}
+	//// Enable Player input
+	//APlayerController* playerController = GetWorld()->GetFirstPlayerController();
 
 	// Re-enable movement
-	GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
+	//GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
 
-	// Player can takedown AI again
-	m_canTakedown = true;
+	//// Player can takedown AI again
+	//m_canTakedown = true;
+
+	// Enable Player input
+	//GetController()->Possess( this );
+
+	//GetController()->EnableInput( GetWorld()->GetFirstPlayerController() );
+
+	// Re-enable movement
+	//GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
+
+	//// Player can takedown AI again
+	//m_canTakedown = true;
 }
 
 void ACPP_PlayerManager::TakeAttack()

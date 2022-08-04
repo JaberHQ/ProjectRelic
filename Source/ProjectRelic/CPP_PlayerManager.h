@@ -105,6 +105,8 @@ private:
 	FName m_pistolSocket;
 	FName m_pistolMuzzleSocket;
 
+	APlayerController* m_pPlayerController;
+
 
 private:
 	/*****************************************************************************
@@ -229,6 +231,17 @@ public:
 	*   See also        : N/A
 	*****************************************************************************/
 	ACPP_PlayerManager();
+	/*****************************************************************************
+	*   Function        : ~ACPP_PlayerManager()
+	*   Purpose         : Deconstructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	~ACPP_PlayerManager();
 	/*****************************************************************************
 	*   Function        : virtual void BeginPlay() override
 	*   Purpose         : Begin event
