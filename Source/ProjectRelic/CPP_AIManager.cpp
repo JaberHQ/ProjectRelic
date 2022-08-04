@@ -8,6 +8,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Misc/App.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "CPP_AISettings.h"
 
 ACPP_AIManager::ACPP_AIManager()
 	:health( 100.0f )
@@ -124,6 +125,8 @@ void ACPP_AIManager::Tick( float DeltaTime )
 
 	// Broadcast delegate for sight detection widget
 	SightDetectionDelegate();
+
+	
 }
 
 void ACPP_AIManager::BeginPlay()
@@ -361,13 +364,29 @@ void ACPP_AIManager::EnterCover()
 	Crouch();
 }
 
+void ACPP_AIManager::ShootPlayer()
+{
+	ShootProjectile();
+	GetWorld()->GetTimerManager().SetTimer( m_stopShooting, this, &ACPP_AIManager::StopShootingPlayer, 5.0f, true );
+
+}
+
+void ACPP_AIManager::StopShootingPlayer()
+{
+	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
+	GetWorld()->GetTimerManager().ClearTimer( m_stopShooting );
+
+
+}
+
 void ACPP_AIManager::TimeToShoot()
 {
 	//FTimerHandle m_shootTimer;
 
-	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
+	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_AIManager::ShootPlayer, timeBetweenShots, true );
 
 	Crouch();
+	//StopShooting();
 }
 
 void ACPP_AIManager::SetHasCaughtPlayer( bool boolean )
@@ -389,6 +408,8 @@ bool ACPP_AIManager::GetCanTakedown()
 {
 	return m_canTakedown;
 }
+
+
 
 
 

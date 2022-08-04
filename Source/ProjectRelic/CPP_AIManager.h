@@ -90,6 +90,9 @@ private:
 	bool m_hasSeenSomething; // If AI has seen but no caught something
 	bool m_isInCover; // AI is in cover
 	bool m_dead; // If AI is dead
+
+	FTimerHandle m_stopShooting;
+
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -446,4 +449,7 @@ public:
 	 *   See also        : CPP_PLayerManager::Takedown
 	***********************************************************************************/
 	bool GetCanTakedown();
+
+	void ShootPlayer();
+	void StopShootingPlayer();
 };
