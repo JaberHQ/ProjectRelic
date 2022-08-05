@@ -13,7 +13,7 @@ EBTNodeResult::Type UCPP_ChangeCoverTask::ExecuteTask( UBehaviorTreeComponent& o
 		if( controllerAI->GetChangeCoverNumber() == 0 )
 		{
 			controllerAI->SetInCover( false );
-			controllerAI->SetChangeCoverNumber( 4 );
+			controllerAI->SetChangeCoverNumber( 5 );
 		}
 		else
 		{

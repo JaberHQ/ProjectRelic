@@ -6,7 +6,7 @@
 #include "CPP_PlayerManager.h"
 
 ACPP_AIController::ACPP_AIController()
-	:m_changeCoverNumber( 4 )
+	:m_changeCoverNumber( 5 )
 {
 	// BT and BB
 	behaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
