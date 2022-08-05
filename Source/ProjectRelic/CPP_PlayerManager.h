@@ -82,17 +82,18 @@ private:
 	bool m_deathHitmarkerActive; // If death hitmarker is active
 	bool m_isInCover; // If character is in cover
 	FTimerHandle m_hitmarkerTimer; // Hitmarker timer handle
-	UMaterialInterface* m_material; // Material 
-	UMaterialInterface* m_material1; // Material 
-	UMaterialInterface* m_material2; // Material 
-	UMaterialInterface* m_material3; // Material 
-	UMaterialInterface* m_material4; // Material 
-	UMaterialInterface* m_material5; // Material 
-	UMaterialInterface* m_material6; // Material 
-	UMaterialInterface* m_material7; // Material 
-	UMaterialInterface* m_material8; // Material 
-	UMaterialInterface* m_material9; // Material 
-	UMaterialInterface* m_material10; // Material 
+	TArray<UMaterialInterface> m_material;
+	//UMaterialInterface* m_material; // Material 
+	//UMaterialInterface* m_material1; // Material 
+	//UMaterialInterface* m_material2; // Material 
+	//UMaterialInterface* m_material3; // Material 
+	//UMaterialInterface* m_material4; // Material 
+	//UMaterialInterface* m_material5; // Material 
+	//UMaterialInterface* m_material6; // Material 
+	//UMaterialInterface* m_material7; // Material 
+	//UMaterialInterface* m_material8; // Material 
+	//UMaterialInterface* m_material9; // Material 
+	//UMaterialInterface* m_material10; // Material 
 	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
 	FName m_pistolSocket; // Pistol socket
 	FName m_pistolMuzzleSocket; // Pistol muzzle socket

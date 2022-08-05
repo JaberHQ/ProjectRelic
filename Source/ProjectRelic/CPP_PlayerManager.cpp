@@ -81,7 +81,7 @@ void ACPP_PlayerManager::BeginPlay()
 	m_invisibility = false;
 
 	// Create dynamic material
-	m_material = GetMesh()->GetMaterial( 0 );
+	/*m_material = GetMesh()->GetMaterial( 0 );
 	m_material1 = GetMesh()->GetMaterial( 1 );
 	m_material2 = GetMesh()->GetMaterial( 2 );
 	m_material3 = GetMesh()->GetMaterial( 3 );
@@ -91,10 +91,14 @@ void ACPP_PlayerManager::BeginPlay()
 	m_material7 = GetMesh()->GetMaterial( 7 );
 	m_material8 = GetMesh()->GetMaterial( 8 );
 	m_material9 = GetMesh()->GetMaterial( 9 );
-	m_material10 = GetMesh()->GetMaterial( 10 );
+	m_material10 = GetMesh()->GetMaterial( 10 );*/
+	for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
+	{
+		GetMesh
+	}
 
 	// Create dynamic material
-	m_dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
+	//m_dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
 
 	// Set dynamic material
 	GetMesh()->SetMaterial( 0, m_dynamicMaterial );
