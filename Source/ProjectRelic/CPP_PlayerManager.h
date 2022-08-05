@@ -82,7 +82,7 @@ private:
 	bool m_deathHitmarkerActive; // If death hitmarker is active
 	bool m_isInCover; // If character is in cover
 	FTimerHandle m_hitmarkerTimer; // Hitmarker timer handle
-	TArray<UMaterialInterface> m_material;
+	TArray<UMaterialInterface*> m_material;
 	//UMaterialInterface* m_material; // Material 
 	//UMaterialInterface* m_material1; // Material 
 	//UMaterialInterface* m_material2; // Material 

@@ -81,20 +81,10 @@ void ACPP_PlayerManager::BeginPlay()
 	m_invisibility = false;
 
 	// Create dynamic material
-	/*m_material = GetMesh()->GetMaterial( 0 );
-	m_material1 = GetMesh()->GetMaterial( 1 );
-	m_material2 = GetMesh()->GetMaterial( 2 );
-	m_material3 = GetMesh()->GetMaterial( 3 );
-	m_material4 = GetMesh()->GetMaterial( 4 );
-	m_material5 = GetMesh()->GetMaterial( 5 );
-	m_material6 = GetMesh()->GetMaterial( 6 );
-	m_material7 = GetMesh()->GetMaterial( 7 );
-	m_material8 = GetMesh()->GetMaterial( 8 );
-	m_material9 = GetMesh()->GetMaterial( 9 );
-	m_material10 = GetMesh()->GetMaterial( 10 );*/
+
 	for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
 	{
-		GetMesh
+		m_material.Add( GetMesh()->GetMaterial( i ) );
 	}
 
 	// Create dynamic material
@@ -102,8 +92,8 @@ void ACPP_PlayerManager::BeginPlay()
 
 	// Set dynamic material
 	GetMesh()->SetMaterial( 0, m_dynamicMaterial );
-	m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
-	m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
+	//m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+	//m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
 	// Set health to full
 	//health = defaultHealth;
@@ -337,23 +327,12 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 	else
 	{
 		// Back to original texture
-		m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
-		/*for( int i = 0; i < 10; i++ )
+		//m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
+		
+		for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
 		{
-			GetMesh()->SetMaterial( i, m_material );
-			m_material+i
-		}*/
-		/*GetMesh()->SetMaterial( 0, m_material );
-		GetMesh()->SetMaterial( 1, m_material1 );
-		GetMesh()->SetMaterial( 2, m_material2 );
-		GetMesh()->SetMaterial( 3, m_material3 );
-		GetMesh()->SetMaterial( 4, m_material4 );
-		GetMesh()->SetMaterial( 5, m_material5 );
-		GetMesh()->SetMaterial( 6, m_material6 );
-		GetMesh()->SetMaterial( 7, m_material7 );
-		GetMesh()->SetMaterial( 8, m_material8 );
-		GetMesh()->SetMaterial( 9, m_material9 );
-		GetMesh()->SetMaterial( 10, m_material10 );*/
+			GetMesh()->SetMaterial( i, m_material[ i ] );
+		}
 
 	}
 }
