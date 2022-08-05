@@ -123,6 +123,19 @@ void ACPP_AIManager::Tick( float DeltaTime )
 		}
 	}
 
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+	if( playerManager )
+	{
+		if( playerManager->GetInvisibilityStatus() )
+		{
+			GetMesh()->SetRenderCustomDepth( true );
+		}
+		else
+		{
+			GetMesh()->SetRenderCustomDepth( false );
+
+		}
+	}
 	// Broadcast delegate for sight detection widget
 	SightDetectionDelegate();
 
