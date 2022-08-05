@@ -409,10 +409,6 @@ bool ACPP_AIManager::GetCanTakedown()
 	return m_canTakedown;
 }
 
-
-
-
-
 void ACPP_AIManager::OnPlayerCaught( const TArray<AActor*>& caughtActors )
 {
 	// AI Controller reference

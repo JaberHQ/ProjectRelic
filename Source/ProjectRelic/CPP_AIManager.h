@@ -92,7 +92,7 @@ private:
 	bool m_dead; // If AI is dead
 
 	FTimerHandle m_stopShooting;
-
+	FTimerHandle m_coverTimer;
 private:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "AI", meta = ( AllowPrivateAccess = "true" ) );
 		ACPP_PatrolPoint* m_patrolPath; // Choose patrol points
@@ -451,5 +451,8 @@ public:
 	bool GetCanTakedown();
 
 	void ShootPlayer();
+
 	void StopShootingPlayer();
+
+
 };

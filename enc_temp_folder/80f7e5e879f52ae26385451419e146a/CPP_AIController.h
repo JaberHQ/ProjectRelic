@@ -74,8 +74,6 @@ private:
 
 	UPROPERTY( EditDefaultsOnly, Category = "AI" )
 		FName m_dead; // If AI is dead
-
-	int m_changeCoverNumber;
 private:
 	/**********************************************************************
 	   *   Function        : virtual void OnPossess( APawn* pawn ) override
@@ -267,9 +265,4 @@ public:
 	*   See also        : Behaviour Tree - BT_AssaultSoldier
 	*********************************************************************************/
 	bool GetDead();
-
-	void DecremenetCover();
-	int GetChangeCoverNumber();
-	void SetChangeCoverNumber( int integer );
-
 };

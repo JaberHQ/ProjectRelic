@@ -6,7 +6,6 @@
 #include "CPP_PlayerManager.h"
 
 ACPP_AIController::ACPP_AIController()
-	:m_changeCoverNumber( 4 )
 {
 	// BT and BB
 	behaviourComp = CreateDefaultSubobject<UBehaviorTreeComponent>( TEXT( "BehaviourComp" ) );
@@ -149,19 +148,4 @@ void ACPP_AIController::SetDead( bool boolean )
 bool ACPP_AIController::GetDead()
 {
 	return blackboardComp->GetValueAsBool( m_dead );
-}
-
-void ACPP_AIController::DecremenetCover()
-{
-	m_changeCoverNumber--;
-}
-
-int ACPP_AIController::GetChangeCoverNumber()
-{
-	return m_changeCoverNumber;
-}
-
-void ACPP_AIController::SetChangeCoverNumber( int integer )
-{
-	m_changeCoverNumber = integer;
 }
