@@ -114,9 +114,6 @@ public:
 	UPROPERTY( EditAnywhere, Category = "Health" )
 		float health; // Player health
 
-	UPROPERTY( EditAnywhere, Category = "Health" )
-		float defaultHealth; // Player default health
-
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
 		bool takedownAvailable; // If takedown is available
 
@@ -205,396 +202,6 @@ private:
 	*   See also        : N/A
 	*****************************************************************************/
 	void HitmarkerFinished();
-
-public:
-	/*****************************************************************************
-	*   Function        : ACPP_PlayerManager()
-	*   Purpose         : Constructor
-	*   Parameters      : N/A
-	*   Returns         : N/A
-	*   Date altered    : 02/05/2022
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : N/A
-	*   See also        : N/A
-	*****************************************************************************/
-	ACPP_PlayerManager();
-	/*****************************************************************************
-	*   Function        : ~ACPP_PlayerManager()
-	*   Purpose         : Deconstructor
-	*   Parameters      : N/A
-	*   Returns         : N/A
-	*   Date altered    : 02/05/2022
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : N/A
-	*   See also        : N/A
-	*****************************************************************************/
-	~ACPP_PlayerManager();
-	/*****************************************************************************
-	*   Function        : virtual void BeginPlay() override
-	*   Purpose         : Begin event
-	*   Parameters      : N/A
-	*   Returns         : N/A
-	*   Date altered    : 02/05/2022 
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : N/A
-	*   See also        : N/A
-	*****************************************************************************/
-	virtual void BeginPlay() override;
-	/*******************************************************************************************************************
-	*   Function        : virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override
-	*   Purpose         : Player inputs
-	*   Parameters      : class UInputComponent* PlayerInputComponent
-	*   Returns         : N/A
-	*   Date altered    : 02/05/2022 
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : N/A
-	*   See also        : N/A
-	*******************************************************************************************************************/
-	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
-	/*****************************************************************************
-	 *   Function        : virtual void Tick( float DeltaTime ) override
-	 *   Purpose         : Event Tick
-	 *   Parameters      : float DeltaTime
-	 *   Returns         : N/A
-	 *   Date altered    : 02/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	virtual void Tick( float DeltaTime ) override;
-	/*****************************************************************************
-	 *   Function        : void SetCanTakedown( bool canTakedown );
-	 *   Purpose         : Set bool for being able to stealth takedown AI
-	 *   Parameters      : bool canTakedown
-	 *   Returns         : N/A 
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	void SetCanTakedown( bool canTakedown );
-	/*****************************************************************************
-	 *   Function        : bool GetCanTakedown()
-	 *   Purpose         : Get bool for being able to stealth takedown AI
-	 *   Parameters      : N/A
-	 *   Returns         : m_canTakedown
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	bool GetCanTakedown();
-	/*****************************************************************************
-	 *   Function        : void Takedown()
-	 *   Purpose         : Stealth Takedown AI (The actual action)
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	void Takedown();
-	/*****************************************************************************
-	 *   Function        : void TraceForward_Implementation()
-	 *   Purpose         : Send a raycast to check if AI is infront
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	void TraceForwardImplementation();
-	/*****************************************************************************
-	 *   Function        : void AnimationExecuted()
-	 *   Purpose         : Actions after anim montage has been played
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	void AnimationExecuted();
-	/*****************************************************************************
-	 *   Function        : virtual void TakeAttack() override
-	 *   Purpose         : When Player has been hit by projectile
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_CharacterManager::ShootProjectile
-	*****************************************************************************/
-	virtual void TakeAttack() override;
-	/*****************************************************************************
-	  *   Function        : void UserInterfaceDelegate()
-	  *   Purpose         : Delegate for Players gameplay HUD
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void UserInterfaceDelegate();
-	/*****************************************************************************
-	  *   Function        : void Invisibility()
-	  *   Purpose         : Turn player invisibility on or off
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void Invisibility();
-	/*****************************************************************************
-	  *   Function        : bool GetInvisibilityStatus()
-	  *   Purpose         : Get if invsibility is on
-	  *   Parameters      : N/A
-	  *   Returns         : m_invisibility
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	bool GetInvisibilityStatus();
-	/*****************************************************************************
-	  *   Function        : void InvisibilityFinished()
-	  *   Purpose         : Actions when invisiblity has finished
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void InvisibilityFinished();
-	/*****************************************************************************
-	  *   Function        : void Respawn()
-	  *   Purpose         : Respawn Player
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void Respawn();
-	/*****************************************************************************
-	  *   Function        : void IncreaseAmmoCount( int ammo )
-	  *   Purpose         : Increase the ammunition of weapons when called
-	  *   Parameters      : int ammo
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void IncreaseAmmoCount( int ammo );
-	/*************************************************************************************
-	  *   Function        : void EquipGun( TArray<UChildActorComponent*> WeaponInventory )
-	  *   Purpose         : Choose which gun is equipped by the player 
-	  *   Parameters      : TArray<UChildActorComponent*> WeaponInventory
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : void ChangeWeapons( float inputAxis )
-	  *************************************************************************************/
-	void EquipGun( TArray<UChildActorComponent*> WeaponInventory );
-	/*************************************************************************************
-	  *   Function        : void ChangeWeapons( float inputAxis )
-	  *   Purpose         : Change which weapons is chosen
-	  *   Parameters      : float inputAxis
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : void EquipGun( TArray<UChildActorComponent*> WeaponInventory )
-	  *************************************************************************************/
-	void ChangeWeapons( float inputAxis );
-	/*****************************************************************************
-	  *   Function        : bool GetAssaultRifle()
-	  *   Purpose         : Get assault rifle bool
-	  *   Parameters      : N/A
-	  *   Returns         : m_assaultRifle
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetAssaultRifle();
-	/*****************************************************************************
-	  *   Function        : bool GetPistol()
-	  *   Purpose         : Get pistol bool
-	  *   Parameters      : N/A
-	  *   Returns         : m_pistol
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetPistol();
-	/*****************************************************************************
-	  *   Function        : bool GetThrowable()
-	  *   Purpose         : Get throwable bool
-	  *   Parameters      : N/A
-	  *   Returns         : m_throwable
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetThrowable();
-	/*****************************************************************************
-	  *   Function        : bool GetHitmarkerActive()
-	  *   Purpose         : Get if hitmarker is active or not
-	  *   Parameters      : N/A
-	  *   Returns         : m_hitmarkerActive
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetHitmarkerActive();
-	/*****************************************************************************
-	  *   Function        : void SetHitmarkerActive( bool hitmarkerActive )
-	  *   Purpose         : Set if hitmarker is active or not
-	  *   Parameters      : bool hitmarkerActive
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void SetHitmarkerActive( bool hitmarkerActive );
-	/*****************************************************************************
-	  *   Function        : void DistractEnemy()
-	  *   Purpose         : Distract the enemy with a sound
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void DistractEnemy();
-	/*****************************************************************************
-	  *   Function        : void SetDeathHitmarkerActive( bool deathHitmarkerActive )
-	  *   Purpose         : Set specific hitmarker for when Player kills AI
-	  *   Parameters      : bool deathHitmarkerActive
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void SetDeathHitmarkerActive( bool deathHitmarkerActive );
-	/*****************************************************************************
-	  *   Function        : bool GetDeathHitmarkerActive()
-	  *   Purpose         : Get hitmarker for when AI is shot dead
-	  *   Parameters      : N/A
-	  *   Returns         : m_deathHitmarkerActive
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetDeathHitmarkerActive();
-	/*****************************************************************************
-	  *   Function        : void EquipWeaponTick()
-	  *   Purpose         : Equip weapon within Tick
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void EquipWeaponTick();
-	/*****************************************************************************
-	  *   Function        : void HitmarkerTick()
-	  *   Purpose         : Set hitmarker in tick 
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void HitmarkerTick();
-	/*****************************************************************************
-	  *   Function        : float GetHealth()
-	  *   Purpose         : Get Player health
-	  *   Parameters      : N/A
-	  *   Returns         : health
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		float GetHealth();
-	/*****************************************************************************
-	  *   Function        : void PlayerDead()
-	  *   Purpose         : Actions when Player is dead
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void PlayerDead();
-	/*****************************************************************************
-	  *   Function        : void Reset()
-	  *   Purpose         : Reset Player stats
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		void Reset();
-public:
-
-	/*****************************************************************************
-	 *   Function        : bool GetTurnRight()
-	 *   Purpose         : Get turn right bool
-	 *   Parameters      : N/A
-	 *   Returns         : m_turnRight
-	 *   Date altered    : 31/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : Used in animation blueprint
-	 *   See also        : N/A
-	*****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetTurnRight();
-	/*****************************************************************************
-	 *   Function        : bool GetTurnLeft()
-	 *   Purpose         : Get turn left bool
-	 *   Parameters      : N/A
-	 *   Returns         : m_turnLeft
-	 *   Date altered    : 31/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : Used in animation blueprint
-	 *   See also        : N/A
-	*****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetTurnLeft();
-public:
 	/*****************************************************************************
 	 *   Function        : void MoveForward( float inputAxis )
 	 *   Purpose         : Make character move forward
@@ -848,5 +455,388 @@ public:
 	*   See also        : N/A
 	*****************************************************************************/
 	AActor* TakedownTrace();
+	/*****************************************************************************
+	  *   Function        : void PlayerDead()
+	  *   Purpose         : Actions when Player is dead
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void PlayerDead();
+	/*****************************************************************************
+	 *   Function        : void Takedown()
+	 *   Purpose         : Stealth Takedown AI (The actual action)
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void Takedown();
+	/*****************************************************************************
+	 *   Function        : void AnimationExecuted()
+	 *   Purpose         : Actions after anim montage has been played
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void AnimationExecuted();
+	/*****************************************************************************
+	  *   Function        : void DistractEnemy()
+	  *   Purpose         : Distract the enemy with a sound
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void DistractEnemy();
+	/*****************************************************************************
+	*   Function        : void Invisibility()
+	*   Purpose         : Turn player invisibility on or off
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 01/07/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	void Invisibility();
+	/*****************************************************************************
+	  *   Function        : void EquipWeaponTick()
+	  *   Purpose         : Equip weapon within Tick
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void EquipWeaponTick();
+	/*****************************************************************************
+	  *   Function        : void HitmarkerTick()
+	  *   Purpose         : Set hitmarker in tick
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void HitmarkerTick();
+	/*************************************************************************************
+	  *   Function        : void EquipGun( TArray<UChildActorComponent*> WeaponInventory )
+	  *   Purpose         : Choose which gun is equipped by the player
+	  *   Parameters      : TArray<UChildActorComponent*> WeaponInventory
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : void ChangeWeapons( float inputAxis )
+	  *************************************************************************************/
+	void EquipGun( TArray<UChildActorComponent*> WeaponInventory );
+	/*************************************************************************************
+	  *   Function        : void ChangeWeapons( float inputAxis )
+	  *   Purpose         : Change which weapons is chosen
+	  *   Parameters      : float inputAxis
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : void EquipGun( TArray<UChildActorComponent*> WeaponInventory )
+	  *************************************************************************************/
+	void ChangeWeapons( float inputAxis );
+	/*****************************************************************************
+	  *   Function        : void InvisibilityFinished()
+	  *   Purpose         : Actions when invisiblity has finished
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void InvisibilityFinished();
+	/*****************************************************************************
+	  *   Function        : void Respawn()
+	  *   Purpose         : Respawn Player
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void Respawn();
+
+public:
+	/*****************************************************************************
+	*   Function        : ACPP_PlayerManager()
+	*   Purpose         : Constructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	ACPP_PlayerManager();
+	/*****************************************************************************
+	*   Function        : ~ACPP_PlayerManager()
+	*   Purpose         : Deconstructor
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	~ACPP_PlayerManager();
+	/*****************************************************************************
+	*   Function        : virtual void BeginPlay() override
+	*   Purpose         : Begin event
+	*   Parameters      : N/A
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022 
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*****************************************************************************/
+	virtual void BeginPlay() override;
+	/*******************************************************************************************************************
+	*   Function        : virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override
+	*   Purpose         : Player inputs
+	*   Parameters      : class UInputComponent* PlayerInputComponent
+	*   Returns         : N/A
+	*   Date altered    : 02/05/2022 
+	*   Contributors    : Jaber Ahmed
+	*   Notes           : N/A
+	*   See also        : N/A
+	*******************************************************************************************************************/
+	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+	/*****************************************************************************
+	 *   Function        : virtual void Tick( float DeltaTime ) override
+	 *   Purpose         : Event Tick
+	 *   Parameters      : float DeltaTime
+	 *   Returns         : N/A
+	 *   Date altered    : 02/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	virtual void Tick( float DeltaTime ) override;
+	/*****************************************************************************
+	 *   Function        : void SetCanTakedown( bool canTakedown );
+	 *   Purpose         : Set bool for being able to stealth takedown AI
+	 *   Parameters      : bool canTakedown
+	 *   Returns         : N/A 
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void SetCanTakedown( bool canTakedown );
+	/*****************************************************************************
+	 *   Function        : bool GetCanTakedown()
+	 *   Purpose         : Get bool for being able to stealth takedown AI
+	 *   Parameters      : N/A
+	 *   Returns         : m_canTakedown
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	bool GetCanTakedown() const;
+	/*****************************************************************************
+	 *   Function        : virtual void TakeAttack() override
+	 *   Purpose         : When Player has been hit by projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_CharacterManager::ShootProjectile
+	*****************************************************************************/
+	virtual void TakeAttack() override;
+	
+	/*****************************************************************************
+	  *   Function        : bool GetInvisibilityStatus()
+	  *   Purpose         : Get if invsibility is on
+	  *   Parameters      : N/A
+	  *   Returns         : m_invisibility
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	bool GetInvisibilityStatus() const;
+	/*****************************************************************************
+	  *   Function        : void SetHitmarkerActive( bool hitmarkerActive )
+	  *   Purpose         : Set if hitmarker is active or not
+	  *   Parameters      : bool hitmarkerActive
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void SetHitmarkerActive( bool hitmarkerActive );
+	/*****************************************************************************
+	  *   Function        : void SetDeathHitmarkerActive( bool deathHitmarkerActive )
+	  *   Purpose         : Set specific hitmarker for when Player kills AI
+	  *   Parameters      : bool deathHitmarkerActive
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void SetDeathHitmarkerActive( bool deathHitmarkerActive );
+	
+	
+	
+public:
+
+	/*****************************************************************************
+	 *   Function        : bool GetTurnRight()
+	 *   Purpose         : Get turn right bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_turnRight
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Used in animation blueprint
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnRight() const;
+	/*****************************************************************************
+	 *   Function        : bool GetTurnLeft()
+	 *   Purpose         : Get turn left bool
+	 *   Parameters      : N/A
+	 *   Returns         : m_turnLeft
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : Used in animation blueprint
+	 *   See also        : N/A
+	*****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetTurnLeft() const;
+	/*****************************************************************************
+	  *   Function        : float GetHealth()
+	  *   Purpose         : Get Player health
+	  *   Parameters      : N/A
+	  *   Returns         : health
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		float GetHealth() const;
+	/*****************************************************************************
+	  *   Function        : void Reset()
+	  *   Purpose         : Reset Player stats
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void Reset();
+	/*****************************************************************************
+	  *   Function        : bool GetDeathHitmarkerActive()
+	  *   Purpose         : Get hitmarker for when AI is shot dead
+	  *   Parameters      : N/A
+	  *   Returns         : m_deathHitmarkerActive
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetDeathHitmarkerActive() const;
+	/*****************************************************************************
+	  *   Function        : void IncreaseAmmoCount( int ammo )
+	  *   Purpose         : Increase the ammunition of weapons when called
+	  *   Parameters      : int ammo
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void IncreaseAmmoCount( int ammo );
+
+	/*****************************************************************************
+	  *   Function        : bool GetAssaultRifle()
+	  *   Purpose         : Get assault rifle bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_assaultRifle
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetAssaultRifle() const;
+	/*****************************************************************************
+	  *   Function        : bool GetPistol()
+	  *   Purpose         : Get pistol bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_pistol
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetPistol() const;
+	/*****************************************************************************
+	  *   Function        : bool GetThrowable()
+	  *   Purpose         : Get throwable bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_throwable
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetThrowable() const;
+	/*****************************************************************************
+	  *   Function        : bool GetHitmarkerActive()
+	  *   Purpose         : Get if hitmarker is active or not
+	  *   Parameters      : N/A
+	  *   Returns         : m_hitmarkerActive
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetHitmarkerActive() const;
+	/*****************************************************************************
+	  *   Function        : void UserInterfaceDelegate()
+	  *   Purpose         : Delegate for Players gameplay HUD
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void UserInterfaceDelegate();
 
 };

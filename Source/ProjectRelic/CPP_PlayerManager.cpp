@@ -10,19 +10,17 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "CPP_AIManager.h"
-
-
+#include "CPP_Settings.h"
 
 ACPP_PlayerManager::ACPP_PlayerManager()
 	:m_canTakedown( false )
 	,takedownTraceDistance( 250.0f )
-	,defaultHealth( 100.0f )
-	,health( 100.0f )
+	,health( Settings::k_defaultHealth )
 	,m_shotDamage( 15.0f )
 	,m_animPosition( 40.0f )
 	,m_animCompletion( 5.0f )
 	,m_invisibility( false )
-	,m_invisibilityPercent( 100.0f )
+	,m_invisibilityPercent( Settings::k_defaultInvisibility )
 	,m_invisiblityTimer()
 	,m_currentlyEquipped( 0 )
 	,m_weaponInventory()
@@ -181,12 +179,12 @@ void ACPP_PlayerManager::Turn( float inputAxis )
 
 
 
-bool ACPP_PlayerManager::GetTurnRight()
+bool ACPP_PlayerManager::GetTurnRight() const
 {
 	return m_turnRight;
 }
 
-bool ACPP_PlayerManager::GetTurnLeft()
+bool ACPP_PlayerManager::GetTurnLeft() const
 {
 	return m_turnLeft;
 }
@@ -283,7 +281,6 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 	InvisibilityTick( DeltaTime );
 
 	EquipWeaponTick();
-
 
 	HitmarkerTick();
 
@@ -477,7 +474,7 @@ void ACPP_PlayerManager::SetCanTakedown( bool canTakedown )
 	m_canTakedown = canTakedown;	
 }
 
-bool ACPP_PlayerManager::GetCanTakedown()
+bool ACPP_PlayerManager::GetCanTakedown() const
 {
 	return m_canTakedown;
 }
@@ -581,64 +578,7 @@ AActor* ACPP_PlayerManager::TakedownTrace()
 }
 
 
-void ACPP_PlayerManager::TraceForwardImplementation()
-{
-	FVector location; // Location
-	FRotator rotation; // Rotation
-	FHitResult hit; // Hit
-	FCollisionQueryParams traceParams; // Trace parameters
 
-	// Player viewpoint
-	GetController()->GetPlayerViewPoint( location, rotation );
-
-	// Set start and end
-	FVector start = location;
-	FVector end = ( GetActorLocation() + ( GetActorForwardVector() * takedownTraceDistance ) );
-
-	// Line trace
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECC_WorldDynamic, traceParams );
-
-	// If line has hit
-	if( bHit )
-	{
-		// Box where collision has occured
-		//DrawDebugBox( GetWorld(), hit.ImpactPoint, FVector( 5, 5, 5 ), FColor::Emerald, false, 2.0f );
-
-		// Get AI Manager
-		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( hit.GetActor() );
-		if( managerAI )
-		{		
-			// --- Spring arm stuff ---
-
-			// Disable character movement
-			GetCharacterMovement()->DisableMovement();
-
-			// Disable Player input
-			APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-			DisableInput( playerController );
-
-			// Set bool
-			m_canTakedown = false;
-
-			// Set actor transform
-			SetActorRotation( managerAI->GetActorRotation() ); // Meant to be new transform rotation, not actor rotation
-			SetActorLocation( ( managerAI->GetActorLocation() ) + ( managerAI->GetActorForwardVector() * -m_animPosition ) );
-			
-			if( animTakedown )
-			{
-				// Play animation
-				PlayAnimMontage( animTakedown );
-				
-				// Takedown AI
-				managerAI->Takedown();
-
-				// Delay 
-				FTimerHandle delayTimer;
-				GetWorld()->GetTimerManager().SetTimer( delayTimer, this, &ACPP_PlayerManager::AnimationExecuted, m_animCompletion, false );		
-			}
-		}
-	}
-}
 
 void ACPP_PlayerManager::Invisibility()
 {
@@ -661,7 +601,7 @@ void ACPP_PlayerManager::Invisibility()
 	
 }
 
-bool ACPP_PlayerManager::GetInvisibilityStatus()
+bool ACPP_PlayerManager::GetInvisibilityStatus() const
 {
 	return m_invisibility;
 }
@@ -767,22 +707,22 @@ void ACPP_PlayerManager::ChangeWeapons( float inputAxis )
 	EquipGun( m_weaponInventory );
 }
 
-bool ACPP_PlayerManager::GetHitmarkerActive()
+bool ACPP_PlayerManager::GetHitmarkerActive() const
 {
 	return m_hitmarkerActive;
 }
 
-bool ACPP_PlayerManager::GetAssaultRifle()
+bool ACPP_PlayerManager::GetAssaultRifle() const
 {
 	return m_assaultRifle;
 }
 
-bool ACPP_PlayerManager::GetPistol()
+bool ACPP_PlayerManager::GetPistol() const
 {
 	return m_pistol;
 }
 
-bool ACPP_PlayerManager::GetThrowable()
+bool ACPP_PlayerManager::GetThrowable() const
 {
 	return m_throwable;
 }
@@ -813,7 +753,7 @@ void ACPP_PlayerManager::SetDeathHitmarkerActive( bool deathHitmarkerActive )
 	m_deathHitmarkerActive = deathHitmarkerActive;
 }
 
-bool ACPP_PlayerManager::GetDeathHitmarkerActive()
+bool ACPP_PlayerManager::GetDeathHitmarkerActive() const
 {
 	return m_deathHitmarkerActive;
 }
@@ -825,25 +765,7 @@ void ACPP_PlayerManager::AnimationExecuted()
 	{
 		m_pPlayerController->Possess( this );
 	}
-	//// Enable Player input
-	//APlayerController* playerController = GetWorld()->GetFirstPlayerController();
 
-	// Re-enable movement
-	//GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
-
-	//// Player can takedown AI again
-	//m_canTakedown = true;
-
-	// Enable Player input
-	//GetController()->Possess( this );
-
-	//GetController()->EnableInput( GetWorld()->GetFirstPlayerController() );
-
-	// Re-enable movement
-	//GetCharacterMovement()->SetMovementMode( EMovementMode::MOVE_Walking );
-
-	//// Player can takedown AI again
-	//m_canTakedown = true;
 }
 
 void ACPP_PlayerManager::TakeAttack()
@@ -904,7 +826,7 @@ void ACPP_PlayerManager::HitmarkerTick()
 	}
 }
 
-float ACPP_PlayerManager::GetHealth()
+float ACPP_PlayerManager::GetHealth() const
 {
 	return health;
 }
