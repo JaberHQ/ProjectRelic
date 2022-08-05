@@ -175,7 +175,7 @@ void ACPP_CharacterManager::ShootProjectile()
 	if( m_ammoAR > 0  || m_ammoPistol > 0  )
 	{
 		// Spawn muzzle flash
-		UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetComponentLocation(), FRotator(0.0f, 90.0f, 0.0f), FVector(0.1f, 0.1f, 0.1f));
+		UGameplayStatics::SpawnEmitterAttached( animShoot, bulletComp, "MyAttachPoint", bulletComp->GetRelativeLocation(), FRotator( 0.0f, 90.0f, 0.0f ), FVector( 0.1f, 0.1f, 0.1f ) );
 
 		if( m_assaultRifle )
 		{

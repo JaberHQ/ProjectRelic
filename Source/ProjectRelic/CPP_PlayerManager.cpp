@@ -102,7 +102,7 @@ void ACPP_PlayerManager::BeginPlay()
 	m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
 	// Set health to full
-	health = defaultHealth;
+	//health = defaultHealth;
 }
 
 void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
