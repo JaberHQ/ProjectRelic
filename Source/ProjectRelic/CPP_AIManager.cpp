@@ -118,7 +118,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
 				//controllerAI->PlayerHasShot();
 
-				//controllerAI->SetHasLineOfSight( true );
+				controllerAI->SetHasLineOfSight( true );
 			}
 		}
 	}
