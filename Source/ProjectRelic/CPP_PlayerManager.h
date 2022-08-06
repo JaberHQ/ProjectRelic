@@ -76,6 +76,7 @@ private:
 	float m_invisibilityTimeMultiplier; // Increase time invisibility
 	float m_invisibilityTimeDrain; // Multplier for how quick invisibility drains
 	float m_chanceOfHit; // Chance to take damage
+	bool m_dead;
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 	bool m_hitmarkerActive; // If hitmarker is active
@@ -839,5 +840,16 @@ public:
 	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
 		void UserInterfaceDelegate();
-
+	/*****************************************************************************
+	  *   Function        : bool GetDead();
+	  *   Purpose         : Get dead bool
+	  *   Parameters      : N/A
+	  *   Returns         : m_dead
+	  *   Date altered    : 06/08/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		bool GetDead();
 };

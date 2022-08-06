@@ -38,6 +38,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,footstepsSFX()
 	,takedownAvailable( false )
 	,m_pPlayerController( nullptr )
+	,m_dead( false )
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -759,7 +760,7 @@ void ACPP_PlayerManager::TakeAttack()
 	if( randomHit < m_chanceOfHit )
 	{
 		// If health remains, decrease health else pronounce Player as dead
-		health > 0.0f ? health -= m_shotDamage : Respawn();
+		health > 0.0f ? health -= m_shotDamage : m_dead = true;
 	}
 }
 
@@ -780,6 +781,11 @@ void ACPP_PlayerManager::UserInterfaceDelegate()
 		userInterfaceD.Broadcast( health / 100.0f, m_invisibilityPercent / 100.0f, m_throwableAmount, 0, m_assaultRifle, m_pistol, m_throwable );
 
 	}
+}
+
+bool ACPP_PlayerManager::GetDead()
+{
+	return m_dead;
 }
 
 void ACPP_PlayerManager::StartAim()
