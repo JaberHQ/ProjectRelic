@@ -91,7 +91,7 @@ void ACPP_PlayerManager::BeginPlay()
 	//m_dynamicMaterial = UMaterialInstanceDynamic::Create( m_material, this );
 
 	// Set dynamic material
-	GetMesh()->SetMaterial( 0, m_dynamicMaterial );
+	//GetMesh()->SetMaterial( 0, m_dynamicMaterial );
 	//m_dynamicMaterial->SetScalarParameterValue( TEXT( "EmissiveStrength" ), 0 );
 	//m_dynamicMaterial->SetVectorParameterValue( TEXT( "Colour" ), FLinearColor::Red );
 	
