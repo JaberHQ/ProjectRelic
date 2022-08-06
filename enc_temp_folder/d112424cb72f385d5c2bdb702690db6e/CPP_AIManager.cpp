@@ -118,7 +118,7 @@ void ACPP_AIManager::Tick( float DeltaTime )
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
 				//controllerAI->PlayerHasShot();
 
-				//controllerAI->SetHasLineOfSight( true );
+				controllerAI->SetHasLineOfSight( true );
 			}
 		}
 	}
@@ -374,64 +374,61 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 		{
 			if( playerManager->GetInvisibilityStatus() == false )
 			{
+				// Set bool to investigate
+				m_hasSeenSomething = true;
 
+				// Sight config
 				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
 
 				for( int i = 0; i < caughtActors.Num(); i++ )
 				{
+					// Get location
+					FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ i ] )->GetStimulusLocation( sightConfig->GetSenseID() );
+					FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ i ] )->GetReceiverLocation( sightConfig->GetSenseID() );
+
+					// Distance between Player and Enemy
+					float distance = FVector::Distance( playerLocation, enemyLocation );
+
+					// Set last known location of the Player
+					controllerAI->SetLastKnownLocation( playerLocation );
+
+					//Investigate
+					controllerAI->SetInvestigate( true );
+
 					// Actor perception
 					FActorPerceptionBlueprintInfo info;
-					perceptionComp->GetActorsPerception( caughtActors[ i ], info );
-
+					perceptionComp->GetActorsPerception( playerManager, info );
 					for( int j = 0; j < info.LastSensedStimuli.Num(); j++ )
 					{
-						FAIStimulus stimulus = info.LastSensedStimuli[ j ];
-						if( stimulus.WasSuccessfullySensed() )
+						const FAIStimulus stimulus = info.LastSensedStimuli[ j ];
+
+						if( stimulus.Type.Name == "Default__AISense_Sight" )
 						{
-							if( caughtActors[ 0 ] )
+							if( stimulus.WasSuccessfullySensed() )
 							{
-								if( stimulus.Type.Name == "Default__AISense_sight" )
+								// Set bool to investigate
+								m_hasSeenSomething = true;
+								//UGameplayStatics::PlaySoundAtLocation( GetWorld(), soundHuh, GetActorLocation(), 0.3f );
+							}
+							else
+							{
+								// Go back to regular pathing
+								if( m_hasBeenCaught == false )
 								{
-
-									m_hasSeenSomething = true;
-
-									// Get location
-									FVector playerLocation = perceptionComp->GetActorInfo( *caughtActors[ i ] )->GetStimulusLocation( sightConfig->GetSenseID() );
-									FVector enemyLocation = perceptionComp->GetActorInfo( *caughtActors[ i ] )->GetReceiverLocation( sightConfig->GetSenseID() );
-
-									// Distance between Player and Enemy
-									float distance = FVector::Distance( playerLocation, enemyLocation );
-
-									// Set last known location of the Player
-									controllerAI->SetLastKnownLocation( playerLocation );
-
-									//Investigate
-									controllerAI->SetInvestigate( true );
-
-								}
-								if( stimulus.Tag == noiseTag )
-								{
-									FVector shotLocation = perceptionComp->GetActorInfo( *caughtActors[ i ] )->GetLastStimulusLocation();
-									controllerAI->SetLastKnownLocation( shotLocation );
-									//Investigate
-									controllerAI->SetInvestigate( true );
+									m_hasSeenSomething = false;
 								}
 							}
-
-							
 						}
-							
-											
 					}
+
+				}
+				// If player has been caught
+				if( m_hasBeenCaught )
+				{
+					// Set actor (Player) as caught
+					controllerAI->PlayerHasShot();
 				}
 			}
-			// If player has been caught
-			if( m_hasBeenCaught )
-			{
-				// Set actor (Player) as caught
-				controllerAI->PlayerHasShot();
-			}
-
 		}
 	}
 	

@@ -979,9 +979,7 @@ void ACPP_PlayerManager::StartShooting()
 			if( m_ammoAR > 0 )
 			{
 				m_isShooting = true;
-				FVector location = GetActorLocation();
-				UGameplayStatics::PlaySoundAtLocation( GetWorld(), shootSFX, gunComp->GetRelativeLocation(), 0.1f );
-				UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
+
 				//m_ammoAR -= 1;
 
 				ShootProjectile();
@@ -992,9 +990,7 @@ void ACPP_PlayerManager::StartShooting()
 			if( m_ammoAR <= 0 )
 			{
 				m_isShooting = false;
-				FVector location = GetActorLocation();
-				UGameplayStatics::PlaySoundAtLocation( GetWorld(), pistolShootSFX, bulletComp->GetRelativeLocation(), 0.1f );
-				UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
+
 				GetWorld()->GetTimerManager().SetTimer( m_reloadTime, this, &ACPP_CharacterManager::Reloaded, m_reloadAnimTime, true );
 			}
 

@@ -58,6 +58,7 @@
  * 11/07/2022	 JA			 v2.6		 Ammo count, pickups
  * 18/07/2022	 JA			 v2.7		 Something to throw
  * 25/07/2022	 JA			 v2.8	     HUD, bug fixes
+ * 06/08/2022	 JA			 v2.9		 Xray vision
 **************************************************************************************************************/
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams( FPlayerUI, float, healthBar, float, invisibilityBar, int, ammoCount, int, reserveCount, bool ,assaultRifle, bool, pistol, bool, throwable );
 
@@ -76,7 +77,8 @@ private:
 	float m_invisibilityTimeMultiplier; // Increase time invisibility
 	float m_invisibilityTimeDrain; // Multplier for how quick invisibility drains
 	float m_chanceOfHit; // Chance to take damage
-	bool m_dead;
+	bool m_dead; // Player dead
+	bool m_xray; // Xray on or off
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
 	TArray< UChildActorComponent*> m_weaponInventory; // Array for player weapons
 	bool m_hitmarkerActive; // If hitmarker is active
@@ -84,17 +86,6 @@ private:
 	bool m_isInCover; // If character is in cover
 	FTimerHandle m_hitmarkerTimer; // Hitmarker timer handle
 	TArray<UMaterialInterface*> m_material;
-	//UMaterialInterface* m_material; // Material 
-	//UMaterialInterface* m_material1; // Material 
-	//UMaterialInterface* m_material2; // Material 
-	//UMaterialInterface* m_material3; // Material 
-	//UMaterialInterface* m_material4; // Material 
-	//UMaterialInterface* m_material5; // Material 
-	//UMaterialInterface* m_material6; // Material 
-	//UMaterialInterface* m_material7; // Material 
-	//UMaterialInterface* m_material8; // Material 
-	//UMaterialInterface* m_material9; // Material 
-	//UMaterialInterface* m_material10; // Material 
 	UMaterialInstanceDynamic* m_dynamicMaterial; // Dynamic materialPlay
 	FName m_pistolSocket; // Pistol socket
 	FName m_pistolMuzzleSocket; // Pistol muzzle socket
@@ -578,6 +569,18 @@ private:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	void Respawn();
+	/*****************************************************************************
+	  *   Function        : void Xray();
+	  *   Purpose         : Turn on xray vision power
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 06/08/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void Xray();
+
 
 public:
 	/*****************************************************************************
@@ -851,5 +854,28 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
-		bool GetDead();
+		bool GetDead() const;
+	/*****************************************************************************
+	  *   Function        : void SetThrowable( bool boolean );
+	  *   Purpose         : Set throwable
+	  *   Parameters      : bool boolean
+	  *   Returns         : N/A
+	  *   Date altered    : 06/08/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
+		void SetThrowable( bool boolean );
+	/*****************************************************************************
+	  *   Function        : bool GetXray();
+	  *   Purpose         : Get xray
+	  *   Parameters      : N/A
+	  *   Returns         : m_xray
+	  *   Date altered    : 06/08/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	bool GetXray() const;
 };
