@@ -682,8 +682,7 @@ public:
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
-	UFUNCTION( BlueprintCallable )
-		bool GetInvisibilityStatus() const;
+	bool GetInvisibilityStatus() const;
 	/*****************************************************************************
 	  *   Function        : void SetHitmarkerActive( bool hitmarkerActive )
 	  *   Purpose         : Set if hitmarker is active or not
