@@ -344,4 +344,17 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	void StopShooting();
+	/*****************************************************************************
+	  *   Function        : bool GetIsShooting();
+	  *   Purpose         : Get if the character is shooting
+	  *   Parameters      : N/A
+	  *   Returns         : m_isShooting
+	  *   Date altered    : 07/08/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+
+	UFUNCTION( BlueprintCallable )
+		bool GetIsShooting();
 };

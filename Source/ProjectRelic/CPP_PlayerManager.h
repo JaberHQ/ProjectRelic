@@ -877,5 +877,6 @@ public:
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
-	bool GetXray() const;
+	UFUNCTION( BlueprintCallable )
+		bool GetXray() const;
 };

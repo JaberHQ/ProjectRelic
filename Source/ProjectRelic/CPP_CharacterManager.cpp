@@ -261,3 +261,8 @@ void ACPP_CharacterManager::StopShooting()
 	m_isShooting = false;
 	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
 }
+
+bool ACPP_CharacterManager::GetIsShooting()
+{
+	return m_isShooting;
+}

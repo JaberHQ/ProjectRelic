@@ -203,6 +203,8 @@ void ACPP_PlayerManager::MoveForward( float inputAxis )
 
 		// Report noise to event so that enemy can 'hear' it
 		//UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 0.1f, this, 0.0f, noiseTag );
+
+		m_xray = false;
 	}
 
 }
@@ -220,6 +222,9 @@ void ACPP_PlayerManager::MoveRight( float inputAxis )
 
 		// Add movement in that direction
 		AddMovementInput( Direction, inputAxis );
+
+		m_xray = false;
+
 	}
 	else if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == true ) )
 	{
