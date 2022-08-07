@@ -388,7 +388,7 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 						FAIStimulus stimulus = info.LastSensedStimuli[ j ];
 						if( stimulus.WasSuccessfullySensed() )
 						{
-							if( caughtActors[ i ] == playerManager )
+							if( caughtActors[ 0 ] )
 							{
 								if( stimulus.Type.Name == "Default__AISense_sight" )
 								{
