@@ -695,7 +695,7 @@ public:
 	  *   See also        : N/A
 	  *****************************************************************************/
 	UFUNCTION( BlueprintCallable )
-	void SetHitmarkerActive( bool hitmarkerActive );
+		void SetHitmarkerActive( bool hitmarkerActive );
 	/*****************************************************************************
 	  *   Function        : void SetDeathHitmarkerActive( bool deathHitmarkerActive )
 	  *   Purpose         : Set specific hitmarker for when Player kills AI
