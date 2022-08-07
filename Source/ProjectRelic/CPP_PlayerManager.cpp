@@ -25,7 +25,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_currentlyEquipped( 0 )
 	,m_weaponInventory()
 	,invisibleMaterial()
-	,m_chanceOfHit( 0.2f )
+	,m_chanceOfHit( 0.5f )
 	,m_pistolSocket(TEXT( "PistolSocket" ) )
 	,m_pistolMuzzleSocket( TEXT(" PistolMuzzleSocket" ) )
 	,callEnemy()
@@ -747,6 +747,7 @@ void ACPP_PlayerManager::SetDeathHitmarkerActive( bool deathHitmarkerActive )
 	m_deathHitmarkerActive = deathHitmarkerActive;
 }
 
+
 bool ACPP_PlayerManager::GetDeathHitmarkerActive() const
 {
 	return m_deathHitmarkerActive;
@@ -771,6 +772,11 @@ void ACPP_PlayerManager::TakeAttack()
 	{
 		// If health remains, decrease health else pronounce Player as dead
 		health > 0.0f ? health -= m_shotDamage : m_dead = true;
+
+		if( m_dead )
+		{
+			PlayAnimMontage( deadAnim );
+		}
 	}
 }
 

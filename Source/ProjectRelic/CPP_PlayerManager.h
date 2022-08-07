@@ -694,6 +694,7 @@ public:
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
 	void SetHitmarkerActive( bool hitmarkerActive );
 	/*****************************************************************************
 	  *   Function        : void SetDeathHitmarkerActive( bool deathHitmarkerActive )
@@ -705,6 +706,7 @@ public:
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
+	UFUNCTION( BlueprintCallable )
 	void SetDeathHitmarkerActive( bool deathHitmarkerActive );
 	
 	
