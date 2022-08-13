@@ -98,6 +98,11 @@ private:
 	APlayerController* m_pPlayerController; // Player controller
 	int m_increaseARAmmo;
 	int m_increasePistolAmmo;
+	int m_assaultRifleValue;
+	int m_pistolValue;
+	int m_throwableValue;
+	float m_coverTraceValue;
+	int m_throwableFull;
 	float m_percentageMutliplier; // Multiply value for sliders
 	float m_hitmarkerAnimComplete;
 	float m_aimingInReturnValue;

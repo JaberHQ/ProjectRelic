@@ -50,6 +50,11 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_percentageMutliplier( 100.0f )
 	,m_hitmarkerAnimComplete( 1.0f )
 	,m_wallTraceMultipler( 100.0f )
+	,m_assaultRifleValue( 0 )
+	,m_pistolValue( 1 )
+	,m_throwableValue( 2 )
+	,m_coverTraceValue( 200.0f )
+	,m_throwableFull( 1 )
 	,animThrow()
 {
 	// Create components
@@ -620,7 +625,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 	WeaponInventory[ m_currentlyEquipped ]->SetVisibility( true );
 
 	// If AR is chosen
-	if( m_currentlyEquipped == 0 )
+	if( m_currentlyEquipped == m_assaultRifleValue )
 	{
 		// Set bools
 		m_assaultRifle = true;
@@ -633,7 +638,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 
 	}
 	// If pistol is chosen
-	if( m_currentlyEquipped == 1 )
+	if( m_currentlyEquipped == m_pistolValue )
 	{
 		// Set bools
 		m_assaultRifle = false;
@@ -645,7 +650,7 @@ void ACPP_PlayerManager::EquipGun( TArray<UChildActorComponent*> WeaponInventory
 		bulletComp->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, m_pistolMuzzleSocket );
 
 	}
-	if( m_currentlyEquipped == 2 )
+	if( m_currentlyEquipped == m_throwableValue )
 	{
 		// Set bools
 		m_assaultRifle = false;
@@ -897,7 +902,7 @@ bool ACPP_PlayerManager::CoverTrace( float inputAxis )
 	{
 		// Start and end of line trace
 		const FVector start = GetActorLocation();
-		const FVector end = GetActorLocation() + ( GetCharacterMovement()->GetPlaneConstraintNormal() * 200.0f );
+		const FVector end = GetActorLocation() + ( GetCharacterMovement()->GetPlaneConstraintNormal() * m_coverTraceValue );
 
 		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
 
@@ -1006,7 +1011,7 @@ void ACPP_PlayerManager::StartShooting()
 		if( m_throwable )
 		{
 			// If there is a throwable object
-			if( m_throwableAmount == 1 )
+			if( m_throwableAmount == m_throwableFull )
 			{
 				// Play animation
 				PlayAnimMontage( animThrow );
@@ -1048,6 +1053,9 @@ bool ACPP_PlayerManager::RightCoverTrace()
 	// Start and end of line trace
 	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f );
 	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+
+	
+	+0( 45.0f )
 	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
 	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_wallTraceMultipler ) + start;
 
