@@ -83,59 +83,12 @@ void ACPP_AIManager::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	//m_detectionSpeed = DetectionSpeedCalculation();
-	m_detectionSpeed = myCurve->GetFloatValue( m_curveFloat );
+	// Tick for sight evaluation
+	SightValueTick();
 
-	
-	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasSeenSomething ), 
-						FApp::GetDeltaTime(), m_detectionSpeed );
+	// Tick for if enemy can be seen through xray powerup
+	XrayEvaluation();
 
-
-	// If sight value is full
-	if( m_sightValuePercent >= 1.0f )
-	{
-		// Set player has been caught
-		m_hasBeenCaught = true;
-
-		// Cast to AI controller
-		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
-
-		if( controllerAI )
-		{
-			// Cast to player
-			ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
-
-			if( playerManager )
-			{
-				// Set Player and AI location
-				FVector playerLocation = playerManager->GetActorLocation();
-				FVector enemyLocation = controllerAI->GetPawn()->GetActorLocation();
-
-				// Find the distance between the two
-				float distance = FVector::Distance( playerLocation, enemyLocation );
-
-				// Set curve float
-				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
-				//controllerAI->PlayerHasShot();
-
-				controllerAI->SetHasLineOfSight( true );
-			}
-		}
-	}
-
-	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
-	if( playerManager )
-	{
-		if( playerManager->GetXray() )
-		{
-			GetMesh()->SetRenderCustomDepth( true );
-		}
-		else
-		{
-			GetMesh()->SetRenderCustomDepth( false );
-
-		}
-	}
 	// Broadcast delegate for sight detection widget
 	SightDetectionDelegate();
 
@@ -145,7 +98,6 @@ void ACPP_AIManager::Tick( float DeltaTime )
 void ACPP_AIManager::BeginPlay()
 {
 	Super::BeginPlay();
-
 
 	// If enemy 'senses' the player
 	perceptionComp->OnPerceptionUpdated.AddDynamic( this, &ACPP_AIManager::OnUpdated );
@@ -232,16 +184,20 @@ void ACPP_AIManager::TakeAttack()
 	{
 		// Set player caught
 		controllerAI->PlayerHasShot();
-		m_sightValuePercent = 1.0f;
 
-		SetSightValuePercent( 100.0f );
+		// Set sight value to full
+		SetSightValuePercent( 1.0f );
 
 		if( playerManager )
 		{
+			// Set hitmarker if hit but not dead
+
+			health > 0.0f ? playerManager->SetHitmarkerActive( true ) : playerManager->SetDeathHitmarkerActive( true );
 			if( health > 0.0f )
 			{
 				playerManager->SetHitmarkerActive( true );
 			}
+			// Set death hitmarker if dead
 			else
 			{
 				playerManager->SetDeathHitmarkerActive( true );
@@ -328,6 +284,67 @@ void ACPP_AIManager::StopShootingPlayer()
 	GetWorld()->GetTimerManager().ClearTimer( m_stopShooting );
 
 
+}
+
+void ACPP_AIManager::SightValueTick()
+{
+	// Set curve for detection speed
+	m_detectionSpeed = myCurve->GetFloatValue( m_curveFloat );
+
+	// Set sight value percent
+	m_sightValuePercent = UKismetMathLibrary::FInterpTo_Constant( m_sightValuePercent, UKismetMathLibrary::SelectFloat( 1.0f, 0.0f, m_hasSeenSomething ),
+		FApp::GetDeltaTime(), m_detectionSpeed );
+
+	// If sight value is full
+	if( m_sightValuePercent >= 1.0f )
+	{
+		// Set player has been caught
+		m_hasBeenCaught = true;
+
+		// Cast to AI controller
+		ACPP_AIController* controllerAI = Cast<ACPP_AIController>( GetController() );
+
+		if( controllerAI )
+		{
+			// Cast to player
+			ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+
+			if( playerManager )
+			{
+				// Set Player and AI location
+				FVector playerLocation = playerManager->GetActorLocation();
+				FVector enemyLocation = controllerAI->GetPawn()->GetActorLocation();
+
+				// Find the distance between the two
+				float distance = FVector::Distance( playerLocation, enemyLocation );
+
+				// Set curve float
+				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
+				//controllerAI->PlayerHasShot();
+
+				controllerAI->SetHasLineOfSight( true );
+			}
+		}
+	}
+}
+
+void ACPP_AIManager::XrayEvaluation()
+{
+	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
+	if( playerManager )
+	{
+		if( playerManager->GetXray() )
+		{
+			// Allow enemy to be seen through walls
+			GetMesh()->SetRenderCustomDepth( true );
+		}
+		else
+		{
+			// Stop enemy to be seen through walls
+			GetMesh()->SetRenderCustomDepth( false );
+
+		}
+	}
 }
 
 void ACPP_AIManager::TimeToShoot()

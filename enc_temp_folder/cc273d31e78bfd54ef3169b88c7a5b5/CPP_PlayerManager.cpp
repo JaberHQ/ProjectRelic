@@ -49,7 +49,6 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_increasePistolAmmo( 5 )
 	,m_percentageMutliplier( 100.0f )
 	,m_hitmarkerAnimComplete( 1.0f )
-	,m_wallTraceMultipler( 100.0f )
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -568,7 +567,7 @@ void ACPP_PlayerManager::Invisibility()
 	if( !m_invisibility )
 	{
 		// If inivsibility is off and the bar is full
-		if( m_invisibilityPercent >= m_invisibilityFull )
+		if( m_invisibilityPercent >= 100.0f )
 		{
 			// Change invisibility bool
 			m_invisibility = !m_invisibility;
@@ -774,10 +773,12 @@ void ACPP_PlayerManager::UserInterfaceDelegate()
 	if( m_pistol )
 	{
 		userInterfaceD.Broadcast( health / m_percentageMutliplier, m_invisibilityPercent / m_percentageMutliplier, m_ammoPistol, m_reservePistol, m_assaultRifle, m_pistol, m_throwable );
+
 	}
 	if( m_throwable )
 	{
 		userInterfaceD.Broadcast( health / m_percentageMutliplier, m_invisibilityPercent / m_percentageMutliplier, m_throwableAmount, 0, m_assaultRifle, m_pistol, m_throwable );
+
 	}
 }
 
@@ -849,6 +850,10 @@ void ACPP_PlayerManager::StopAim()
 {
 	m_aimingIn = false;
 	springArmComp->TargetArmLength = m_aimingInReturnValue;
+	if( m_throwable )
+	{
+		//DestroyPredictionSpline();
+	}
 }
 
 void ACPP_PlayerManager::StartCover( FHitResult hit )
@@ -867,7 +872,10 @@ void ACPP_PlayerManager::WallTrace()
 
 	// Start and end of line trace
 	const FVector start = GetActorLocation();
-	const FVector end = ( GetActorForwardVector() * m_wallTraceMultipler ) + GetActorLocation();
+	const FVector end = ( GetActorForwardVector() * 100.0f ) + GetActorLocation();
+
+	// Draw a line for debug
+	//DrawDebugLine( GetWorld(), start, end, FColor::Yellow, false, 5.0f );
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTracer ), true, GetInstigator() );
 
@@ -876,8 +884,14 @@ void ACPP_PlayerManager::WallTrace()
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
 
-	// If hit start cover, else stop cover
-	bHit ? StartCover( hit ) : StopCover();
+	if( bHit )
+	{
+		StartCover( hit );
+	}
+	else
+	{
+		StopCover();
+	}
 }
 
 void ACPP_PlayerManager::StopCover()
@@ -897,6 +911,9 @@ bool ACPP_PlayerManager::CoverTrace( float inputAxis )
 		// Start and end of line trace
 		const FVector start = GetActorLocation();
 		const FVector end = GetActorLocation() + ( GetCharacterMovement()->GetPlaneConstraintNormal() * 200.0f );
+
+		// Draw a line for debug
+		DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
 
 		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
 
@@ -941,8 +958,10 @@ bool ACPP_PlayerManager::CoverTrace( float inputAxis )
 			// Add movement in that direction
 			AddMovementInput( Direction, inputAxis );
 		}
+
 		return false;
 	}
+	//return false;
 }
 
 void ACPP_PlayerManager::StartShooting()
@@ -953,20 +972,14 @@ void ACPP_PlayerManager::StartShooting()
 		{
 			if( m_ammoAR > 0 )
 			{
-				// Shooting is true
 				m_isShooting = true;
-
-				// Get actor location
-				const FVector location = GetActorLocation();
-				
-				// Play shooting sound that AI will hear
+				FVector location = GetActorLocation();
 				UGameplayStatics::PlaySoundAtLocation( GetWorld(), shootSFX, gunComp->GetRelativeLocation(), 0.1f );
 				UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
-				
-				// Shoot Raycast
+				//m_ammoAR -= 1;
+
 				ShootProjectile();
 
-				// Set shoot timer
 				GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_CharacterManager::ShootProjectile, timeBetweenShots, true );
 			}
 
@@ -987,6 +1000,8 @@ void ACPP_PlayerManager::StartShooting()
 			{
 				m_isShooting = true;
 
+				//m_ammoPistol -= 1;
+
 				ShootProjectile();
 			}
 
@@ -997,8 +1012,10 @@ void ACPP_PlayerManager::StartShooting()
 			if( m_throwableAmount == 1 )
 			{
 				PlayAnimMontage( animThrow );
+				//ThrowObject();
 			}
 		}
+
 	}
 }
 
@@ -1006,6 +1023,7 @@ void ACPP_PlayerManager::StartShooting()
 
 void ACPP_PlayerManager::ThrowObject()
 {
+
 	ACPP_Throwable* throwableRef = Cast<ACPP_Throwable>( throwable->GetChildActor() );
 	if( throwableRef )
 	{
@@ -1023,7 +1041,25 @@ void ACPP_PlayerManager::ThrowObject()
 
 }
 
+void ACPP_PlayerManager::CreatePredictionSpline()
+{
+	
+}
 
+void ACPP_PlayerManager::DestroyPredictionSpline()
+{
+
+}
+
+void ACPP_PlayerManager::DestroyPredictionMeshes()
+{
+	
+}
+
+void ACPP_PlayerManager::DrawPredictionSpline()
+{
+	
+}
 
 bool ACPP_PlayerManager::GetIsCrouched()
 {

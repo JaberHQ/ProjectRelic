@@ -82,7 +82,6 @@ private:
 	float m_aimingInValue; // Aiming in zoom
 	float m_rightAxisValue; // Value for turning right
 	float m_invisiblityTimerFinished; // Invisibility timer finished
-	float m_wallTraceMultipler;
 	bool m_dead; // Player dead
 	bool m_xray; // Xray on or off
 	FTimerHandle m_invisiblityTimer; // Timer handle for invisiblity
@@ -393,6 +392,50 @@ private:
 	 *   See also        : CPP_Throwable.h
 	*****************************************************************************/
 	void ThrowObject();
+	/*****************************************************************************
+	 *   Function        : void CreatePredictionSpline()
+	 *   Purpose         : Create prediction spline for projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void CreatePredictionSpline();
+	/*****************************************************************************
+	 *   Function        : void DestroyPredictionSpline()
+	 *   Purpose         : Destroy prediction spline for projectile
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void DestroyPredictionSpline();
+	/*****************************************************************************
+	 *   Function        : void DestroyPredictionMeshes()
+	 *   Purpose         : Destroy meshes for prediction spline
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void DestroyPredictionMeshes();
+	/*****************************************************************************
+	 *   Function        : void DrawPredictionSpline()
+	 *   Purpose         : Draw prediction spline for projectiles
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 31/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void DrawPredictionSpline();
 	/*****************************************************************************
 	*   Function        : void Turn( float inputAxis )
 	*   Purpose         : Mouse input turn

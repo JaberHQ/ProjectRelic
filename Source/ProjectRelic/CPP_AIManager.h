@@ -149,6 +149,111 @@ private:
 	**********************************************************************************/
 	UFUNCTION()
 		void OnPlayerCaught( const TArray<AActor*>& caughtActors );
+	/*****************************************************************************
+	 *   Function        : void DelayDeath()
+	 *   Purpose         : After AI takedown, a delay before they are destroyed
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 30/05/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_AIManager::Takedown
+   *****************************************************************************/
+	void DelayDeath();
+	/*****************************************************************************
+	  *   Function        : void EvaluateSightDetection();
+	  *   Purpose         : Whether sight detection meter goes up or down
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void EvaluateSightDetection();
+	/*****************************************************************************
+	  *   Function        : void SeenPlayer()
+	  *   Purpose         : What AI do when they see the player
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void SeenPlayer();
+	/*****************************************************************************
+	  *   Function        : void LostPlayer()
+	  *   Purpose         : What AI to do when they lose the player
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	void LostPlayer();
+	/*****************************************************************************
+	  *   Function        : float DetectionSpeedCalculation()
+	  *   Purpose         : Calculation for stealth detection widget
+	  *   Parameters      : N/A
+	  *   Returns         : N/A
+	  *   Date altered    : 01/07/2022
+	  *   Contributors    : Jaber Ahmed
+	  *   Notes           : N/A
+	  *   See also        : N/A
+	  *****************************************************************************/
+	float DetectionSpeedCalculation();
+	/*****************************************************************************
+  *   Function        : void DelayInvestigate()
+  *   Purpose         : Delay AI investigating state
+  *   Parameters      : N/A
+  *   Returns         : N/A
+  *   Date altered    : 01/07/2022
+  *   Contributors    : Jaber Ahmed
+  *   Notes           : N/A
+  *   See also        : N/A
+  *****************************************************************************/
+	void DelayInvestigate();
+	/*****************************************************************************
+	 *   Function        : void SetupPerceptionSystem()
+	 *   Purpose         : Setup the sight perception component
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
+	void SetupPerceptionSystem();
+	
+	
+	/*****************************************************************************
+	 *   Function        : void ShootPlayer
+	 *   Purpose         : Shooting the player
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_ShootFromCover
+	*****************************************************************************/
+	void ShootPlayer();
+	/*****************************************************************************
+	 *   Function        : void StopShootingPlayer
+	 *   Purpose         : Stop shooting the player
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_ShootFromCover
+	*****************************************************************************/
+	void StopShootingPlayer();
+
+	void SightValueTick();
+
+	void XrayEvaluation();
 public:
 	/*****************************************************************************
 	 *   Function        : bool GetHasCaughtPlayer()
@@ -295,17 +400,7 @@ public:
 	 *   See also        : CPP_PatrolPoint
    *****************************************************************************/
 	ACPP_PatrolPoint* GetPatrolPath();
-	/*****************************************************************************
-	 *   Function        : void DelayDeath()
-	 *   Purpose         : After AI takedown, a delay before they are destroyed
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 30/05/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_AIManager::Takedown
-   *****************************************************************************/
-	void DelayDeath();
+	
 	/*****************************************************************************
 	 *   Function        : virtual void TakeAttack() override
 	 *   Purpose         : When AI has been hit by projectiles
@@ -317,94 +412,7 @@ public:
 	 *   See also        : CPP_CharacterManager::ShootProjectile
    *****************************************************************************/
 	virtual void TakeAttack() override;
-	/*****************************************************************************
-	  *   Function        : void EvaluateSightDetection();
-	  *   Purpose         : Whether sight detection meter goes up or down
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void EvaluateSightDetection();
-	/*****************************************************************************
-	  *   Function        : void SeenPlayer()
-	  *   Purpose         : What AI do when they see the player
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void SeenPlayer();
-	/*****************************************************************************
-	  *   Function        : void LostPlayer()
-	  *   Purpose         : What AI to do when they lose the player
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	void LostPlayer();
-	/*****************************************************************************
-	  *   Function        : float DetectionSpeedCalculation()
-	  *   Purpose         : Calculation for stealth detection widget
-	  *   Parameters      : N/A
-	  *   Returns         : N/A
-	  *   Date altered    : 01/07/2022
-	  *   Contributors    : Jaber Ahmed
-	  *   Notes           : N/A
-	  *   See also        : N/A
-	  *****************************************************************************/
-	float DetectionSpeedCalculation();
-	  /*****************************************************************************
-	*   Function        : void DelayInvestigate()
-	*   Purpose         : Delay AI investigating state
-	*   Parameters      : N/A
-	*   Returns         : N/A
-	*   Date altered    : 01/07/2022
-	*   Contributors    : Jaber Ahmed
-	*   Notes           : N/A
-	*   See also        : N/A
-	*****************************************************************************/
-	void DelayInvestigate();
-	/*****************************************************************************
-	 *   Function        : void SetupPerceptionSystem()
-	 *   Purpose         : Setup the sight perception component
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 28/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : N/A
-	*****************************************************************************/
-	void SetupPerceptionSystem();
-	/*****************************************************************************
-	 *   Function        : void EnterCover()
-	 *   Purpose         : AI action when entering cover 
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 28/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_EnterCoverTask
-	*****************************************************************************/
-	void EnterCover();
-	/*****************************************************************************
-	 *   Function        : void TimeToShoot();
-	 *   Purpose         : Shooting task when in cover
-	 *   Parameters      : N/A
-	 *   Returns         : N/A
-	 *   Date altered    : 28/07/2022
-	 *   Contributors    : Jaber Ahmed
-	 *   Notes           : N/A
-	 *   See also        : CPP_ShootFromCover
-	*****************************************************************************/
-	void TimeToShoot();
+	
 	/*****************************************************************************
 	 *   Function        : void SetHasCaughtPlayer( bool boolean )
 	 *   Purpose         : Set boolean to catch the player
@@ -449,10 +457,28 @@ public:
 	 *   See also        : CPP_PLayerManager::Takedown
 	***********************************************************************************/
 	bool GetCanTakedown();
-
-	void ShootPlayer();
-
-	void StopShootingPlayer();
+	/*****************************************************************************
+	 *   Function        : void EnterCover()
+	 *   Purpose         : AI action when entering cover
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_EnterCoverTask
+	*****************************************************************************/
+	void EnterCover();
+	/*****************************************************************************
+	 *   Function        : void TimeToShoot();
+	 *   Purpose         : Shooting task when in cover
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : CPP_ShootFromCover
+	*****************************************************************************/
+	void TimeToShoot();
 
 
 };
