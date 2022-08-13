@@ -50,6 +50,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_percentageMutliplier( 100.0f )
 	,m_hitmarkerAnimComplete( 1.0f )
 	,m_wallTraceMultipler( 100.0f )
+	,animThrow()
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -972,10 +973,17 @@ void ACPP_PlayerManager::StartShooting()
 
 			if( m_ammoAR <= 0 )
 			{
+				// Stop shooting
 				m_isShooting = false;
-				FVector location = GetActorLocation();
+
+				// Get player location
+				const FVector location = GetActorLocation();
+
+				// Play no ammo sound
 				UGameplayStatics::PlaySoundAtLocation( GetWorld(), pistolShootSFX, bulletComp->GetRelativeLocation(), 0.1f );
 				UAISense_Hearing::ReportNoiseEvent( GetWorld(), location, 1.0f, this, 0.0f, noiseTag );
+
+				// Set reload timer
 				GetWorld()->GetTimerManager().SetTimer( m_reloadTime, this, &ACPP_CharacterManager::Reloaded, m_reloadAnimTime, true );
 			}
 
@@ -983,10 +991,13 @@ void ACPP_PlayerManager::StartShooting()
 
 		if( m_pistol )
 		{
+			// If there is pistol ammo
 			if( m_ammoPistol > 0 )
 			{
+				// Shooting is true
 				m_isShooting = true;
 
+				// Shoot your projectile
 				ShootProjectile();
 			}
 
@@ -994,8 +1005,10 @@ void ACPP_PlayerManager::StartShooting()
 
 		if( m_throwable )
 		{
+			// If there is a throwable object
 			if( m_throwableAmount == 1 )
 			{
+				// Play animation
 				PlayAnimMontage( animThrow );
 			}
 		}
@@ -1009,18 +1022,18 @@ void ACPP_PlayerManager::ThrowObject()
 	ACPP_Throwable* throwableRef = Cast<ACPP_Throwable>( throwable->GetChildActor() );
 	if( throwableRef )
 	{
+		// Throw object
 		throwableRef->ThrowObject( UKismetMathLibrary::GetForwardVector( GetControlRotation() ) );
+		
+		// Decrement throwable
 		m_throwableAmount--;
 
 		if( animThrow )
 		{
+			// Play anim
 			PlayAnimMontage( animThrow );
 		}
 	}
-	else
-	{
-	}
-
 }
 
 
@@ -1036,10 +1049,7 @@ bool ACPP_PlayerManager::RightCoverTrace()
 	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f );
 	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
 	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
-	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * 200.0f ) + start;
-
-	// Draw a line for debug
-	DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_wallTraceMultipler ) + start;
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
 
@@ -1060,10 +1070,7 @@ bool ACPP_PlayerManager::LeftCoverTrace()
 	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() );
 	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
 	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
-	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * 200.0f ) + start;
-
-	// Draw a line for debug
-	DrawDebugLine( GetWorld(), start, end, FColor::Orange, false, 5.0f );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_wallTraceMultipler ) + start;
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
 

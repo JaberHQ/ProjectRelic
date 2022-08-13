@@ -139,6 +139,11 @@ public:
 	UPROPERTY( BlueprintCallable, BlueprintAssignable )
 		FPlayerUI userInterfaceD; // User interface delegate
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animReload; // Anim Montage for Player stealth takedown
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
+		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
 private:
 	/*****************************************************************************
 	*   Function        : void InvisibilityTick( float DeltaTime )

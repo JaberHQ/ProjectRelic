@@ -126,11 +126,7 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
 		UParticleSystem* animShoot; // Anim Montage for Player stealth takedown
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
-		UAnimMontage* animReload; // Anim Montage for Player stealth takedown
-
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Animations" )
-		UAnimMontage* animThrow; // Anim Montage for Player stealth takedown
+	
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "SFX" )
 		USoundBase* shootSFX; // Shot sound effect
