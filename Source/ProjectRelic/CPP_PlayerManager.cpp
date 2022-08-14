@@ -56,6 +56,7 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_coverTraceValue( 200.0f )
 	,m_throwableFull( 1 )
 	,animThrow()
+	,m_rightCoverTraceMultiplier( 45.0f )
 {
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
@@ -108,21 +109,16 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
 	PrimaryActorTick.bCanEverTick = true;
 
-
+	// Bind Axis
 	PlayerInputComponent->BindAxis( "MoveForward", this, &ACPP_PlayerManager::MoveForward );
 	PlayerInputComponent->BindAxis( "MoveRight", this, &ACPP_PlayerManager::MoveRight );
 	PlayerInputComponent->BindAxis( "Turn", this, &ACPP_PlayerManager::Turn );
 	PlayerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
-
-	//PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
-	//PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
-	//PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACPP_CharacterManager::BeginCrouch );
-	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
-	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_PlayerManager::BeginSprint );
-	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_PlayerManager::EndSprint );
-
 	PlayerInputComponent->BindAxis( "ChangeWeapons", this, &ACPP_PlayerManager::ChangeWeapons );
 
+	// Bind Action
+	PlayerInputComponent->BindAction( "Sprint", IE_Pressed, this, &ACPP_PlayerManager::BeginSprint );
+	PlayerInputComponent->BindAction( "Sprint", IE_Released, this, &ACPP_PlayerManager::EndSprint );
 	PlayerInputComponent->BindAction( "MeleeTakedown", IE_Pressed, this, &ACPP_PlayerManager::Takedown );
 	PlayerInputComponent->BindAction( "PowerUp", IE_Pressed, this, &ACPP_PlayerManager::Invisibility );
 	PlayerInputComponent->BindAction( "Shoot", IE_Pressed, this, &ACPP_PlayerManager::StartShooting );
@@ -132,12 +128,19 @@ void ACPP_PlayerManager::SetupPlayerInputComponent( UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction( "CoverButton", IE_Pressed, this, &ACPP_PlayerManager::WallTrace );
 	PlayerInputComponent->BindAction( "DistractEnemy", IE_Pressed, this, &ACPP_PlayerManager::DistractEnemy );
 	PlayerInputComponent->BindAction( "XrayVision", IE_Pressed, this, &ACPP_PlayerManager::Xray );
+
+	// Depreciated actions
+	//PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
+	//PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
+	//PlayerInputComponent->BindAction( "Crouch", IE_Pressed, this, &ACPP_CharacterManager::BeginCrouch );
+	//PlayerInputComponent->BindAction( "Crouch", IE_Released, this, &ACPP_CharacterManager::EndCrouch );
 }
 
 void ACPP_PlayerManager::Turn( float inputAxis )
 {
 	AddControllerYawInput( inputAxis );
 
+	// Get turn velocity
 	float X = GetVelocity().X;
 	float Y = GetVelocity().Y;
 	float Z = GetVelocity().Z;
@@ -267,12 +270,10 @@ void ACPP_PlayerManager::Tick( float DeltaTime )
 
 	HitmarkerTick();
 
-	if( health == 0 )
-	{
-		PlayerDead();
-	}
-	
 	TakedownTrace();
+
+	if( health == 0 )
+		PlayerDead();
 	//userInterfaceDelegate();
 }
 
@@ -287,15 +288,19 @@ void ACPP_PlayerManager::InvisibilityEvaluation( float DeltaTime )
 {
 	if( m_invisibilityPercent > 0.0f && m_invisibility )
 	{
+		// Set invsiiblity timer
 		GetWorld()->GetTimerManager().SetTimer( m_invisiblityTimer, this, &ACPP_PlayerManager::InvisibilityFinished, m_invisiblityTimerFinished, true );
+
+		// Decrement the invisibility bar 
 		m_invisibilityPercent -= DeltaTime * m_invisibilityTimeDrain;
+
+		// Stop player from being able to aim
 		m_aimingIn = false;
 	}
 
-	if( m_invisibilityPercent < m_invisibilityFull && !m_invisibility || m_invisibilityPercent == 0 )
-	{
-		m_invisibilityPercent += ( DeltaTime * m_invisibilityTimeMultiplier );
-	}
+	// If invisibility is off and less than full
+	if( ( m_invisibilityPercent < m_invisibilityFull && !m_invisibility ) || m_invisibilityPercent == 0 )
+		m_invisibilityPercent += ( DeltaTime * m_invisibilityTimeMultiplier ); // Increase invisiblity again
 }
 
 void ACPP_PlayerManager::InvisibilityMaterial()
@@ -303,6 +308,7 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 	// If player is invisible
 	if( m_invisibility )
 	{
+		// Change player material to invisiblity to give invisibility look
 		for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
 		{
 			GetMesh()->SetMaterial( i, invisibleMaterial );
@@ -310,7 +316,7 @@ void ACPP_PlayerManager::InvisibilityMaterial()
 	}
 	else
 	{
-		
+		// Change material to player material
 		for( int i = 0; i < GetMesh()->GetNumMaterials(); i++ )
 		{
 			GetMesh()->SetMaterial( i, m_material[ i ] );
@@ -448,16 +454,16 @@ void ACPP_PlayerManager::Takedown()
 {
 	if( m_canTakedown )
 	{
-		
-		//GEngine->AddOnScreenDebugMessage( -1, 5.0f, FColor::Red, managerAI->GetName() );
-    
+
+		// Actor spawn parameters
 		FActorSpawnParameters spawnInfo;
 		
-		AAIController* controllerAI = GetWorld()->SpawnActor<AAIController>( GetActorLocation(), GetActorRotation(), spawnInfo );
+		
+		AAIController* controllerAI = GetWorld()->SpawnActor<AAIController>( GetActorLocation(), GetActorRotation(), spawnInfo ); // Controller reference
 		
 		if( controllerAI ) 
 		{
-			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( TakedownTrace() );
+			ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( TakedownTrace() ); // AI reference
 			if( managerAI )
 			{
 				// Disable AI movement
@@ -842,9 +848,7 @@ void ACPP_PlayerManager::PlayerDead()
 	// Disable Player input
 	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
 	if( playerController )
-	{
 		DisableInput( playerController );
-	}
 }
 
 void ACPP_PlayerManager::Reset()
@@ -853,24 +857,29 @@ void ACPP_PlayerManager::Reset()
 
 void ACPP_PlayerManager::StopAim()
 {
+	// Stop aiming in bool
 	m_aimingIn = false;
+
+	// Return spring arm length
 	springArmComp->TargetArmLength = m_aimingInReturnValue;
 }
 
 void ACPP_PlayerManager::StartCover( FHitResult hit )
 {
+	// Set plane constraints
 	GetCharacterMovement()->SetPlaneConstraintEnabled( true );
 	GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+
+	// Turn off rotation yaw
 	bUseControllerRotationYaw = false;
+
+	// Set in cover
 	m_isInCover = true;
 
 }
 
 void ACPP_PlayerManager::WallTrace()
 {
-	FVector cameraLocation = cameraComp->GetComponentLocation();
-	FRotator cameraRotation = cameraComp->GetComponentRotation();
-
 	// Start and end of line trace
 	const FVector start = GetActorLocation();
 	const FVector end = ( GetActorForwardVector() * m_wallTraceMultipler ) + GetActorLocation();
@@ -888,8 +897,13 @@ void ACPP_PlayerManager::WallTrace()
 
 void ACPP_PlayerManager::StopCover()
 {
+	// Stop plane constaint
 	GetCharacterMovement()->SetPlaneConstraintEnabled( false );
+
+	// Give back player rotation yaw
 	bUseControllerRotationYaw = true;
+
+	// Set cover bool 
 	m_isInCover = false;
 }
 
@@ -1054,9 +1068,8 @@ bool ACPP_PlayerManager::RightCoverTrace()
 	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f );
 	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
 
-	
-	+0( 45.0f )
-	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
+	// Start and end
+	const FVector start = GetActorLocation() + ( movementDirection * m_rightCoverTraceMultiplier );
 	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_wallTraceMultipler ) + start;
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );

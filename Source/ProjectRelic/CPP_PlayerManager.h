@@ -106,7 +106,7 @@ private:
 	float m_percentageMutliplier; // Multiply value for sliders
 	float m_hitmarkerAnimComplete;
 	float m_aimingInReturnValue;
-
+	float m_rightCoverTraceMultiplier;
 public:
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
 		float takedownTraceDistance; // Raycast distance
