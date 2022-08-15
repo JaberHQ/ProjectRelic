@@ -15,6 +15,7 @@ EBTNodeResult::Type UCPP_ShootTask::ExecuteTask( UBehaviorTreeComponent& ownerCo
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
 		if( managerAI )
 		{
+			// Shoot projectile
 			managerAI->ShootProjectile();
 
 			// Success

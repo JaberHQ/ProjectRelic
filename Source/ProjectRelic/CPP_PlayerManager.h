@@ -107,6 +107,7 @@ private:
 	float m_hitmarkerAnimComplete;
 	float m_aimingInReturnValue;
 	float m_rightCoverTraceMultiplier;
+	float m_coverValue;
 public:
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "MeleeTakedown" )
 		float takedownTraceDistance; // Raycast distance

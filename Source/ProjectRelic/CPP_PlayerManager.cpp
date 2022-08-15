@@ -57,7 +57,9 @@ ACPP_PlayerManager::ACPP_PlayerManager()
 	,m_throwableFull( 1 )
 	,animThrow()
 	,m_rightCoverTraceMultiplier( 45.0f )
+	,m_coverValue( -1.0f )
 {
+
 	// Create components
 	primaryGun = CreateDefaultSubobject<UChildActorComponent>( TEXT( "PrimaryGun" ) );
 	pistol = CreateDefaultSubobject<UChildActorComponent>( TEXT( "Pistol" ) );
@@ -969,10 +971,9 @@ void ACPP_PlayerManager::CoverTrace( float inputAxis )
 
 bool ACPP_PlayerManager::RightCoverTrace()
 {
-	const float m_rightCoverValue = -1.0f;
 
 	// Start and end of line trace
-	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * m_rightCoverValue );
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * m_coverValue);
 	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
 
 	// Start and end
@@ -990,7 +991,7 @@ bool ACPP_PlayerManager::RightCoverTrace()
 bool ACPP_PlayerManager::LeftCoverTrace()
 {
 
-	const float m_leftCoverValue = -1.0f;
+
 
 	// Start and end of line trace
 	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() );
@@ -998,7 +999,7 @@ bool ACPP_PlayerManager::LeftCoverTrace()
 
 	// Start and end
 	const FVector start = GetActorLocation() + ( movementDirection * m_rightCoverTraceMultiplier );
-	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * m_leftCoverValue ) * m_wallTraceMultipler ) + start;
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * m_coverValue ) * m_wallTraceMultipler ) + start;
 
 	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
 

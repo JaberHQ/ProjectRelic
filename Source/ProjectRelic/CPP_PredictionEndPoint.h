@@ -35,7 +35,7 @@ public:
 	ACPP_PredictionEndPoint();
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-		class UStaticMeshComponent* endPoint;
+		class UStaticMeshComponent* endPoint; // End point
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

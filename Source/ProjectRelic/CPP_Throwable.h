@@ -30,11 +30,11 @@ class PROJECTRELIC_API ACPP_Throwable : public AActor
 {
 	GENERATED_BODY()
 private:
-	FVector m_velocity;
-
+	FVector m_velocity; // Velocity
+	float m_forwardVectorMultiplier; // Forward vector multiplier
 public:
 	UPROPERTY( EditDefaultsOnly, Category = "Throwable" )
-		class USkeletalMeshComponent* throwableMeshComp;
+		class USkeletalMeshComponent* throwableMeshComp; // Mesh Component
 
 public:	
 	/*****************************************************************************

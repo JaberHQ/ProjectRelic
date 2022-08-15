@@ -12,27 +12,29 @@
 
 ACPP_AIManager::ACPP_AIManager()
 	:health( 100.0f )
-	, defaultHealth( 100.0f )
-	, m_canTakedown( true)
-	, m_sightRadius( 1000.0f )
-	, m_loseSightRadius( 1500.0f )
-	, m_peripheralVisionAngleDegrees( 35.0f )
-	, m_patrolSpeed( 300.0f )
-	, m_chaseSpeed( 600.0f )
-	, m_shotDamage( 23.3f )
-	, m_deathTimer( 25.0f )
-	, m_hasBeenSeen( false )
-	, m_hasBeenCaught( false )
-	, m_sightValuePercent( 0.0f )
-	, m_curveFloat( 0.0f )
-	, m_hasSeenSomething( false )
-	, m_detectionSpeed( 0.0f )
-	, m_headShotDamage( 2.0f )
-	, soundHuh()
-	, m_isInCover( false )
-	, animDeath()
-	, m_dead()
-	, bottleTag( TEXT( "bottleNoise" ) )
+	,defaultHealth( 100.0f )
+	,m_canTakedown( true)
+	,m_sightRadius( 1000.0f )
+	,m_loseSightRadius( 1500.0f )
+	,m_peripheralVisionAngleDegrees( 35.0f )
+	,m_patrolSpeed( 300.0f )
+	,m_chaseSpeed( 600.0f )
+	,m_shotDamage( 23.3f )
+	,m_deathTimer( 25.0f )
+	,m_hasBeenSeen( false )
+	,m_hasBeenCaught( false )
+	,m_sightValuePercent( 0.0f )
+	,m_curveFloat( 0.0f )
+	,m_hasSeenSomething( false )
+	,m_detectionSpeed( 0.0f )
+	,m_headShotDamage( 2.0f )
+	,soundHuh()
+	,m_isInCover( false )
+	,animDeath()
+	,m_dead()
+	,bottleTag( TEXT( "bottleNoise" ) )
+	,m_hearingRange( 3000.0f )
+	,m_hearingAge( 35.0f )
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -65,11 +67,11 @@ ACPP_AIManager::ACPP_AIManager()
 	if( hearingConfig )
 	{
 		// Hearing config
-		hearingConfig->HearingRange = 3000.0f;
+		hearingConfig->HearingRange = m_hearingRange;
 		hearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 		hearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 		hearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
-		hearingConfig->SetMaxAge( 35.0f );
+		hearingConfig->SetMaxAge( m_hearingAge );
 	}
 
 	//perceptionComp->SetDominantSense( hearingConfig->GetSenseImplementation() );
@@ -273,17 +275,19 @@ void ACPP_AIManager::EnterCover()
 
 void ACPP_AIManager::ShootPlayer()
 {
+	// Shoot
 	ShootProjectile();
+
+	// Set shooting timer
 	GetWorld()->GetTimerManager().SetTimer( m_stopShooting, this, &ACPP_AIManager::StopShootingPlayer, 5.0f, true );
 
 }
 
 void ACPP_AIManager::StopShootingPlayer()
 {
+	// Clear timers
 	GetWorld()->GetTimerManager().ClearTimer( m_shootTime );
 	GetWorld()->GetTimerManager().ClearTimer( m_stopShooting );
-
-
 }
 
 void ACPP_AIManager::SightValueTick()
@@ -320,8 +324,8 @@ void ACPP_AIManager::SightValueTick()
 
 				// Set curve float
 				m_curveFloat = UKismetMathLibrary::NormalizeToRange( distance, 0.0f, 1000.0f );
-				//controllerAI->PlayerHasShot();
 
+				// Set has line of sight
 				controllerAI->SetHasLineOfSight( true );
 			}
 		}
@@ -330,12 +334,14 @@ void ACPP_AIManager::SightValueTick()
 
 void ACPP_AIManager::XrayEvaluation()
 {
+	// Player reference
 	ACPP_PlayerManager* playerManager = Cast<ACPP_PlayerManager>( UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) );
 	if( playerManager )
 	{
+		// If player is using xray vision
 		if( playerManager->GetXray() )
 		{
-			// Allow enemy to be seen through walls
+			// Set enemy to be seen through walls
 			GetMesh()->SetRenderCustomDepth( true );
 		}
 		else
@@ -349,21 +355,22 @@ void ACPP_AIManager::XrayEvaluation()
 
 void ACPP_AIManager::TimeToShoot()
 {
-	//FTimerHandle m_shootTimer;
-
+	// Set shoot timer
 	GetWorld()->GetTimerManager().SetTimer( m_shootTime, this, &ACPP_AIManager::ShootPlayer, timeBetweenShots, true );
 
+	// Crouch
 	Crouch();
-	//StopShooting();
 }
 
 void ACPP_AIManager::SetHasCaughtPlayer( bool boolean )
 {
+	// Set bool
 	m_hasBeenCaught = boolean;
 }
 
 void ACPP_AIManager::SetMaxWalkSpeed( float speed )
 {
+	// Set max walk speed
 	GetCharacterMovement()->MaxWalkSpeed = speed;
 }
 
@@ -391,7 +398,7 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 		{
 			if( playerManager->GetInvisibilityStatus() == false )
 			{
-
+				// Register pecepetion 
 				UAIPerceptionSystem::RegisterPerceptionStimuliSource( this, sightConfig->GetSenseImplementation(), controllerAI );
 
 				for( int i = 0; i < caughtActors.Num(); i++ )
@@ -405,8 +412,10 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 						FAIStimulus stimulus = info.LastSensedStimuli[ j ];
 						if( stimulus.WasSuccessfullySensed() )
 						{
+							// If player
 							if( caughtActors[ i ] == playerManager )
 							{
+								// If sense
 								if( stimulus.Type.Name == "Default__AISense_sight" )
 								{
 
@@ -426,6 +435,7 @@ void ACPP_AIManager::OnUpdated( const TArray<AActor*>& caughtActors )
 									controllerAI->SetInvestigate( true );
 
 								}
+								// If noise is detected
 								if( stimulus.Tag == noiseTag )
 								{
 									FVector shotLocation = perceptionComp->GetActorInfo( *caughtActors[ i ] )->GetLastStimulusLocation();

@@ -22,6 +22,7 @@
  * Change Log:
  * Date          Initials    Version     Comments
  * 28/07/2022    JA          v1.1        Made AI move to cover
+ * 15/08/2022    JA			 v1.2		 Depreciated
 *****************************************************************************************************/
 UCLASS()
 class PROJECTRELIC_API UCPP_MoveToCoverTask : public UBTTaskNode

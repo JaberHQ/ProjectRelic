@@ -90,7 +90,8 @@ private:
 	bool m_hasSeenSomething; // If AI has seen but no caught something
 	bool m_isInCover; // AI is in cover
 	bool m_dead; // If AI is dead
-
+	float m_hearingRange;
+	float m_hearingAge;
 	FTimerHandle m_stopShooting;
 	FTimerHandle m_coverTimer;
 private:
@@ -250,9 +251,27 @@ private:
 	 *   See also        : CPP_ShootFromCover
 	*****************************************************************************/
 	void StopShootingPlayer();
-
+	/*****************************************************************************
+	 *   Function        : void SightValueTick()
+	 *   Purpose         : Sight detection tick
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void SightValueTick();
-
+	/*****************************************************************************
+	 *   Function        : void XrayEvaluation();
+	 *   Purpose         : Xray evaluation tick
+	 *   Parameters      : N/A
+	 *   Returns         : N/A
+	 *   Date altered    : 28/07/2022
+	 *   Contributors    : Jaber Ahmed
+	 *   Notes           : N/A
+	 *   See also        : N/A
+	*****************************************************************************/
 	void XrayEvaluation();
 public:
 	/*****************************************************************************

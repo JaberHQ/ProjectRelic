@@ -12,26 +12,18 @@ EBTNodeResult::Type UCPP_ShootFromCover::ExecuteTask( UBehaviorTreeComponent& ow
 
 	if( controllerAI )
 	{
-
 		// Use index to get patrol path
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
 		if( managerAI )
 		{
+			// Uncrouch enemy AI
 			managerAI->UnCrouch();
+
+			// Shoot at player
 			managerAI->ShootProjectile();
-
 			managerAI->TimeToShoot();
-			/*controllerAI->PlayerHasShot();
-			managerAI->SetHasCaughtPlayer( true );
-			managerAI->UnCrouch();*/
-			//for( int i = 0; i < 4; i++ )
-			//{
-			//	managerAI->ShootProjectile();
-			//}
-			//
-			//// Success
 
-
+			// Finish task
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 			return EBTNodeResult::Succeeded;
 		}
