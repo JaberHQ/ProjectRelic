@@ -17,12 +17,16 @@ EBTNodeResult::Type UCPP_EnterCoverTask::ExecuteTask( UBehaviorTreeComponent& ow
 		ACPP_AIManager* managerAI = Cast<ACPP_AIManager>( controllerAI->GetPawn() );
 		if( managerAI )
 		{
+			// Enter cover
 			managerAI->EnterCover();
 
+			// Finish task
 			FinishLatentTask( ownerComp, EBTNodeResult::Succeeded );
 
+			// Set in cover
 			controllerAI->SetInCover( true );
 
+			// Return
 			return EBTNodeResult::Succeeded;
 		}
 	}
