@@ -197,25 +197,28 @@ void ACPP_PlayerManager::MoveForward( float inputAxis )
 
 void ACPP_PlayerManager::MoveRight( float inputAxis )
 {
-	if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == false ) )
+	if( m_isInCover )
 	{
-		// Rotation
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
-
-		// Get forward vector
-		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
-
-		// Add movement in that direction
-		AddMovementInput( Direction, inputAxis );
-
-		m_xray = false;
-
-	}
-	else if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == true ) )
-	{
+		if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) )
 		CoverTrace( inputAxis );
 	}
+	else
+	{
+		if( ( Controller != nullptr ) && ( inputAxis != 0.0f ) && ( m_isInCover == false ) )
+		{
+			// Rotation
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation( 0, Rotation.Yaw, 0 );
+
+			// Get forward vector
+			const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
+
+			// Add movement in that direction
+			AddMovementInput( Direction, inputAxis );
+			m_xray = false;
+		}
+	}
+	
 }
 
 void ACPP_PlayerManager::BeginSprint()
@@ -864,6 +867,31 @@ void ACPP_PlayerManager::StopAim()
 	springArmComp->TargetArmLength = m_aimingInReturnValue;
 }
 
+void ACPP_PlayerManager::WallTrace()
+{
+	if( m_isInCover )
+	{
+		StopCover();
+	}
+	else
+	{
+		// Start and end of line trace
+		const FVector start = GetActorLocation();
+		const FVector end = ( GetActorForwardVector() * m_wallTraceMultipler ) + GetActorLocation();
+
+		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTracer ), true, GetInstigator() );
+
+		// Hit result
+		FHitResult hit( ForceInit );
+
+		bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+
+		// If hit start cover, else stop cover
+		bHit ? StartCover( hit ) : StopCover();
+	}
+	
+}
+
 void ACPP_PlayerManager::StartCover( FHitResult hit )
 {
 	// Set plane constraints
@@ -878,22 +906,6 @@ void ACPP_PlayerManager::StartCover( FHitResult hit )
 
 }
 
-void ACPP_PlayerManager::WallTrace()
-{
-	// Start and end of line trace
-	const FVector start = GetActorLocation();
-	const FVector end = ( GetActorForwardVector() * m_wallTraceMultipler ) + GetActorLocation();
-
-	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTracer ), true, GetInstigator() );
-
-	// Hit result
-	FHitResult hit( ForceInit );
-
-	bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
-
-	// If hit start cover, else stop cover
-	bHit ? StartCover( hit ) : StopCover();
-}
 
 void ACPP_PlayerManager::StopCover()
 {
@@ -907,62 +919,93 @@ void ACPP_PlayerManager::StopCover()
 	m_isInCover = false;
 }
 
-bool ACPP_PlayerManager::CoverTrace( float inputAxis )
+void ACPP_PlayerManager::CoverTrace( float inputAxis )
 {
 	bool rightHit = RightCoverTrace();
 	bool leftHit = LeftCoverTrace();
 
+	const FVector direction = UKismetMathLibrary::GetRightVector( UKismetMathLibrary::MakeRotator( 0.0f, 0.0f, GetControlRotation().Yaw ) );
 	if( rightHit && leftHit )
 	{
-		// Start and end of line trace
-		const FVector start = GetActorLocation();
-		const FVector end = GetActorLocation() + ( GetCharacterMovement()->GetPlaneConstraintNormal() * m_coverTraceValue );
-
-		FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
-
-		// Hit result
-		FHitResult hit( ForceInit );
-		bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
-
-		if( bHit )
+		if( inputAxis != 0.0f )
 		{
-			GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
+			const FVector start = GetActorLocation();
+			const FVector end = GetActorLocation() + ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_coverTraceValue );
 
-			// Rotation
-			const FRotator rotation = Controller->GetControlRotation();
-			const FRotator yawRotation( 0.0f, rotation.Yaw, 0.0f );
+			FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
 
-			// Get forward vector
-			const FVector direction = FRotationMatrix( yawRotation ).GetUnitAxis( EAxis::Y );
+			// Hit result
+			FHitResult hit( ForceInit );
+			bool bHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
 
-			// Add movement in that direction
-			AddMovementInput( direction, inputAxis );
+			if( bHit )
+			{
+				GetCharacterMovement()->SetPlaneConstraintNormal( hit.Normal );
 
+				// Add movement in that direction
+				AddMovementInput( direction, inputAxis );
+
+			}
 		}
-		return bHit;
 	}
 
-	else
+	if( rightHit || leftHit )
 	{
-		// Rotation
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation( 0, Rotation.Yaw, 0 );
+		bool pickA;
 
-		// Get forward vector
-		const FVector Direction = FRotationMatrix( YawRotation ).GetUnitAxis( EAxis::Y );
+		const float signOfInputAxis = UKismetMathLibrary::SignOfFloat( inputAxis );
 
-		if( inputAxis == 1.0f && rightHit )
-		{
-			// Add movement in that direction
-			AddMovementInput( Direction, inputAxis );
-		}
-		else if( inputAxis == -1.0f && leftHit )
-		{
-			// Add movement in that direction
-			AddMovementInput( Direction, inputAxis );
-		}
-		return false;
+		signOfInputAxis == 1.0f ? rightHit = true : leftHit = true;
+
+		if( signOfInputAxis && ( rightHit == true || leftHit == true ) )
+		 pickA = true;
+
+		const float scale = UKismetMathLibrary::SelectFloat( inputAxis, 0.0f, pickA );
+
+		AddMovementInput( direction, scale );
+
 	}
+}
+
+bool ACPP_PlayerManager::RightCoverTrace()
+{
+	const float m_rightCoverValue = -1.0f;
+
+	// Start and end of line trace
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * m_rightCoverValue );
+	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+
+	// Start and end
+	const FVector start = GetActorLocation() + ( movementDirection * m_rightCoverTraceMultiplier );
+	const FVector end = ( GetCharacterMovement()->GetPlaneConstraintNormal() * m_wallTraceMultipler ) + start;
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool rightHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+	return rightHit;
+}
+
+bool ACPP_PlayerManager::LeftCoverTrace()
+{
+
+	const float m_leftCoverValue = -1.0f;
+
+	// Start and end of line trace
+	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() );
+	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
+
+	// Start and end
+	const FVector start = GetActorLocation() + ( movementDirection * m_rightCoverTraceMultiplier );
+	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * m_leftCoverValue ) * m_wallTraceMultipler ) + start;
+
+	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
+
+	// Hit result
+	FHitResult hit( ForceInit );
+	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
+	return leftHit;
 }
 
 void ACPP_PlayerManager::StartShooting()
@@ -1026,15 +1069,11 @@ void ACPP_PlayerManager::StartShooting()
 		{
 			// If there is a throwable object
 			if( m_throwableAmount == m_throwableFull )
-			{
 				// Play animation
 				PlayAnimMontage( animThrow );
-			}
 		}
 	}
 }
-
-
 
 void ACPP_PlayerManager::ThrowObject()
 {
@@ -1048,55 +1087,13 @@ void ACPP_PlayerManager::ThrowObject()
 		m_throwableAmount--;
 
 		if( animThrow )
-		{
 			// Play anim
 			PlayAnimMontage( animThrow );
-		}
 	}
 }
-
-
 
 bool ACPP_PlayerManager::GetIsCrouched()
 {
 	return m_isCrouched;
 }
 
-bool ACPP_PlayerManager::RightCoverTrace()
-{
-	// Start and end of line trace
-	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f );
-	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
-
-	// Start and end
-	const FVector start = GetActorLocation() + ( movementDirection * m_rightCoverTraceMultiplier );
-	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_wallTraceMultipler ) + start;
-
-	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
-
-	// Hit result
-	FHitResult hit( ForceInit );
-	bool rightHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
-	return rightHit;
-}
-
-bool ACPP_PlayerManager::LeftCoverTrace()
-{
-	// Left 
-	FVector cameraLocation = cameraComp->GetComponentLocation();
-	FRotator cameraRotation = cameraComp->GetComponentRotation();
-
-	// Start and end of line trace
-
-	FRotator movementVector = UKismetMathLibrary::MakeRotFromX( GetCharacterMovement()->GetPlaneConstraintNormal() );
-	FVector movementDirection = UKismetMathLibrary::GetRightVector( movementVector );
-	const FVector start = GetActorLocation() + ( movementDirection * 45.0f );
-	const FVector end = ( ( GetCharacterMovement()->GetPlaneConstraintNormal() * -1.0f ) * m_wallTraceMultipler ) + start;
-
-	FCollisionQueryParams traceParams( SCENE_QUERY_STAT( WallTrace ), true, GetInstigator() );
-
-	// Hit result
-	FHitResult hit( ForceInit );
-	bool leftHit = GetWorld()->LineTraceSingleByChannel( hit, start, end, ECollisionChannel::COLLISION_COVER, traceParams ); // Trace channel cover --
-	return leftHit;
-}

@@ -347,7 +347,7 @@ private:
 	  *   Notes           : N/A
 	  *   See also        : N/A
 	  *****************************************************************************/
-	bool CoverTrace( float inputAxis );
+	void CoverTrace( float inputAxis );
 	/*****************************************************************************
 	  *   Function        : bool GetIsCrouched()
 	  *   Purpose         : Get bool for crouching
