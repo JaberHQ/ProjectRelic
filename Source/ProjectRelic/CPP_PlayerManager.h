@@ -11,7 +11,7 @@
 
 #include "CPP_PlayerManager.generated.h"
 
-/**************************************************************************************************************
+/****************************************************************************************************************************************************************************************************************************
  * Type: Class
  *
  * Name: CPP_PlayerManager
@@ -23,24 +23,17 @@
  * Functions: virtual void BeginPlay() override,
  *			  virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override
  *
- * References: https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/HowTo/CharacterMovement/
- *				https://www.youtube.com/watch?v=a5gA7q5GD7Q&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=1
- *				https://www.youtube.com/watch?v=HrIAbcixoiQ&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=5
- *				https://www.youtube.com/watch?v=bQtbhWKsQKA&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=7
- *				https://www.youtube.com/watch?v=UZYa21qs82w&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=15
- *				https://www.youtube.com/watch?v=09ZXNjX4xTk&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=16
- *				https://www.youtube.com/watch?v=FMcW7t5ivEg&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=17
- *				https://www.youtube.com/watch?v=nn057V9KQDs&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=18
- *				https://www.youtube.com/watch?v=wNDrCcjtLdA&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=19
- *				https://www.youtube.com/watch?v=qACoBfFIe7o&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=20
- *				https://www.youtube.com/watch?v=0ZvAnUTodfI&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=25
- *				https://www.youtube.com/watch?v=n0GoiyS6I-o&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=26
- *				https://www.youtube.com/watch?v=m4oSOugBQCg&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=28
- *				https://www.youtube.com/watch?v=-tM4sDpDgrE&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=34
- *				https://www.youtube.com/watch?v=ysqRp7oeZME&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=38
- *				https://www.youtube.com/watch?v=usd0U9B0wTw&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=39
- *				https://www.youtube.com/watch?v=-Lg-_EU6NoU&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=42
- *				
+ * References:
+ *		UE4 Third Person Cover Shooter - 5 End of Cover and Cover Movement.[online] EvilEyeGames.
+ *				Available at: https://www.youtube.com/watch?v=09ZXNjX4xTk&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=16&ab_channel=EvilEyeGames [Accessed May 2022 | Modified]
+ *		Unreal Engine 4 Tutorial - Stealth AI Part 16: Takedown. [online] Ryan Laley.
+ *				Available at: https://www.youtube.com/watch?v=nn057V9KQDs&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=18&ab_channel=RyanLaley [Accessed May 2022 | Modified]
+ *		Unreal Engine - Throw Prediction Tutorial (1/2). [online] Reids Channel.
+ *				Available At: https://www.youtube.com/watch?v=88BCSofXKH8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=45&ab_channel=ReidsChannel [Accessed July 2022 | Modified]
+ *		How To Create A Throwing Grenade Predicted Path Trajectory - Unreal Engine 4/5 Tutorial. [online] Matt Aspland.
+ *				Available At: https://www.youtube.com/watch?v=TAnzmz2AviY&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=53&ab_channel=MattAspland [Accessed July 2022 | Modified]
+ *		UE4 - Tutorial - Transparent Back Culling! [online] Dean Ashford.
+ *				Available at: https://www.youtube.com/watch?v=72j2coQz0X0&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=56&ab_channel=DeanAshford [Accessed August 2022 | Modified]
  *
  * See Also: PlayerManager.h
  *
@@ -59,7 +52,7 @@
  * 18/07/2022	 JA			 v2.7		 Something to throw
  * 25/07/2022	 JA			 v2.8	     HUD, bug fixes
  * 06/08/2022	 JA			 v2.9		 Xray vision
-**************************************************************************************************************/
+****************************************************************************************************************************************************************************************************************************/
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_SevenParams( FPlayerUI, float, healthBar, float, invisibilityBar, int, ammoCount, int, reserveCount, bool ,assaultRifle, bool, pistol, bool, throwable );
 
 UCLASS()

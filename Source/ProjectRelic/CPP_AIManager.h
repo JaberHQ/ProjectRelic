@@ -21,7 +21,7 @@
 #include "TimerManager.h"
 #include "CPP_AIManager.generated.h"
 
-/***********************************************************************************************
+/*************************************************************************************************************************************************************************************************************
  * Type: Class
  *
  * Name: CPP_AIManager
@@ -30,19 +30,24 @@
  *
  * Purpose: Parent class for all AI
  *
- * References: https://www.youtube.com/watch?v=3IDflM4GuCY&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=9
- *				https://www.youtube.com/watch?v=nshHCycft4A&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=9
- *				https://www.youtube.com/watch?v=owZz-ffUzsc&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=11
- *				https://www.youtube.com/watch?v=iQ1QsqcWFMI&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=12
- *				https://www.youtube.com/watch?v=0XbM0O-gwxU&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=13
- *				https://www.youtube.com/watch?v=0gU5StGSq_o&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=15
- *				https://www.youtube.com/watch?v=nn057V9KQDs&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=19
- *				https://www.youtube.com/watch?v=O5o_usc2pWo&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=22
- *				https://www.youtube.com/watch?v=0ZvAnUTodfI&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=25
- *				https://www.youtube.com/watch?v=WDzIk7dP4d4&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=30
- *				https://www.youtube.com/watch?v=99NT6lQ6SJ0&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=31
- *				https://www.youtube.com/watch?v=GdLvZacVmkA&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=39
- *				https://www.youtube.com/watch?v=aACvp7BBeCk&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=42
+ * References:
+ *			Unreal Engine AI with Behavior Trees | Unreal Engine. [online] Unreal Engine.
+ *				Available at: https://www.youtube.com/watch?v=iY1jnFvHgbE&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=3&ab_channel=UnrealEngine [Accessed March 2022 | Modified]
+ *			Unreal Engine C++ Tutorial - Stealth Game AI. [online] Reubs.
+ *				Available at: https://www.youtube.com/watch?v=3Z1A825gTA8&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=4&ab_channel=reubs [Accessed March 2022 | Modified]
+ *			Unreal Detection Meter - UE4 Tutorials #222. [online] CodeLikeMe.
+ *				Available at: https://www.youtube.com/watch?v=iQ1QsqcWFMI&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=11&ab_channel=CodeLikeMe [Accessed April 2022 | Modified]
+ *			Unreal Engine 4 Tutorial - Stealth AI Part 11: AI Sight Perception. [online] Ryan Laley.
+ *				Available at: https://www.youtube.com/watch?v=0XbM0O-gwxU&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=12&ab_channel=RyanLaley [Accessed April 2022 | Modified]
+ *			Unreal Engine 4 - AI Improved Patrol. [online] Titanic Games.
+ *				Available at: https://www.youtube.com/watch?v=0gU5StGSq_o&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=14&ab_channel=TitanicGames [Accessed May 2022 | Modified]
+ *			Unreal Engine 4 Tutorial - AI Sight Detection Part 1: The Eye Icon. [online] Ryan Laley.
+ *				Available at: https://www.youtube.com/watch?v=O5o_usc2pWo&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=22&ab_channel=RyanLaley [Accessed May 2022 | Modified]
+ *			Unreal Engine 4 Tutorial - Stealth AI Part 16: Takedown. [online] Ryan Laley.
+ *				Available at: https://www.youtube.com/watch?v=nn057V9KQDs&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=18&ab_channel=RyanLaley [Accessed May 2022 | Modified]
+ *			UE4 C++ AI Tutorial Series Part 5 Patrolling AI NPC. [online] MrCxx.
+ *				Available At: https://www.youtube.com/watch?v=99NT6lQ6SJ0&list=PLBBe1hvULrciqnr3wdS77c5CLfTeHza0X&index=31&ab_channel=MrCxx [Accessed June 2022 | Modified]
+ *
  *				
  *
  * See Also: EnemyCharacter.h
@@ -61,7 +66,7 @@
  * 13/06/2022	 JA			 v2.5		 Detection Meter
  * 20/06/2022	 JA			 v2.6		 Further AI tweaking
  * 04/07/2022	 JA			 v2.7		 Invisibility
- ***********************************************************************************************/
+ *************************************************************************************************************************************************************************************************************/
 
  // Declare delegate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FSightDetectionD, float, detectionSpeed, bool, hasSeenSomething );
